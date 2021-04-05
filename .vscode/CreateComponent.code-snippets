@@ -1,0 +1,13 @@
+{
+	"React Functional Component": {
+		"scope": "typescriptreact",
+		"prefix": "const",
+		"body": [
+			"const ${1:ComponentName}: React.FunctionComponent<${2:IProps}> = (${3:props}:${2:IProps}): JSX.Element =>",
+			"{",
+			"\treturn();",
+			"}"
+		],
+		"description": "Insert React Component"
+	}
+}
