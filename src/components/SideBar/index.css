@@ -4,6 +4,7 @@
     background-color: #00000018;
     overflow-x: hidden; /* Disable horizontal scroll */
     flex-shrink: 0;
+    background-image: url('../../textures/grey_gradient.jpg');
 }
 
 .tablist {
@@ -36,7 +37,7 @@
 }
 
 .tablist-text {
-    color: #a2ebff;
+    color: #c9f3ff;
     text-decoration: none;
 }
 

@@ -11,8 +11,8 @@ interface IProjectPageProps {
 const ProjectTab: React.FunctionComponent<IProjectPageProps> = (props:IProjectPageProps): JSX.Element =>
 {
     return(
-        //<div>Projects placeholder</div>
-        <div id="unityContainer"></div>
+        <div>Projects placeholder</div>
+        //<div id="unityContainer"></div>
     );
 }
 

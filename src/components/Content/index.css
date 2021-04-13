@@ -1,5 +1,6 @@
 .content-view { 
     width: 100%;
+    background-image: url('../../textures/webb-dark.png');
 }
 
 .icon {
@@ -26,7 +27,7 @@
     text-align: left;
     font-size: 30px;
     border-bottom: 1px solid #fe2323;
-    color: #a2ebff;
+    color: #c9f3ff;
     margin: 10px 15px 0px 15px;
     padding-bottom: 10px;
     font-weight: 500;
@@ -37,7 +38,7 @@
 .slideshow-container {
     margin-left: 50px;
     margin-right: 50px;
-    background-color: #ccf9fe17;
+    background-color: #0000003d;
 }
 
 .slideshow-body {
@@ -45,6 +46,7 @@
     border-radius: 3px;
     position: relative;
     height: 500px;  
+    
 }
 
 .slideshow-image {
