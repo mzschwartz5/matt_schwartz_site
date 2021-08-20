@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     timelineItemContent: {
-        height: '200px',
+        height: '00px',
     },
 
 }));
