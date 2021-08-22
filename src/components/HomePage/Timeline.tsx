@@ -1,5 +1,4 @@
-import SiteHeader from "./SiteHeader"
-import Timeline from '@material-ui/lab/Timeline';
+import MuiTimeline from '@material-ui/lab/Timeline';
 import TimelineItem from '@material-ui/lab/TimelineItem';
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
 import TimelineConnector from '@material-ui/lab/TimelineConnector';
@@ -8,27 +7,19 @@ import TimelineDot from '@material-ui/lab/TimelineDot';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import AppBar from '@material-ui/core/AppBar';
 import { makeStyles } from "@material-ui/core/styles";
-import useIntersectionObserver from "../hooks/useIntersectionObserver";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { useRef } from "react";
-import { Slide, Theme, useScrollTrigger } from "@material-ui/core";
+import { Theme } from '@material-ui/core';
 
-/*
-    Main page - Container for whole site.
-    In the future, will add routing to control when each tab renders and to be able to link to a specific tab.
-*/
-const HomePage: React.FunctionComponent = (): JSX.Element =>
+const Timeline: React.FunctionComponent = () =>
 {
     return(
-    <>  
-        <HidingTitleBar/>
-        <Timeline>
+        <MuiTimeline>
             <TimelineItemWrapper/>
             <TimelineItemWrapper/>
             <TimelineItemWrapper/>
-        </Timeline>
-    </>
+        </MuiTimeline>
     );
 }
 
@@ -65,26 +56,6 @@ const TimelineItemWrapper: React.FunctionComponent = () =>
     );
 }
 
-const HidingTitleBar: React.FunctionComponent = (): JSX.Element =>
-{
-    const trigger = useScrollTrigger();
-    const classes = useTitleBarStyles();
-
-    return (
-    <Slide appear={false} direction="down" in={!trigger}>
-        <AppBar className={classes.root}>
-            <SiteHeader/>
-        </AppBar>
-    </Slide>
-    );
-}
-
-const useTitleBarStyles = makeStyles({
-    root: {
-        flexDirection: 'row',
-    },
-});
-
 const useTimelineStyles = makeStyles<Theme, {intersectionRation: number}>({
     // Remove the blank space before the timeline line
     missingOppositeNoStyle: {
@@ -104,7 +75,7 @@ const useTimelineStyles = makeStyles<Theme, {intersectionRation: number}>({
     }),
 
     cardHeight: {
-        height: '125vh',
+        height: '100vh',
     },
 
     cardContent: {
@@ -118,5 +89,4 @@ const useTimelineStyles = makeStyles<Theme, {intersectionRation: number}>({
 
 });
 
-
-export default HomePage;
+export default Timeline;

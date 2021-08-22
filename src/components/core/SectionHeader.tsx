@@ -1,3 +1,5 @@
+import { makeStyles } from "@material-ui/core";
+
 interface ISectionHeaderProps {
     headerText: string;
     overrideClass?: string;
@@ -9,11 +11,18 @@ interface ISectionHeaderProps {
 const SectionHeader: React.FunctionComponent<ISectionHeaderProps> = (props:ISectionHeaderProps): JSX.Element =>
 {
     const {headerText, overrideClass} = props;
-    const defaultClass = "section-header";
+    const classes = useStyles();
 
     return(
-        <h2 className={overrideClass ? overrideClass : defaultClass}>{headerText}</h2>
+        <h2 className={overrideClass ? overrideClass : classes.default}>{headerText}</h2>
     );
 }
+
+const useStyles = makeStyles({
+    default: {
+        flexGrow: 2,
+        marginLeft: '15px'
+    }
+});
 
 export default SectionHeader;
