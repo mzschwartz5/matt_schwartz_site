@@ -20,8 +20,8 @@ const SectionHeader: React.FunctionComponent<ISectionHeaderProps> = (props:ISect
 
 const useStyles = makeStyles({
     default: {
-        flexGrow: 2,
-        marginLeft: '15px'
+        marginLeft: '15px',
+        marginRight: '10px'
     }
 });
 

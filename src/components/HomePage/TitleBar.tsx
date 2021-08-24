@@ -18,7 +18,8 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
     <Slide appear={false} direction="down" in={!trigger}>
         <AppBar className={classes.root} position="sticky">
             <div className={classes.headerDiv}>
-                <SectionHeader headerText="Matthew Schwartz" overrideClass="blah"/>
+                <SectionHeader headerText="Matthew Schwartz"/>
+                <div style={{borderLeft: "solid 1px white", margin: '5px 5px 5px 0px'}}></div>
                 <IconLink imagePath={EmailIconPath} altText="Email address link" linkTo="mailto: mzschwartz5@gmail.com" />
                 <IconLink imagePath={GithubIconPath} altText="GitHub link" linkTo="https://github.com/mzschwartz5" />
                 <IconLink imagePath={LinkedInIconPath} altText="LinkedIn link" linkTo="https://www.linkedin.com/in/matthew-schwartz-37019016b/" />

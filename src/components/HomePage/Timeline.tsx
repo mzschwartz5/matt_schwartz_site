@@ -10,11 +10,14 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from "@material-ui/core/styles";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Theme } from '@material-ui/core';
 import RiceImagePath from '../../assets/images/with_friends_at_rice.jpg';
 import MarathonImagePath from '../../assets/images/marathon_pic.jpg';
 import LinkedInImagePath from '../../assets/images/linkedin_image.jpg';
+import SchoolIcon from '@material-ui/icons/School';
+import WorkIcon from '@material-ui/icons/Work';
+import HomeWorkIcon from '@material-ui/icons/HomeWork';
 
 const Timeline: React.FunctionComponent = () =>
 {
@@ -22,51 +25,55 @@ const Timeline: React.FunctionComponent = () =>
 
     return(
         <MuiTimeline align="alternate">
-            <TimelineItemWrapper imagePath={LinkedInImagePath} imageTitle="LinkedIn" imageText={imageText}/>
-            <TimelineItemWrapper imagePath={RiceImagePath} imageTitle="Rice University" imageText={imageText}/>
-            <TimelineItemWrapper imagePath={MarathonImagePath} imageTitle="Half Marathon 2019" imageText={imageText}/>
+            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={imageText} imageTitle="Education" DotIcon={SchoolIcon}/>
+            <TimelineItemWrapper imagePath={RiceImagePath} imageAltText="Rice University" imageDesc={imageText} imageTitle="Work Experience" DotIcon={WorkIcon}/>
+            <TimelineItemWrapper imagePath={MarathonImagePath} imageAltText="Half Marathon 2019" imageDesc={imageText} imageTitle="Personal Projects" DotIcon={HomeWorkIcon}/>
         </MuiTimeline>
     );
 }
 
 interface ITimelineItemWrapperProps {
     imagePath: string,
+    imageAltText: string,
+    imageDesc: string,
     imageTitle: string,
-    imageText: string,
+    DotIcon: React.FunctionComponent,
 }
 
 const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = (props: ITimelineItemWrapperProps) =>
 {
-    const {imagePath, imageTitle, imageText} = props;
+    const {imagePath, imageAltText, imageDesc, imageTitle, DotIcon} = props;
 
     // When an observed element passes a threshold of on-screen visibility, update its opacity accordingly for fade effect.
     const ref = useRef(null);
-    const thresholds = Array(10).fill(0.1).map((val,idx) => (val += 0.1*idx));
+    const thresholds = useMemo(() => Array(10).fill(0.1).map((val,idx) => (val += 0.1*idx)), []);
     const entry = useIntersectionObserver(ref, {threshold: thresholds})             
     const classes = useTimelineStyles({intersectionRatio: Number(entry?.intersectionRatio)});
 
     return(
         <TimelineItem classes={{root: classes.timelineItemContent}}>
             <TimelineContent className={classes.timelineItemText}>
-                Education
                 <Card className={classes.card}>
                     <CardMedia
                         ref={ref} 
                         image={imagePath}
-                        title={imageTitle}
+                        title={imageAltText}
                         className={classes.cardHeight}
                     />
                 </Card>
             </TimelineContent>
             <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot color="secondary" variant="outlined"/>
-                <TimelineConnector />
+                <TimelineConnector className={classes.timelineConnector}/>
+                <TimelineDot className={classes.timelineDot} variant="outlined" color='primary'>
+                    <DotIcon/>
+                </TimelineDot>
+                <TimelineConnector className={classes.timelineConnector}/>
             </TimelineSeparator>
             <TimelineOppositeContent>
-                <Card className={classes.card}>
+                <Card className={classes.card + ' ' + classes.cardOppositeContent}>
+                    <p>{imageTitle}</p>
                     <CardContent>
-                        {imageText}
+                        {imageDesc}
                     </CardContent>  
                 </Card>
             </TimelineOppositeContent>
@@ -75,19 +82,12 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
 }
 
 const useTimelineStyles = makeStyles<Theme, {intersectionRatio: number}>({
-    // Remove the blank space before the timeline line
-    missingOppositeNoStyle: {
-        "&:before": {
-            display: 'none',
-        }
-    },
 
     timelineItemText: {
         textAlign: 'left',  
     },
 
     timelineItemContent: { 
-        height: '150vh',
         marginLeft: '10px',
         marginRight: '10px'
     },
@@ -103,6 +103,18 @@ const useTimelineStyles = makeStyles<Theme, {intersectionRatio: number}>({
         opacity: (Math.pow(intersectionRatio,.9)),
     }),
 
+    cardOppositeContent: {
+        position: 'relative',
+        top: '25%'
+    },
+
+    timelineDot: {
+        color: '#4267B2'
+    },
+
+    timelineConnector: {
+        backgroundColor: '#4267B2'
+    }
 });
 
 export default Timeline;
