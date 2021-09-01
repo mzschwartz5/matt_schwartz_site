@@ -10,23 +10,21 @@ import TitleBar from './components/HomePage/TitleBar';
 
 function App() {
   return (
-    <div className="App App-header">
-      <Router>
-        <Switch>
-          <Route path="/project_gallery">
-            <TitleBar/>
-            Project Gallery!
-          </Route>
-          <Route path="/blog">
-            <TitleBar/>
-            Blog!
-          </Route>
-          <Route path="/">
-            <HomePage/>
-          </Route>
-        </Switch>
-      </Router>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/project_gallery">
+          <TitleBar/>
+          Project Gallery!
+        </Route>
+        <Route path="/blog">
+          <TitleBar/>
+          Blog!
+        </Route>
+        <Route path="/">
+          <HomePage/>
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 

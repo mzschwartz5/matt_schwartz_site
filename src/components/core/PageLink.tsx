@@ -11,7 +11,7 @@ const PageLink: React.FunctionComponent<IPageLink> = (props:IPageLink): JSX.Elem
     const {text,linkTo,overrideClass} = props;
 
     return(
-        <Link to={linkTo} className={overrideClass} style={{color: 'white'}}>
+        <Link to={linkTo} className={overrideClass} style={{color: 'white', textDecoration: 'none'}}>
             {text}
         </Link>
     );

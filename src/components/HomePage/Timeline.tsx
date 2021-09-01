@@ -46,12 +46,12 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
 
     // When an observed element passes a threshold of on-screen visibility, update its opacity accordingly for fade effect.
     const ref = useRef(null);
-    const thresholds = useMemo(() => Array(10).fill(0.1).map((val,idx) => (val += 0.1*idx)), []);
+    const thresholds = useMemo(() => Array(100).fill(0.01).map((val,idx) => (val += 0.01*idx)), []);
     const entry = useIntersectionObserver(ref, {threshold: thresholds})             
-    const classes = useTimelineStyles({intersectionRatio: Number(entry?.intersectionRatio)});
+    const classes = useTimelineItemStyles({intersectionRatio: Number(entry?.intersectionRatio)});
 
     return(
-        <TimelineItem classes={{root: classes.timelineItemContent}}>
+        <TimelineItem className={classes.timelineItemContent}>
             <TimelineContent className={classes.timelineItemText}>
                 <Card className={classes.card}>
                     <CardMedia
@@ -70,8 +70,8 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                 <TimelineConnector className={classes.timelineConnector}/>
             </TimelineSeparator>
             <TimelineOppositeContent>
+                <p>{imageTitle}</p>
                 <Card className={classes.card + ' ' + classes.cardOppositeContent}>
-                    <p>{imageTitle}</p>
                     <CardContent>
                         {imageDesc}
                     </CardContent>  
@@ -81,7 +81,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
     );
 }
 
-const useTimelineStyles = makeStyles<Theme, {intersectionRatio: number}>({
+const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>({
 
     timelineItemText: {
         textAlign: 'left',  
@@ -100,7 +100,7 @@ const useTimelineStyles = makeStyles<Theme, {intersectionRatio: number}>({
         marginTop: '20px',
         marginLeft: '10px',
         marginRight: '10px',
-        opacity: (Math.pow(intersectionRatio,.9)),
+        opacity: (Math.pow(intersectionRatio,1.1)),
     }),
 
     cardOppositeContent: {
@@ -114,7 +114,9 @@ const useTimelineStyles = makeStyles<Theme, {intersectionRatio: number}>({
 
     timelineConnector: {
         backgroundColor: '#4267B2'
-    }
+    },
+
 });
+
 
 export default Timeline;
