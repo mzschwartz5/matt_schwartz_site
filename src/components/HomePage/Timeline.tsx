@@ -12,9 +12,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { useMemo, useRef } from "react";
 import { Theme } from '@material-ui/core';
-import RiceImagePath from '../../assets/images/with_friends_at_rice.jpg';
-import MarathonImagePath from '../../assets/images/marathon_pic.jpg';
-import LinkedInImagePath from '../../assets/images/linkedin_image.jpg';
+import RiceImagePath from '../../assets/images/homepage/with_friends_at_rice.jpg';
+import MarathonImagePath from '../../assets/images/homepage/marathon_pic.jpg';
+import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
 import SchoolIcon from '@material-ui/icons/School';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
@@ -45,7 +45,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
     const {imagePath, imageAltText, imageDesc, imageTitle, DotIcon} = props;
 
     // When an observed element passes a threshold of on-screen visibility, update its opacity accordingly for fade effect.
-    const ref = useRef(null);
+    const ref = useRef(null); // becomes ref to the element to fade
     const thresholds = useMemo(() => Array(100).fill(0.01).map((val,idx) => (val += 0.01*idx)), []);
     const entry = useIntersectionObserver(ref, {threshold: thresholds})             
     const classes = useTimelineItemStyles({intersectionRatio: Number(entry?.intersectionRatio)});

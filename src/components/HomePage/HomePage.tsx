@@ -1,4 +1,3 @@
-import TitleBar from './TitleBar';
 import Timeline from './Timeline'
 
 /*
@@ -9,7 +8,6 @@ const HomePage: React.FunctionComponent = (): JSX.Element =>
 {
     return(
     <>  
-        <TitleBar/>
         <Timeline/>
     </>
     );

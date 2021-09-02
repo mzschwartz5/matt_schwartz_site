@@ -1,9 +1,9 @@
 import AppBar from '@material-ui/core/AppBar';
 import { Slide, useScrollTrigger } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import SectionHeader from '../core/SectionHeader';
-import PageLink from '../core/PageLink';
-import IconLink from '../core/IconLink';
+import SectionHeader from './SectionHeader';
+import PageLink from './PageLink';
+import IconLink from './IconLink';
 import EmailIconPath from '../../assets/icons/email_icon.png';
 import GithubIconPath from '../../assets/icons/github_logo.png';
 import LinkedInIconPath from '../../assets/icons/linkedin_logo.png';
@@ -51,7 +51,7 @@ const useStyles = makeStyles({
 
     headerDiv: {
         display: "flex",
-        flexGrow: 2,
+        flexGrow: 3,
     },
 });
 
