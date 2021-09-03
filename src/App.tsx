@@ -6,6 +6,7 @@ import {
   Route,
 } from "react-router-dom";
 import TitleBar from './components/core/TitleBar';
+import ProjectGallery from './components/ProjectGallery/ProjectGallery';
 
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
         </Route>
         <Route path="/project_gallery" >
           <TitleBar/>
-          Project Gallery!
+          <ProjectGallery/>
         </Route>
         <Route path="/blog">
           <TitleBar/>
