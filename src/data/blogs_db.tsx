@@ -1,6 +1,68 @@
-import { getDocumentByName } from "./database";
-const BLOG_COLLECTION = "Blogs";
+import { collection, query, getDocs } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
+import { db, storage } from "./database";
 
-export function readBlogByName(blogName: string) {
-    const querySnapshot = getDocumentByName(BLOG_COLLECTION, blogName);
+const BLOG_COLLECTION = "BlogReferences";
+
+// Data model for a a blog reference - expect it to expand in scope as more features are developed
+export interface IBlogReference {
+    title: string;
+    storagePath: string;
+}
+
+interface IBlogRefSetCallback {
+     (refs: IBlogReference[]): void;
+}
+
+// Load all blog reference documents from the Firebase datastore
+// Used primarily to show a selection of all avaiable blogs to users.
+export function loadAllBlogReferences(refSetCallback: IBlogRefSetCallback) {
+    const collectionRef = collection(db, BLOG_COLLECTION);
+    const queryString = query(collectionRef);
+
+    try {
+        let docs: IBlogReference[] = [];
+
+        // A "QuerySnapshot" is Firebase's term for a query result
+        getDocs(queryString).then((querySnapshot) => {
+
+            querySnapshot.forEach((doc) => docs.push(doc.data() as IBlogReference)); // is this type assertion dangerous?
+
+            refSetCallback(docs);
+        });
+    }
+    catch (e) {
+        throw new Error(e);
+    }
+}
+
+interface IContentSetCallback {
+    (content: string): void;
+}
+
+// Load the content for a single blog entry. Pass in callback for setting content. 
+// Content is set in the form of a string. Use ReactHtmlParser before using content.
+export function loadBlogContent(blogPath: string, contentSetCallback: IContentSetCallback) {
+    
+    // Use blog path to get URL to content, then make an HTTP request to load content.
+    // Content is in form of a markdown file with references to images on the blob that will get resolved automatically.
+    try {        
+        getDownloadURL(ref(storage, blogPath))
+        .then((url) => {
+
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            
+            xhr.onload = (event) => {
+                const response = xhr.response;
+                response.text().then((text: string) => contentSetCallback(text));
+            };
+            xhr.open('GET', url);
+
+            xhr.send();
+        });
+    }
+    catch (e) {
+        throw new Error(e);
+    }
 }

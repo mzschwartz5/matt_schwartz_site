@@ -1,13 +1,15 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore, QuerySnapshot } from "firebase/firestore";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 
 const firebaseApp = initializeApp({
-    projectId: 'mattzschwartz'
-});
+    projectId: "mattzschwartz",
+    storageBucket: "gs://mattzschwartz.appspot.com"
+})
 
-const db = getFirestore(firebaseApp);
+export const db = getFirestore(firebaseApp);
+export const storage = getStorage(firebaseApp);
 
 export async function getDocumentByName(collectionName: string, docName: string, fieldName: string = "name") {
     const collectionRef = collection(db, collectionName);
