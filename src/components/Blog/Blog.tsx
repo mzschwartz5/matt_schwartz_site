@@ -1,6 +1,7 @@
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { initializeApp } from "firebase/app"
 import { useState } from "react";
+import ReactHtmlParser from 'react-html-parser';
 
 // Firebase init
 const firebaseApp = initializeApp({
@@ -15,9 +16,9 @@ interface IBlogProps {
 
 const Blog: React.FunctionComponent<IBlogProps> = (props:IBlogProps): JSX.Element =>
 {
-    const [blogText, setBlogText] = useState<string>();
+    const [blogText, setBlogText] = useState<string>("");
 
-    getDownloadURL(ref(storage, 'blog_content/Untitled document.txt'))
+    getDownloadURL(ref(storage, 'blog_content/First Blog/Untitled Document.md.html'))
     .then((url) => {
 
         const xhr = new XMLHttpRequest();
@@ -34,7 +35,7 @@ const Blog: React.FunctionComponent<IBlogProps> = (props:IBlogProps): JSX.Elemen
     });
 
     return(
-        <>{blogText}</>
+        <div>{ReactHtmlParser(blogText)}</div>
     );
 }
 
