@@ -20,6 +20,7 @@ const Blog: React.FunctionComponent<IBlogProps> = (props:IBlogProps): JSX.Elemen
 
     // Temporarily using a button to test loading a blog. 
     const loadBlogClickHandler = () => {
+        // For testing, just grab the first blog
         const blogPath = blogReferences[0].storagePath;
         loadBlogContent(blogPath, setBlogContent)
     };

@@ -8,6 +8,7 @@ import {
 import TitleBar from './components/core/TitleBar';
 import ProjectGallery from './components/ProjectGallery/ProjectGallery';
 import Blog from './components/Blog/Blog';
+import MarkdownEditor from './components/Blog/MarkdownEditor';
 
 function App() {
   return (
@@ -23,8 +24,7 @@ function App() {
         </Route>
         <Route path="/blog">
           <TitleBar/>
-          <Blog/>
-          Blog!
+          <MarkdownEditor filePath={"Test Upload Blog"}/>
         </Route>
       </Switch>
     </Router>

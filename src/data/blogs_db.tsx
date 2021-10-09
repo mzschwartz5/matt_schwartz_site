@@ -1,5 +1,5 @@
 import { collection, query, getDocs } from "firebase/firestore";
-import { getDownloadURL, ref } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "./database";
 
 const BLOG_COLLECTION = "BlogReferences";
@@ -65,4 +65,11 @@ export function loadBlogContent(blogPath: string, contentSetCallback: IContentSe
     catch (e) {
         throw new Error(e);
     }
+}
+
+// Upload an image to firebase storage. Takes a file via the JavaScript File API, and a path to save the file to.
+// Returns 
+export function uploadNewImage(file: File, filePath: string) {
+    const storageRef = ref(storage, filePath);
+    return uploadBytes(storageRef, file);
 }
