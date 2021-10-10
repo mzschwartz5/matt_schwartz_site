@@ -1,6 +1,5 @@
 import { getDownloadURL } from "firebase/storage";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React from "react";
 import { PluginProps, Plugins } from "react-markdown-editor-lite";
 import { uploadNewImage } from "../../data/blogs_db";
 
@@ -9,25 +8,22 @@ import { uploadNewImage } from "../../data/blogs_db";
 const ImageUploadPlugin = (props: PluginProps) =>
 {
 
-    const [fileID, setFileID] = useState(0); 
-    let filePath: string = "";
-    useEffect(() => {
-        filePath = props.config.filePath + "/image" + fileID.toString();
-    }, [fileID])
-
     const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.item(0);
+        const file = event.target.files?.item(0); // multiple file select is off by default
         if (!file) return;
+
+        const filePath = props.config.filePath + "/" + file.name;
 
         uploadNewImage(file, filePath).then(uploadResult =>
             getDownloadURL(uploadResult.ref).then(url => 
-                props.editor.insertText("![](" + url + ")")
+                addImageUrlToBlog(url)
             )
         ); 
 
-        setFileID(prevID => prevID + 1);
+    }
 
-        console.log("Image uploaded!");
+    const addImageUrlToBlog = (url: string) => {
+        props.editor.insertText("![](" + url + ")");
     }
 
     return(
@@ -38,9 +34,9 @@ const ImageUploadPlugin = (props: PluginProps) =>
     );
 }
 
-// The npm package for the markdown editor frankly has a really dumb API for overriding behavior. As a result, I'm 
-// forced to do this dumbness of settings previously-undefined properties on this component.
-// If I had built the markdown editor, it would accept an object adhering to an interface that accepts a JSX component along with the below options.
+// The npm package for this markdown editor frankly has a really dumb API for overriding behavior. As a result, I'm 
+// forced to do this dumbness of settings previously-undefined properties on this component, as if it's a class.
+// If I had built the markdown editor myself, its props would include an object adhering to some interface that accepts a JSX component along with the below options.
 ImageUploadPlugin.pluginName = Plugins.Image;
 ImageUploadPlugin.align = 'left';
 
