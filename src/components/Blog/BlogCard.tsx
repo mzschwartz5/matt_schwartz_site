@@ -5,7 +5,7 @@ import { NavLink, useRouteMatch } from "react-router-dom";
 
 interface IBlogCardProps {
     blogRef: IBlogReference,
-    loadBlogContent: (path: string) => void,
+    loadBlogContent: (path: IBlogReference) => void,
 }
 
 // UI element that represents a single blog entry and can be selected by the 
@@ -17,7 +17,7 @@ const BlogCard: React.FunctionComponent<IBlogCardProps> = (props:IBlogCardProps)
     const routeMatch = useRouteMatch();
 
     const loadBlogOnClick = () => {
-        loadBlogContent(blogRef.storagePath);
+        loadBlogContent(blogRef);
     }
 
     return(
@@ -49,7 +49,7 @@ const useCardStyles = makeStyles({
     
     card: {
         borderRadius: "3px",
-        margin: "10px"
+        margin: "10px",
     },
 
     cardMediaDimension: {

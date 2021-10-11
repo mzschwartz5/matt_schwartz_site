@@ -40,7 +40,7 @@ export function loadAllBlogReferences(refSetCallback: IBlogRefSetCallback) {
             refSetCallback(docs);
         });
     }
-    catch (e) {
+    catch (e: any) {
         throw new Error(e);
     }
 }
@@ -71,7 +71,7 @@ export function loadBlogContent(blogPath: string, contentSetCallback: IContentSe
             xhr.send();
         });
     }
-    catch (e) {
+    catch (e: any) {
         throw new Error(e);
     }
 }
@@ -91,7 +91,7 @@ export function getBlogFromTitle(title: string, setBlogCallback: IBlogSetCallbac
             setBlogCallback(querySnapshot.docs[0].data() as IBlogReference);
         });
     }
-    catch (e) {
+    catch (e: any) {
         throw new Error(e);
     }
 }

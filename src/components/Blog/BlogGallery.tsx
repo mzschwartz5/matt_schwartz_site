@@ -15,14 +15,16 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     const routeMatch = useRouteMatch();
     const [blogReferences,setBlogReferences] = useState<IBlogReference[]>([]);
     const [blogContent, setBlogContent] = useState<string>("");
+    const [activeBlogRef, setActiveBlogRef] = useState<IBlogReference>();
     
     // Load metadata for all blogs upon component mount
     useEffect(() => {
         loadAllBlogReferences(setBlogReferences);
     }, []);     
 
-    const loadBlog = (blogPath: string) => {
-        loadBlogContent(blogPath, setBlogContent)
+    const loadBlog = (blogRef: IBlogReference) => {
+        loadBlogContent(blogRef.storagePath, setBlogContent);
+        setActiveBlogRef(blogRef);
     }
 
     const blogCards = blogReferences.map((ref) => {
@@ -43,7 +45,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
                 </Grid>
             </Route>
             <Route path={routeMatch.path + "/:blogTitle"}>
-                <BlogContent htmlContent={blogContent} loadBlogContent={loadBlog}/>
+                <BlogContent htmlContent={blogContent} author={activeBlogRef?.author} date={activeBlogRef?.postDate} loadBlogContent={loadBlog}/>
             </Route>
         </Switch>
 

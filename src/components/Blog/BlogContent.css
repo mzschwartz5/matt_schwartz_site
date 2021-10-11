@@ -1,0 +1,26 @@
+p 
+{
+    font-size: 1.3em;
+}
+
+img {
+    display: block;
+    margin: auto;
+}
+
+.blog-container 
+{
+    margin: auto;
+    padding-bottom: 5vh;
+    width: 75%;
+}
+
+.blog-title
+{
+    margin-bottom: 0px;
+}
+
+.blog-meta 
+{
+    font-style: italic;
+}
