@@ -3,6 +3,8 @@ import { Grid } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { IBlogReference, loadAllBlogReferences, loadBlogContent } from "../../data/blogs_db";
+import CardSkeleton from "../core/CardSkeleton";
+import DocumentSkeleton from "../core/DocumentSkeleton";
 import BlogCard from "./BlogCard";
 import BlogContent from "./BlogContent";
 
@@ -31,21 +33,26 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
         return <BlogCard loadBlogContent={loadBlog} blogRef={ref} key={ref.ID}/>
     })
 
+    const blogCardSkeletons = Array.from(Array(12).keys()).map(() => {
+        return <CardSkeleton/>
+    });
+
     return(
         <Switch>
             <Route exact path={routeMatch.path}>
                 <Grid container
                     alignContent="flex-start"
                     alignItems="flex-start"
-                    spacing={2}
-                    xl={3}
+                    spacing={3}
                     className={classes.gridContainer}
                 >  
-                    {blogCards}
+                    {blogCards.length ? blogCards : blogCardSkeletons}
                 </Grid>
             </Route>
             <Route path={routeMatch.path + "/:blogTitle"}>
-                <BlogContent htmlContent={blogContent} author={activeBlogRef?.author} date={activeBlogRef?.postDate} loadBlogContent={loadBlog}/>
+                {
+                    blogContent ? <BlogContent htmlContent={blogContent} author={activeBlogRef?.author} date={activeBlogRef?.postDate} loadBlogContent={loadBlog}/> : <DocumentSkeleton/>
+                }
             </Route>
         </Switch>
 
@@ -54,12 +61,9 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
 }
 
 const useCardStyles = makeStyles({
-    gridItem: {
-        maxWidth: "25vw",
-    },
 
     gridContainer: {
-        width: "100%"
+        height: "100%"
     },
 });
 

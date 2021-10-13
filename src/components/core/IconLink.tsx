@@ -1,19 +1,19 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 interface IIconLinkProps {
-    imagePath: string;
+    image: JSX.Element; // material UI icon
     linkTo: string;
     altText: string;
 }
 
 const IconLink: React.FunctionComponent<IIconLinkProps> = (props:IIconLinkProps): JSX.Element =>
 {
-    const {imagePath, linkTo, altText} = props;
+    const {image, linkTo, altText} = props;
     const classes = useStyles();
 
     return(
-        <a href={linkTo} target="_blank" rel="noreferrer" className={classes.icon} >
-            <img src={imagePath} alt={altText} height="20px" width="20px"/>
+        <a href={linkTo} target="_blank" rel="noreferrer" className={classes.icon} title={altText} >
+            {image}
         </a>
     );
 }
@@ -23,7 +23,9 @@ const useStyles = makeStyles({
         marginTop: 'auto',
         marginBottom: 'auto',
         marginLeft: '5px',
-        marginRight: '5px'
+        marginRight: '5px',
+        display: "inline-block",
+        lineHeight: '0'
     }
 });
 

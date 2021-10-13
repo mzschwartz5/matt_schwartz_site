@@ -10,7 +10,7 @@ export interface IBlogReference {
     author: string;
     category: string; // eventually turn into enum
     excerpt: string;
-    featuredImage: string; // reference to blob
+    featuredImage: string; // reference to blob. Can we use storagereference datatype?
     lastUpdate: Timestamp;
     postDate: Timestamp;
     status: number; // eventually turn into enum

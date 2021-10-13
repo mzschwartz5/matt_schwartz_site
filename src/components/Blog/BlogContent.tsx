@@ -2,7 +2,6 @@ import { Timestamp } from '@firebase/firestore';
 import { useEffect } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import { useParams } from 'react-router-dom';
-import { StringLiteralLike } from 'typescript';
 import { getBlogFromTitle, IBlogReference } from '../../data/blogs_db';
 import './BlogContent.css';
 
@@ -24,7 +23,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
 
         const setBlog = (blogRef: IBlogReference) => loadBlogContent(blogRef);
         getBlogFromTitle(blogTitle, setBlog);
-    }, []);
+    },[]);
 
     return(
         <>

@@ -8,25 +8,27 @@ import {
 import TitleBar from './components/core/TitleBar';
 import ProjectGallery from './components/ProjectGallery/ProjectGallery';
 import BlogGallery from './components/Blog/BlogGallery';
+import Footer from './components/core/Footer';
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/">
-          <TitleBar/>
-          <HomePage/>
-        </Route>
-        <Route path="/project_gallery" >
-          <TitleBar/>
-          <ProjectGallery/>
-        </Route>
-        <Route path="/blog">
-          <TitleBar/>
-          <BlogGallery/>
-        </Route>
-      </Switch>
-    </Router>
+    <>
+      <Router>
+        <TitleBar/>
+        <Switch>
+          <Route exact path="/">
+            <HomePage/>
+          </Route>
+          <Route path="/project_gallery" >
+            <ProjectGallery/>
+          </Route>
+          <Route path="/blog">
+            <BlogGallery/>
+          </Route>
+        </Switch>
+        <Footer/>
+      </Router>
+    </>
   );
 }
 

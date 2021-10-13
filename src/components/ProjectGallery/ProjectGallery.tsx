@@ -1,5 +1,8 @@
-import { CardHeader, makeStyles, Card, CardMedia, Grid, CardContent } from "@material-ui/core";
-import paellaImage from "../../assets/images/projectgallery/paella.jpg"
+import { makeStyles, Grid} from "@material-ui/core";
+import { useEffect, useState } from "react";
+import { loadAllProjects, IProject } from "../../data/projects_db";
+import CardSkeleton from "../core/CardSkeleton";
+import ProjectCard from "./ProjectCard";
 
 interface IProjectGaleryProps {
 
@@ -8,61 +11,39 @@ interface IProjectGaleryProps {
 const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IProjectGaleryProps): JSX.Element =>
 {
     const classes = useCardStyles();
+    const [projects, setProjects] = useState<IProject[]>([]);
+    
+    useEffect(() => {
+        loadAllProjects(setProjects)
+    }, []);
+
+    const projectCards = projects.map((proj) => {
+        return <ProjectCard project={proj}/>
+    });
+
+    const cardSkeletons = Array.from(Array(12).keys()).map(() => {
+        return <CardSkeleton/>
+    });
 
     return(
         <Grid container
             alignContent="flex-start"
             alignItems="flex-start"
-            spacing={2}
-            xl={3}
+            spacing={3}
             className={classes.gridContainer}
         >   
-        
-            <Grid item className={classes.gridItem}>
-                <Card className={classes.card}>
-                    <CardHeader 
-                        title="Test Gallery Item"
-                        subheader="Date started: 09/1/2020" 
-                        className={classes.cardBackground}
-                    />
-                    <CardMedia 
-                        className={classes.cardMediaDimension}
-                        image={paellaImage}
-                        title={"This is a paella!"}
-                    />
-                    <CardContent className={classes.cardBackground}>
-                        This is sample card content. It will give a brief description of the project on display.
-                    </CardContent>
-                </Card>
-            </Grid>
+            {projectCards.length ? projectCards : cardSkeletons}
         </Grid>
     );
 }
 
 const useCardStyles = makeStyles({
     
-    card: {
-        borderRadius: "3px",
-        margin: "10px"
-    },
-
-    cardMediaDimension: {
-        height: "25vh",
-        width: "25vw",
-    },
-
-    gridItem: {
-        maxWidth: "25vw",
-    },
-
     gridContainer: {
-        width: "100%"
+        height: "100%",
+        padding: "15px 15px 0px 15px"
     },
 
-    cardBackground: {
-        backgroundColor: "#424242",
-        color: "white"
-    }
 });
 
 export default ProjectGallery;

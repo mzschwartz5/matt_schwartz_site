@@ -30,7 +30,7 @@ const BlogCard: React.FunctionComponent<IBlogCardProps> = (props:IBlogCardProps)
                 />
                 <CardMedia 
                     className={classes.cardMediaDimension}
-                    image={paellaImage}
+                    image={paellaImage} // eventually change this to blogRef.featuredImage
                 />
                 <CardContent className={classes.cardBackground}>
                     {blogRef.excerpt}
@@ -49,7 +49,7 @@ const useCardStyles = makeStyles({
     
     card: {
         borderRadius: "3px",
-        margin: "10px",
+        margin: "10px"
     },
 
     cardMediaDimension: {
@@ -61,14 +61,11 @@ const useCardStyles = makeStyles({
         maxWidth: "25vw",
     },
 
-    gridContainer: {
-        width: "100%"
-    },
-
     cardBackground: {
         backgroundColor: "#424242",
         color: "white"
     },
+    
     cardActions: {
         backgroundColor: "#5e5e5e",
         color: "white"

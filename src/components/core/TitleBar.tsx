@@ -3,11 +3,7 @@ import { Slide, useScrollTrigger } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import SectionHeader from './SectionHeader';
 import PageLink from './PageLink';
-import IconLink from './IconLink';
-import EmailIconPath from '../../assets/icons/email_icon.png';
-import GithubIconPath from '../../assets/icons/github_logo.png';
-import LinkedInIconPath from '../../assets/icons/linkedin_logo.png';
-import ResumeIconPath from '../../assets/icons/resume_icon.png';
+import LinkGroup from './LinkGroup';
 
 const TitleBar: React.FunctionComponent = (): JSX.Element =>
 {
@@ -20,10 +16,7 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
             <div className={classes.headerDiv}>
                 <SectionHeader headerText="Matthew Schwartz"/>
                 <div style={{borderLeft: "solid 1px white", margin: '5px 5px 5px 0px'}}></div>
-                <IconLink imagePath={EmailIconPath} altText="Email address link" linkTo="mailto: mzschwartz5@gmail.com" />
-                <IconLink imagePath={GithubIconPath} altText="GitHub link" linkTo="https://github.com/mzschwartz5" />
-                <IconLink imagePath={LinkedInIconPath} altText="LinkedIn link" linkTo="https://www.linkedin.com/in/matthew-schwartz-37019016b/" />
-                <IconLink imagePath={ResumeIconPath} altText="Resume" linkTo="../../assets/file/Resume2021.pdf" /> 
+                <LinkGroup/> 
             </div>
             <div className={classes.pageLinkDiv}>
                 <PageLink text={"Home"} linkTo={"/"} />
