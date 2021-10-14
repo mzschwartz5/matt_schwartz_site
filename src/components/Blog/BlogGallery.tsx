@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { IBlogReference, loadAllBlogReferences, loadBlogContent } from "../../data/blogs_db";
 import CardSkeleton from "../core/CardSkeleton";
-import DocumentSkeleton from "../core/DocumentSkeleton";
 import BlogCard from "./BlogCard";
 import BlogContent from "./BlogContent";
 
@@ -18,7 +17,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     const [blogReferences,setBlogReferences] = useState<IBlogReference[]>([]);
     const [blogContent, setBlogContent] = useState<string>("");
     const [activeBlogRef, setActiveBlogRef] = useState<IBlogReference>();
-    
+
     // Load metadata for all blogs upon component mount
     useEffect(() => {
         loadAllBlogReferences(setBlogReferences);
@@ -33,8 +32,8 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
         return <BlogCard loadBlogContent={loadBlog} blogRef={ref} key={ref.ID}/>
     })
 
-    const blogCardSkeletons = Array.from(Array(12).keys()).map(() => {
-        return <CardSkeleton/>
+    const blogCardSkeletons = Array.from(Array(12).keys()).map((_val, idx) => {
+        return <CardSkeleton key={idx}/>
     });
 
     return(
@@ -50,9 +49,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
                 </Grid>
             </Route>
             <Route path={routeMatch.path + "/:blogTitle"}>
-                {
-                    blogContent ? <BlogContent htmlContent={blogContent} author={activeBlogRef?.author} date={activeBlogRef?.postDate} loadBlogContent={loadBlog}/> : <DocumentSkeleton/>
-                }
+                <BlogContent htmlContent={blogContent} author={activeBlogRef?.author} date={activeBlogRef?.postDate} loadBlogContent={loadBlog}/>
             </Route>
         </Switch>
 
@@ -63,7 +60,8 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
 const useCardStyles = makeStyles({
 
     gridContainer: {
-        height: "100%"
+        height: "100%",
+        width: "100%"
     },
 });
 

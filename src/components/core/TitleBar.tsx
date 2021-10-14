@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SectionHeader from './SectionHeader';
 import PageLink from './PageLink';
 import LinkGroup from './LinkGroup';
+import AuthLogin from './AuthLogin';
 
 const TitleBar: React.FunctionComponent = (): JSX.Element =>
 {
@@ -22,6 +23,7 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
                 <PageLink text={"Home"} linkTo={"/"} />
                 <PageLink text={"Projects"} linkTo={"/project_gallery"}/>
                 <PageLink text={"Blog"} linkTo={"/blog"} />
+                <AuthLogin/>
             </div>
         </AppBar>
     </Slide>

@@ -4,16 +4,17 @@ import { NavLink } from "react-router-dom";
 interface IPageLink {
     text: string;
     linkTo: string;
+    onClick?: () => void;
     overrideClass?: string;
 }
 
 const PageLink: React.FunctionComponent<IPageLink> = (props:IPageLink): JSX.Element =>
 {
-    const {text,linkTo,overrideClass} = props;
+    const {text,linkTo,onClick,overrideClass} = props;
     const classes = useLinkStyles();
 
     return(
-        <NavLink exact activeClassName={classes.activeLink} to={linkTo} className={overrideClass ? overrideClass : classes.baseLink }>
+        <NavLink exact onClick={onClick} activeClassName={classes.activeLink} to={linkTo} className={overrideClass ? overrideClass : classes.baseLink }>
             {text}
         </NavLink>
     );

@@ -1,6 +1,6 @@
 import {collection, DocumentReference, getDocs, query, Timestamp} from "firebase/firestore";
 import {IBlogReference} from "./blogs_db";
-import { db } from "./database";
+import { db } from "./firebase";
 
 const PROJECT_COLLECTION = "Projects"
 

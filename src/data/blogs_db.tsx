@@ -1,6 +1,6 @@
 import { collection, query, getDocs, Timestamp, where } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "./database";
+import { db, storage } from "./firebase";
 
 const BLOG_COLLECTION = "BlogReferences";
 
