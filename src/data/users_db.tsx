@@ -1,6 +1,5 @@
 import { User } from "@firebase/auth";
-import { collection, doc, DocumentReference, setDoc, where } from "@firebase/firestore";
-import { getDocs, query } from "firebase/firestore";
+import { collection, doc, DocumentReference, getDoc, setDoc } from "@firebase/firestore";
 import { IBlogReference } from "./blogs_db";
 import { db } from "./firebase";
 
@@ -41,9 +40,20 @@ export class AppUser {
 }
 
 export function getAppUser(user: User) {
-    const queryString = query(COLLECTION_REF,where("userId","==",user.uid));
+    const userDoc = doc(COLLECTION_REF, user.uid);
+
     try {
-        return getDocs(queryString);
+        return getDoc(userDoc);
+    }
+    catch (e: any) {
+        throw new Error(e);
+    }
+}
+
+export function getAppUserByID(userID: string) {
+    const userDoc = doc(COLLECTION_REF, userID);
+    try {
+        return getDoc(userDoc);
     }
     catch (e: any) {
         throw new Error(e);
@@ -52,16 +62,15 @@ export function getAppUser(user: User) {
 
 export function loginOrCreateNewUser(user: User) {
     getAppUser(user).then((querySnapshot) => {
-        const exists = (querySnapshot.docs.length === 1); // only one user should be returned
 
-        if (!exists) {   // create new user
+        if (!querySnapshot.exists) {   // create new user
             const appUser = new AppUser(user);
             const userDocRef = doc(COLLECTION_REF, user.uid);
             setDoc(userDocRef, appUser.toFirebase());
             setActiveUser(appUser);
         }
         else {
-            const appUser = querySnapshot.docs[0].data() as AppUser;
+            const appUser = querySnapshot.data() as AppUser;
             setActiveUser(appUser);
         }
     });

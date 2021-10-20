@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import { IBlogReference, loadAllBlogReferences, loadBlogContent } from "../../data/blogs_db";
+import { BlogComment, IBlogReference, loadAllBlogReferences, loadBlogContent, loadCommentsForBlog } from "../../data/blogs_db";
 import CardSkeleton from "../core/CardSkeleton";
 import BlogCard from "./BlogCard";
 import BlogContent from "./BlogContent";
@@ -16,6 +16,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     const routeMatch = useRouteMatch();
     const [blogReferences,setBlogReferences] = useState<IBlogReference[]>([]);
     const [blogContent, setBlogContent] = useState<string>("");
+    const [blogComments, setBlogComments] = useState<BlogComment[]>();
     const [activeBlogRef, setActiveBlogRef] = useState<IBlogReference>();
 
     // Load metadata for all blogs upon component mount
@@ -25,6 +26,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
 
     const loadBlog = (blogRef: IBlogReference) => {
         loadBlogContent(blogRef.storagePath, setBlogContent);
+        loadCommentsForBlog(blogRef, setBlogComments);
         setActiveBlogRef(blogRef);
     }
 
@@ -49,7 +51,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
                 </Grid>
             </Route>
             <Route path={routeMatch.path + "/:blogTitle"}>
-                <BlogContent htmlContent={blogContent} author={activeBlogRef?.author} date={activeBlogRef?.postDate} loadBlogContent={loadBlog}/>
+                <BlogContent htmlContent={blogContent} blogComments={blogComments} blogRef={activeBlogRef} loadBlogContent={loadBlog}/>
             </Route>
         </Switch>
 

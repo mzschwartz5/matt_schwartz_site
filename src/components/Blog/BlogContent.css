@@ -1,6 +1,6 @@
 .blog-container p 
 {
-    font-size: 1.3em;
+    font-size: 1.1em;
 }
 
 .blog-container img {
@@ -25,4 +25,9 @@
 .blog-meta 
 {
     font-style: italic;
+}
+
+.comment-container 
+{
+    margin-left: -50px;
 }
