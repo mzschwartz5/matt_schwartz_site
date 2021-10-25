@@ -1,10 +1,12 @@
-import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc } from "firebase/firestore";
+import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc, doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "./firebase";
-import { getAppUserByID } from "./users_db";
+import { AppUser, getAppUserByID } from "./users_db";
 
 const BLOG_COLLECTION = "BlogReferences";
 const BLOGS_COLL_REF = collection(db, BLOG_COLLECTION);
+const BLOG_COMMENT_COLLECTION = "BlogComments";
+const VOTE_MAP_FIELD_NAME = "voteMap";
 
 // Data model for a a blog reference - expect it to expand in scope as more features are developed
 export interface IBlogReference {
@@ -106,29 +108,32 @@ export class BlogComment {
     ID: string = "";
     text: string = "";
     edited: boolean = false;
-    childComments: BlogComment[] = [];  // comments are doubly-linked for ease of traversal / construction  (via parent IDs)
-    parentCommentID: string;            // and ease of rendering (via children comments). Only parentID is stored in database. Child comments constructed upon retrieval.
+    childComments: BlogComment[] = [];    // comments are doubly-linked for ease of traversal / construction  (via parent IDs)
+    parentCommentID: string;              // and ease of rendering (via children comments). Only parentID is stored in database. Child comments constructed dynamically.
     postDate: Timestamp = Timestamp.now();
-    votes: number = 0;
+    userVote: VoteType;                   // The active user's vote on this comment
+    voteTotal: number;                    // updated offline via cloud functions (triggered by vote actions), to prevent traversing the votes map.
     userName: string = "";
     userPhotoUrl: string = "";
 
     // Construct from database object
-    constructor(blogCommentObj: QueryDocumentSnapshot<DocumentData>) {
+    constructor(blogCommentObj: QueryDocumentSnapshot<DocumentData>, activeUser: AppUser) {
         this.ID = blogCommentObj.id;
         this.text = blogCommentObj.get("text");
         this.edited = blogCommentObj.get("edited");
         this.parentCommentID = blogCommentObj.get("parentCommentID");
         this.postDate = blogCommentObj.get("postDate");
-        this.votes = blogCommentObj.get("votes");
-        
+        this.userVote = blogCommentObj.get(VOTE_MAP_FIELD_NAME)[activeUser.userId] || VoteType.None;
+        this.voteTotal = blogCommentObj.get("voteTotal");
+
         getAppUserByID(blogCommentObj.get("userID")).then((userSnapshot) => {
             this.userName = userSnapshot.get("name");
             this.userPhotoUrl = userSnapshot.get("photoUrl");
         });
     }
 
-    // Return a new comment in object format for posting to firebase
+    // Return a new comment in object format for posting to firebase. (This is basically another constructor. Typescript prohibits multiple constructor
+    // implemntations so this is a hack of sorts.)
     static Object(text: string, parentCommentID: string, userID: string) {
         return(
             {
@@ -137,7 +142,9 @@ export class BlogComment {
                 postDate: Timestamp.now(),
                 text: text,
                 userID: userID,
-                votes: 0
+                voteMap: {},
+                voteTotal: 0,
+                // All other properties of class are computed dynamically
             }
         )
     }
@@ -147,32 +154,32 @@ export interface ISetBlogComments {
     (comments: BlogComment[]): void;
 }
 
-export function loadCommentsForBlog(blogRef: IBlogReference, setBlogComments: ISetBlogComments) {
-    const commentsCollectionPath = BLOG_COLLECTION + "/" + blogRef.ID  + "/BlogComments";
+export function loadCommentsForBlog(blogRef: IBlogReference, setBlogComments: ISetBlogComments, activeUser: AppUser) {
+    const commentsCollectionPath = BLOG_COLLECTION + "/" + blogRef.ID  + "/" + BLOG_COMMENT_COLLECTION;
     const commentsCollectionRef = collection(db, commentsCollectionPath); 
     
     getDocs(commentsCollectionRef).then((querySnapshot) => {
         // Initialize with root-level comments
-        const rootComments = querySnapshot.docs.filter((doc) => doc.get("parentCommentID") === -1);
+        const rootComments = querySnapshot.docs.filter((doc) => doc.get("parentCommentID") === -1).sort(sortCommentsByDate);
         const nonRootComments = querySnapshot.docs.filter((doc) => doc.get("parentCommentID") !== -1);
 
-        const linkedComments = linkUpBlogComments(rootComments, nonRootComments);
+        const linkedComments = linkUpBlogComments(rootComments, nonRootComments, activeUser);
         setBlogComments(linkedComments);
     });
     
 }
 
 // Recursive helper function to link together blog comments via parent-child relationships
-function linkUpBlogComments(currComments: QueryDocumentSnapshot<DocumentData>[], otherComments: QueryDocumentSnapshot<DocumentData>[]) {
+function linkUpBlogComments(currComments: QueryDocumentSnapshot<DocumentData>[], otherComments: QueryDocumentSnapshot<DocumentData>[], activeUser: AppUser) {
     let comments: BlogComment[] = [];
 
     currComments.forEach((parentComment) => {
-        const blogComment = new BlogComment(parentComment);
+        const blogComment = new BlogComment(parentComment, activeUser);
 
-        const childrenDocs = otherComments.filter((doc) => doc.get("parentCommentID") === parentComment.id);
+        const childrenDocs = otherComments.filter((doc) => doc.get("parentCommentID") === parentComment.id).sort(sortCommentsByDate);
         const nonChildrenDocs = otherComments.filter((doc) => doc.get("parentCommentID") !== parentComment.id);
 
-        const childrenComments = linkUpBlogComments(childrenDocs, nonChildrenDocs);
+        const childrenComments = linkUpBlogComments(childrenDocs, nonChildrenDocs, activeUser);
         childrenComments.forEach((child) => blogComment.childComments.push(child));
 
         comments.push(blogComment);
@@ -181,11 +188,33 @@ function linkUpBlogComments(currComments: QueryDocumentSnapshot<DocumentData>[],
     return comments;
 }
 
-export function postBlogComment(blogRef: IBlogReference, text: string, parentCommentID: string, userID: string) {
+const sortCommentsByDate = (a: QueryDocumentSnapshot<DocumentData>, b: QueryDocumentSnapshot<DocumentData>) => {
+    return ((a.get("postDate") as Timestamp).seconds - (b.get("postDate") as Timestamp).seconds);
+}
+
+export function postBlogComment(blogID: string, text: string, parentCommentID: string, userID: string) {
 
     const firebaseComment = BlogComment.Object(text, parentCommentID, userID);  // firebase only accepts data in plain object format
-    const commentsCollectionPath = BLOG_COLLECTION + "/" + blogRef.ID;
+    const commentsCollectionPath = BLOG_COLLECTION + "/" + blogID + "/" + BLOG_COMMENT_COLLECTION + "/";
     const commentsCollectionRef = collection(db, commentsCollectionPath);
 
     addDoc(commentsCollectionRef,firebaseComment);
+}
+
+export enum VoteType {
+    Up = 1,
+    Down = -1,
+    None = 0
+}
+
+export function voteOnBlogComment(voteType: VoteType, blogID: string, commentID: string, userID: string) {
+
+    const commentPath = BLOG_COLLECTION + "/" + blogID + "/" + BLOG_COMMENT_COLLECTION + "/" + commentID;
+    const commentDocRef = doc(db, commentPath);
+
+    // Votes stored as a map from user IDs to values. Update said value.
+    let data: any = {};
+    data[VOTE_MAP_FIELD_NAME + "." + userID] = voteType;
+    updateDoc(commentDocRef, data);
+    
 }
