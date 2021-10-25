@@ -22,9 +22,14 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
     } 
 
     const onClickReply = (_event: any) => {
-        postComment(commentText);
-        setSuccessMessageActive(true);
-        clearReply();
+        try {
+            postComment(commentText);
+            setSuccessMessageActive(true);
+            clearReply();    
+        }
+        catch(e) {
+
+        }
     }
 
     const onClickCancel = (_event: any) => {
@@ -44,7 +49,7 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
         <>
             <div className={classes.postContainer} style={active ? {} : {display: "none"}}>
                 <div className={classes.avatar}>
-                    <Avatar src={activeUser.photoUrl} imgProps={{referrerPolicy: "no-referrer"}} />
+                    <Avatar src={activeUser ? activeUser.photoUrl : ""} imgProps={{referrerPolicy: "no-referrer"}} />
                 </div>
                 <div className={classes.interactions}>
                     <TextField multiline variant="filled" value={commentText} className={classes.textField} placeholder="Add a comment..." onChange={onInputChange}/>

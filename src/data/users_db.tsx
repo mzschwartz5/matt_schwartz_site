@@ -1,14 +1,14 @@
 import { User } from "@firebase/auth";
 import { collection, doc, DocumentReference, getDoc, setDoc } from "@firebase/firestore";
-import { atom, SetterOrUpdater, useSetRecoilState } from "recoil";
+import { atom, SetterOrUpdater } from "recoil";
 import { IBlogReference } from "./blogs_db";
 import { db } from "./firebase";
 
 const USER_COLLECTION = "Users";
 const COLLECTION_REF = collection(db, USER_COLLECTION);
-export const activeUserAtom = atom({
+export const activeUserAtom = atom<AppUser | undefined> ({
     key: "activeUser",
-    default: {} as AppUser
+    default: undefined
 })
 
 export class AppUser {
@@ -65,7 +65,7 @@ export function getAppUserByID(userID: string) {
     }
 }
 
-export function loginOrCreateNewUser(user: User, setActiveUser: SetterOrUpdater<AppUser>) {
+export function loginOrCreateNewUser(user: User, setActiveUser: SetterOrUpdater<AppUser | undefined>) {
     
     getAppUser(user).then((querySnapshot) => {
         if (!querySnapshot.exists()) {   // create new user

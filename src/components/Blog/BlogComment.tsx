@@ -6,7 +6,6 @@ import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import { BlogComment as BlogCommentData, VoteType} from "../../data/blogs_db";
 import PostComment from "./PostComment";
 import { useState } from "react";
-import { AppUser } from "../../data/users_db";
 
 interface IBlogCommentProps {
     comment: BlogCommentData,
@@ -36,15 +35,14 @@ const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogComm
 
     const onClickVoteButton = (voteType: VoteType) => {
         return ((_event: any) => {
-            setTotalVotes(() => {
-                return comment.voteTotal + voteType;
-            }); 
-
-            setVoteState(() => {
+            try { // will fail if no user logged in. Handled in parent.
                 voteOnBlog(voteType, comment.ID);
-                return voteType;
-            })
+                setTotalVotes(comment.voteTotal + voteType); 
+                setVoteState(voteType);
+            }
+            catch(e) {
 
+            }
         })
     }
 

@@ -1,4 +1,4 @@
-import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc, doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc, doc, updateDoc, runTransaction } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "./firebase";
 import { AppUser, getAppUserByID } from "./users_db";
@@ -104,6 +104,12 @@ export function uploadNewImage(file: File, filePath: string) {
     return uploadBytes(storageRef, file);
 }
 
+export enum VoteType {
+    Up = 1,
+    Down = -1,
+    None = 0
+}
+
 export class BlogComment {
     ID: string = "";
     text: string = "";
@@ -117,13 +123,13 @@ export class BlogComment {
     userPhotoUrl: string = "";
 
     // Construct from database object
-    constructor(blogCommentObj: QueryDocumentSnapshot<DocumentData>, activeUser: AppUser) {
+    constructor(blogCommentObj: QueryDocumentSnapshot<DocumentData>, activeUser: AppUser | undefined) {
         this.ID = blogCommentObj.id;
         this.text = blogCommentObj.get("text");
         this.edited = blogCommentObj.get("edited");
         this.parentCommentID = blogCommentObj.get("parentCommentID");
         this.postDate = blogCommentObj.get("postDate");
-        this.userVote = blogCommentObj.get(VOTE_MAP_FIELD_NAME)[activeUser.userId] || VoteType.None;
+        this.userVote = activeUser ? (blogCommentObj.get(VOTE_MAP_FIELD_NAME)[activeUser.userId] || VoteType.None) : VoteType.None;
         this.voteTotal = blogCommentObj.get("voteTotal");
 
         getAppUserByID(blogCommentObj.get("userID")).then((userSnapshot) => {
@@ -154,7 +160,7 @@ export interface ISetBlogComments {
     (comments: BlogComment[]): void;
 }
 
-export function loadCommentsForBlog(blogRef: IBlogReference, setBlogComments: ISetBlogComments, activeUser: AppUser) {
+export function loadCommentsForBlog(blogRef: IBlogReference, setBlogComments: ISetBlogComments, activeUser: AppUser | undefined) {
     const commentsCollectionPath = BLOG_COLLECTION + "/" + blogRef.ID  + "/" + BLOG_COMMENT_COLLECTION;
     const commentsCollectionRef = collection(db, commentsCollectionPath); 
     
@@ -170,7 +176,7 @@ export function loadCommentsForBlog(blogRef: IBlogReference, setBlogComments: IS
 }
 
 // Recursive helper function to link together blog comments via parent-child relationships
-function linkUpBlogComments(currComments: QueryDocumentSnapshot<DocumentData>[], otherComments: QueryDocumentSnapshot<DocumentData>[], activeUser: AppUser) {
+function linkUpBlogComments(currComments: QueryDocumentSnapshot<DocumentData>[], otherComments: QueryDocumentSnapshot<DocumentData>[], activeUser: AppUser | undefined) {
     let comments: BlogComment[] = [];
 
     currComments.forEach((parentComment) => {
@@ -201,20 +207,30 @@ export function postBlogComment(blogID: string, text: string, parentCommentID: s
     addDoc(commentsCollectionRef,firebaseComment);
 }
 
-export enum VoteType {
-    Up = 1,
-    Down = -1,
-    None = 0
-}
-
 export function voteOnBlogComment(voteType: VoteType, blogID: string, commentID: string, userID: string) {
 
     const commentPath = BLOG_COLLECTION + "/" + blogID + "/" + BLOG_COMMENT_COLLECTION + "/" + commentID;
     const commentDocRef = doc(db, commentPath);
 
-    // Votes stored as a map from user IDs to values. Update said value.
-    let data: any = {};
-    data[VOTE_MAP_FIELD_NAME + "." + userID] = voteType;
-    updateDoc(commentDocRef, data);
-    
+    try {
+        runTransaction(db, async (transaction) => {
+            
+            const commentDoc = await transaction.get(commentDocRef);
+            if (!commentDoc.exists()) throw new Error("Voted comment does not exist");
+
+            const prevVoteTotal: number = commentDoc.data().voteTotal;
+            const prevUserVote: number = commentDoc.data().voteMap[userID] || VoteType.None;
+            const voteChange: number = (prevUserVote === VoteType.None) ? voteType : -prevUserVote;
+
+            let data: any = {};
+            data[VOTE_MAP_FIELD_NAME + "." + userID] = voteType;
+            data["voteTotal"] = (prevVoteTotal + voteChange);
+
+            transaction.update(commentDocRef, data);
+        });
+    }
+
+    catch(e) {
+        console.log("Transaction failed: ", e);
+    }
 }

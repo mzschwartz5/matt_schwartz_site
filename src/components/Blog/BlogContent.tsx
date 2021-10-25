@@ -1,3 +1,4 @@
+import { Snackbar } from '@material-ui/core';
 import { useEffect, useState, useCallback } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import { useParams } from 'react-router-dom';
@@ -17,23 +18,29 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
     const [blogContent, setBlogContent] = useState<string>("");
     const [blogComments, setBlogComments] = useState<BlogCommentData[]>();
     const [blogRef, setBlogRef] = useState<IBlogReference>();
+    const [errorMessage, setErrorMessage] = useState("");
+    const closeSnackbar = () => setErrorMessage("");
     const activeUser = useRecoilValue(activeUserAtom)
+
     const postComment =  useCallback((text: string, parentCommentID: string) => {
         if (!blogRef) return;
-        if (!activeUser) throw new Error("No active user set when posting reply");
+        if (!activeUser) {
+            setErrorMessage("Please log in to post a comment.");
+            throw new Error("No user logged in");
+        }
         
         postBlogComment(blogRef.ID, text, parentCommentID, activeUser.userId); // bake user and blog IDs into this function before passing down to children
 
     },[blogRef, activeUser]);
     const voteOnBlog = useCallback((voteType: VoteType, commentID: string) => {
         if (!blogRef) return;
-        if (!activeUser) throw new Error("No active user set when voting on comment");
+        if (!activeUser) {
+            setErrorMessage("Please log in to vote on a comment.");
+            throw new Error("No user logged in");            
+        }
 
         voteOnBlogComment(voteType, blogRef.ID, commentID, activeUser.userId);
     }, [blogRef, activeUser]);
-
-    // Force to top on every rerender
-    window.scrollTo(0,0)
 
     useEffect(() => {
 
@@ -48,6 +55,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
 
 
     },[]);
+
 
 
     const comments = blogComments?.map((comment) => {
@@ -66,6 +74,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
                     {comments}
                 </div>
             </div>
+            <Snackbar open={errorMessage !== ""} autoHideDuration={6000} message={errorMessage} onClose={closeSnackbar}/>
         </>
     );
 }
