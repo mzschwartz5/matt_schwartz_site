@@ -1,11 +1,15 @@
 import { User } from "@firebase/auth";
 import { collection, doc, DocumentReference, getDoc, setDoc } from "@firebase/firestore";
+import { atom, SetterOrUpdater, useSetRecoilState } from "recoil";
 import { IBlogReference } from "./blogs_db";
 import { db } from "./firebase";
 
 const USER_COLLECTION = "Users";
 const COLLECTION_REF = collection(db, USER_COLLECTION);
-let ACTIVE_USER: AppUser;
+export const activeUserAtom = atom({
+    key: "activeUser",
+    default: {} as AppUser
+})
 
 export class AppUser {
     email: string;
@@ -51,6 +55,7 @@ export function getAppUser(user: User) {
 }
 
 export function getAppUserByID(userID: string) {
+
     const userDoc = doc(COLLECTION_REF, userID);
     try {
         return getDoc(userDoc);
@@ -60,10 +65,10 @@ export function getAppUserByID(userID: string) {
     }
 }
 
-export function loginOrCreateNewUser(user: User) {
+export function loginOrCreateNewUser(user: User, setActiveUser: SetterOrUpdater<AppUser>) {
+    
     getAppUser(user).then((querySnapshot) => {
-
-        if (!querySnapshot.exists) {   // create new user
+        if (!querySnapshot.exists()) {   // create new user
             const appUser = new AppUser(user);
             const userDocRef = doc(COLLECTION_REF, user.uid);
             setDoc(userDocRef, appUser.toFirebase());
@@ -76,8 +81,3 @@ export function loginOrCreateNewUser(user: User) {
     });
 
 }
-
-// Simple implementation of read-only global data (active user global defined at top)
-export function getActiveUser() {return ACTIVE_USER}
-
-function setActiveUser(user: AppUser) {ACTIVE_USER = user;}

@@ -1,37 +1,57 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import { useParams } from 'react-router-dom';
-import { BlogComment as BlogCommentData, getBlogFromTitle, IBlogReference } from '../../data/blogs_db';
+import { useRecoilValue } from 'recoil';
+import { BlogComment as BlogCommentData, getBlogFromTitle, IBlogReference, loadBlogContent, loadCommentsForBlog, postBlogComment, voteOnBlogComment, VoteType } from '../../data/blogs_db';
+import { activeUserAtom } from '../../data/users_db';
 import DocumentSkeleton from '../core/DocumentSkeleton';
 import BlogComment from './BlogComment';
 import './BlogContent.css';
 
 interface IBlogContentProps {
-    htmlContent: string;
-    blogComments?: BlogCommentData[];
-    blogRef?: IBlogReference;
-    loadBlogContent: (path: IBlogReference) => void;
 }
 
 const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogContentProps): JSX.Element =>
 {
-    const {htmlContent, blogComments, blogRef, loadBlogContent} = props;
     const { blogTitle } = useParams<{blogTitle: string}>(); // if page loaded from URL, we won't have access to the blog object yet. So get title from URL -> load blog.
+    const [blogContent, setBlogContent] = useState<string>("");
+    const [blogComments, setBlogComments] = useState<BlogCommentData[]>();
+    const [blogRef, setBlogRef] = useState<IBlogReference>();
+    const activeUser = useRecoilValue(activeUserAtom)
+    const postComment =  useCallback((text: string, parentCommentID: string) => {
+        if (!blogRef) return;
+        if (!activeUser) throw new Error("No active user set when posting reply");
+        
+        postBlogComment(blogRef.ID, text, parentCommentID, activeUser.userId); // bake user and blog IDs into this function before passing down to children
+
+    },[blogRef, activeUser]);
+    const voteOnBlog = useCallback((voteType: VoteType, commentID: string) => {
+        if (!blogRef) return;
+        if (!activeUser) throw new Error("No active user set when voting on comment");
+
+        voteOnBlogComment(voteType, blogRef.ID, commentID, activeUser.userId);
+    }, [blogRef, activeUser]);
 
     // Force to top on every rerender
     window.scrollTo(0,0)
 
     useEffect(() => {
 
-        // When loading a specific blog page directly from a URL, we need to first load the content.
-        if (htmlContent) return;
+        // Load blog content and comments on mount
+        const loadBlog = (blogRef: IBlogReference) => {
+            loadBlogContent(blogRef.storagePath, setBlogContent);
+            loadCommentsForBlog(blogRef, setBlogComments, activeUser); 
+            setBlogRef(blogRef);
+        }
 
-        const setBlog = (blogRef: IBlogReference) => loadBlogContent(blogRef);
-        getBlogFromTitle(blogTitle, setBlog);
+        getBlogFromTitle(blogTitle, loadBlog);
+
+
     },[]);
 
+
     const comments = blogComments?.map((comment) => {
-        return <BlogComment comment={comment} key={comment.ID}/>
+        return <BlogComment comment={comment} key={comment.ID} postComment={postComment} voteOnBlog={voteOnBlog}/>
     })
 
     return(
@@ -40,7 +60,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
                 <h1 className="blog-title">{blogTitle}</h1>
                 <div className="blog-meta" >{blogRef?.author + " - " + blogRef?.postDate.toDate().toDateString()}</div>
                 <hr />
-                {htmlContent ? ReactHtmlParser(htmlContent) : <DocumentSkeleton/>}
+                {blogContent ? ReactHtmlParser(blogContent) : <DocumentSkeleton/>}
                 <hr />
                 <div className="comment-container">
                     {comments}
