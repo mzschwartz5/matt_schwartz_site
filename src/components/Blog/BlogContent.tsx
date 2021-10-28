@@ -8,6 +8,7 @@ import { activeUserAtom } from '../../data/users_db';
 import DocumentSkeleton from '../core/DocumentSkeleton';
 import BlogComment from './BlogComment';
 import './BlogContent.css';
+import CommentSection from './CommentSection';
 
 interface IBlogContentProps {
 }
@@ -22,44 +23,45 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
     const closeSnackbar = () => setErrorMessage("");
     const activeUser = useRecoilValue(activeUserAtom)
 
-    const postComment =  useCallback((text: string, parentCommentID: string) => {
-        if (!blogRef) return;
-        if (!activeUser) {
-            setErrorMessage("Please log in to post a comment.");
-            throw new Error("No user logged in");
-        }
-        
-        postBlogComment(blogRef.ID, text, parentCommentID, activeUser.userId); // bake user and blog IDs into this function before passing down to children
-
-    },[blogRef, activeUser]);
-    const voteOnBlog = useCallback((voteType: VoteType, commentID: string) => {
-        if (!blogRef) return;
-        if (!activeUser) {
-            setErrorMessage("Please log in to vote on a comment.");
-            throw new Error("No user logged in");            
-        }
-
-        voteOnBlogComment(voteType, blogRef.ID, commentID, activeUser.userId);
-    }, [blogRef, activeUser]);
-
     useEffect(() => {
-
         // Load blog content and comments on mount
         const loadBlog = (blogRef: IBlogReference) => {
-            loadBlogContent(blogRef.storagePath, setBlogContent);
+            loadBlogContent((blogRef.storagePath + "/content.md.html"), setBlogContent);
             loadCommentsForBlog(blogRef, setBlogComments, activeUser); 
             setBlogRef(blogRef);
         }
 
         getBlogFromTitle(blogTitle, loadBlog);
-
-
     },[]);
 
 
+    const validateBlogContext = useCallback((errorText: string) => {
+        if (!blogRef) return false;
+        if (!activeUser) {
+            setErrorMessage(errorText);
+            throw new Error("No user logged in");            
+        }
+        return true;
+    }, [blogRef, activeUser]);
+
+    const postReplyToComment = useCallback((text: string, parentCommentID: string) => {
+        if (!validateBlogContext("Please log in to reply to a comment.")) return;
+        postBlogComment(blogRef!.ID, text, parentCommentID, activeUser!.userId); // bake user and blog IDs into this function before passing down to children
+    },[blogRef, activeUser, validateBlogContext]);
+
+    const postNewComment = useCallback((text: string) => {
+        if (!validateBlogContext("Please log in to post a new comment.")) return;
+        postBlogComment(blogRef!.ID, text, "-1", activeUser!.userId);
+    },[blogRef, activeUser, validateBlogContext]);
+
+    const voteOnBlog = useCallback((voteType: VoteType, commentID: string) => {
+        if (!validateBlogContext("Please log in to vote on a comment.")) return;
+        voteOnBlogComment(voteType, blogRef!.ID, commentID, activeUser!.userId);
+    }, [blogRef, activeUser, validateBlogContext]);
+
 
     const comments = blogComments?.map((comment) => {
-        return <BlogComment comment={comment} key={comment.ID} postComment={postComment} voteOnBlog={voteOnBlog}/>
+        return <BlogComment comment={comment} key={comment.ID} postComment={postReplyToComment} voteOnBlog={voteOnBlog}/>
     })
 
     return(
@@ -70,9 +72,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
                 <hr />
                 {blogContent ? ReactHtmlParser(blogContent) : <DocumentSkeleton/>}
                 <hr />
-                <div className="comment-container">
-                    {comments}
-                </div>
+                <CommentSection comments={comments} postNewComment={postNewComment}/>
             </div>
             <Snackbar open={errorMessage !== ""} autoHideDuration={6000} message={errorMessage} onClose={closeSnackbar}/>
         </>

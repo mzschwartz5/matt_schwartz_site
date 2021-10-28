@@ -2,8 +2,12 @@ import { makeStyles } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import { IBlogReference, loadAllBlogReferences } from "../../data/blogs_db";
+import { activeUserAtom } from "../../data/users_db";
 import CardSkeleton from "../core/CardSkeleton";
+import BlogWriter from "./admin/BlogWriter";
+import CreateBlogCard from "./admin/CreateBlogCard";
 import BlogCard from "./BlogCard";
 import BlogContent from "./BlogContent";
 
@@ -15,6 +19,8 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     const classes = useCardStyles();
     const routeMatch = useRouteMatch();
     const [blogReferences,setBlogReferences] = useState<IBlogReference[]>([]);
+    const [newBlog, setNewBlog] = useState<IBlogReference>();
+    const activeUser = useRecoilValue(activeUserAtom)
 
     // Load metadata for all blogs upon component mount
     useEffect(() => {
@@ -29,18 +35,27 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
         return <CardSkeleton key={idx}/>
     });
 
+    if (activeUser?.isAdmin) {
+        blogCards.push(<CreateBlogCard setCreatedBlogRef={setNewBlog} key="CreateBlogCard"/>);
+    }
+
     return(
         <Switch>
             <Route exact path={routeMatch.path}>
-                <Grid container
-                    alignContent="flex-start"
-                    alignItems="flex-start"
-                    spacing={3}
-                    className={classes.gridContainer}
-                >  
-                    {blogCards.length ? blogCards : blogCardSkeletons}
-                </Grid>
+                <div>
+                    <Grid container
+                        alignContent="flex-start"
+                        alignItems="center"
+                        spacing={3}
+                        className={classes.gridContainer}
+                    >  
+                        {blogCards.length ? blogCards : blogCardSkeletons}
+                    </Grid>
+                </div>
             </Route>
+            <Route path={routeMatch.path + "/create/" + newBlog?.title}>
+                {newBlog ? <BlogWriter blogRef={newBlog}/> : ""}
+            </Route> 
             <Route path={routeMatch.path + "/:blogTitle"}>
                 <BlogContent/>
             </Route>

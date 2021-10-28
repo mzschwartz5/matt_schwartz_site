@@ -33,7 +33,7 @@ export class AppUser {
         return(
             {
                 email: this.email,
-                isAdmin: this.isAdmin,
+                isAdmin: false,
                 name: this.name,
                 photoUrl: this.photoUrl,
                 subscribedBlogs: this.subscribedBlogs,

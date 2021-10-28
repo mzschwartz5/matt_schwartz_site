@@ -54,6 +54,14 @@ function AuthenticateUser() {
     const email = error.email;
     console.log("Error authenticating " + email + ": " + errorCode);
   });
+
+  // Check for auth state changes -- such as on page refresh, when auth info is loaded from cache. In this case,
+  // we need to reset the recoil state from the auth cache.
+  auth.onAuthStateChanged((user) => {
+    if (user) { // user is authenticated
+      loginOrCreateNewUser(user, setActiveUser);
+    }
+  })
 }
 
 export default App;

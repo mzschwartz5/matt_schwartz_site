@@ -6,7 +6,7 @@ import { activeUserAtom } from "../../data/users_db";
 interface IPostCommentProps {
     active: boolean,
     postComment: (text: string) => void,
-    setActiveState: (value: React.SetStateAction<boolean>) => void,
+    setActiveState: (value: boolean) => void,
 }
 
 const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostCommentProps): JSX.Element =>
@@ -32,7 +32,7 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
         }
     }
 
-    const onClickCancel = (_event: any) => {
+    const onClickClear = (_event: any) => {
         clearReply();
     }
 
@@ -54,7 +54,7 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
                 <div className={classes.interactions}>
                     <TextField multiline variant="filled" value={commentText} className={classes.textField} placeholder="Add a comment..." onChange={onInputChange}/>
                     <Button onClick={onClickReply} variant="outlined" size="small" className={classes.buttons}>Reply</Button>
-                    <Button onClick={onClickCancel} variant="outlined" size="small" className={classes.buttons} >Cancel</Button>
+                    <Button onClick={onClickClear} variant="outlined" size="small" className={classes.buttons} >Clear</Button>
                 </div>
             </div>
             <Snackbar open={successMessageActive} autoHideDuration={6000} message="Post in progress. Please refresh to see changes" onClose={onCloseSnackbar}/>

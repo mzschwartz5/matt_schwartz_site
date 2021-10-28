@@ -1,7 +1,7 @@
 import { getDownloadURL } from "firebase/storage";
 import React from "react";
 import { PluginProps, Plugins } from "react-markdown-editor-lite";
-import { uploadNewImage } from "../../data/blogs_db";
+import { uploadNewImage } from "../../../data/database";
 
 
 // Override the built-in image button in the markdown editor toolbar 

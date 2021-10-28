@@ -18,11 +18,11 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
     }, []);
 
     const projectCards = projects.map((proj) => {
-        return <ProjectCard project={proj}/>
+        return <ProjectCard project={proj} key={proj.title}/> // change proj.title to ID later
     });
 
-    const cardSkeletons = Array.from(Array(12).keys()).map(() => {
-        return <CardSkeleton/>
+    const cardSkeletons = Array.from(Array(12).keys()).map((_val, idx) => {
+        return <CardSkeleton key={idx}/>
     });
 
     return(

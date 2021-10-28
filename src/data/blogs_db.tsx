@@ -1,12 +1,19 @@
-import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc, doc, updateDoc, runTransaction } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc, doc, runTransaction, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { blogContentFolder } from "./database";
 import { db, storage } from "./firebase";
 import { AppUser, getAppUserByID } from "./users_db";
 
 const BLOG_COLLECTION = "BlogReferences";
 const BLOGS_COLL_REF = collection(db, BLOG_COLLECTION);
 const BLOG_COMMENT_COLLECTION = "BlogComments";
-const VOTE_MAP_FIELD_NAME = "voteMap";
+const VOTE_MAP_FIELD_NAME = "voteMap";      // any field names used as keys in multiple places get named constants
+const VOTE_TOTAL_FIELD_NAME = "voteTotal";
+
+export enum BlogStatus {
+    draft = 0,
+    published = 1
+}
 
 // Data model for a a blog reference - expect it to expand in scope as more features are developed
 export interface IBlogReference {
@@ -17,7 +24,7 @@ export interface IBlogReference {
     featuredImage: string; // reference to blob. Can we use storagereference datatype?
     lastUpdate: Timestamp;
     postDate: Timestamp;
-    status: number; // eventually turn into enum
+    status: BlogStatus,
     tags: string[];
     title: string;
     storagePath: string;
@@ -37,7 +44,10 @@ export function loadAllBlogReferences(refSetCallback: IBlogRefSetCallback) {
         // A "QuerySnapshot" is Firebase's term for a query result
         getDocs(BLOGS_COLL_REF).then((querySnapshot) => {
 
-            querySnapshot.forEach((doc) => docs.push(doc.data() as IBlogReference)); // is this type assertion dangerous?
+            querySnapshot.forEach((doc) => {
+                let blogRef = doc.data();
+                docs.push(blogRef as IBlogReference);
+            }); 
 
             refSetCallback(docs);
         });
@@ -61,16 +71,20 @@ export function loadBlogContent(blogPath: string, contentSetCallback: IContentSe
         getDownloadURL(ref(storage, blogPath))
         .then((url) => {
 
-            const xhr = new XMLHttpRequest();
-            xhr.responseType = 'blob';
-            
-            xhr.onload = (event) => {
-                const response = xhr.response;
-                response.text().then((text: string) => contentSetCallback(text));
-            };
-            xhr.open('GET', url);
+            try {             
+                const xhr = new XMLHttpRequest();
+                xhr.responseType = 'blob';
+                
+                xhr.onload = (event) => {
+                    const response = xhr.response;
+                    response.text().then((text: string) => contentSetCallback(text));
+                };
+                xhr.open('GET', url);
 
-            xhr.send();
+                xhr.send();   
+            } catch (error) {
+                console.log(error);
+            }
         });
     }
     catch (e: any) {
@@ -97,12 +111,34 @@ export function getBlogFromTitle(title: string, setBlogCallback: IBlogSetCallbac
     }
 }
 
-// Upload an image to firebase storage. Takes a file via the JavaScript File API, and a path to save the file to.
-// Returns 
-export function uploadNewImage(file: File, filePath: string) {
-    const storageRef = ref(storage, filePath);
-    return uploadBytes(storageRef, file);
+export function createNewBlog(blogRef: IBlogReference) {
+    const blogDoc = doc(BLOGS_COLL_REF);
+    blogRef.ID = blogDoc.id;
+    setDoc(blogDoc, blogRef);
+    
+    return blogDoc.id;
 }
+
+export function saveBlogDraft(blogRef: IBlogReference, blogContent: string) {
+    
+    // Update the blog reference
+    const blogPath = BLOG_COLLECTION + "/" + blogRef.ID
+    const blogDoc = doc(db, blogPath);
+    setDoc(blogDoc, blogRef);
+
+    // Update the blog content itself
+    const filePath = blogRef.storagePath + "/content.md.html";
+    const storageRef = ref(storage, filePath);
+    uploadString(storageRef, blogContent);
+}
+
+export function publishBlog(blogRef: IBlogReference, blogContent: string) {
+    blogRef.status = BlogStatus.published;
+    blogRef.postDate = Timestamp.now();
+    saveBlogDraft(blogRef, blogContent);
+}
+
+// ======================= EVERYTHING BELOW IS FOR BLOG COMMENTS ================ //
 
 export enum VoteType {
     Up = 1,
@@ -130,7 +166,7 @@ export class BlogComment {
         this.parentCommentID = blogCommentObj.get("parentCommentID");
         this.postDate = blogCommentObj.get("postDate");
         this.userVote = activeUser ? (blogCommentObj.get(VOTE_MAP_FIELD_NAME)[activeUser.userId] || VoteType.None) : VoteType.None;
-        this.voteTotal = blogCommentObj.get("voteTotal");
+        this.voteTotal = blogCommentObj.get(VOTE_TOTAL_FIELD_NAME);
 
         getAppUserByID(blogCommentObj.get("userID")).then((userSnapshot) => {
             this.userName = userSnapshot.get("name");
@@ -166,8 +202,8 @@ export function loadCommentsForBlog(blogRef: IBlogReference, setBlogComments: IS
     
     getDocs(commentsCollectionRef).then((querySnapshot) => {
         // Initialize with root-level comments
-        const rootComments = querySnapshot.docs.filter((doc) => doc.get("parentCommentID") === -1).sort(sortCommentsByDate);
-        const nonRootComments = querySnapshot.docs.filter((doc) => doc.get("parentCommentID") !== -1);
+        const rootComments = querySnapshot.docs.filter((doc) => doc.get("parentCommentID") === "-1").sort(sortCommentsByDate);
+        const nonRootComments = querySnapshot.docs.filter((doc) => doc.get("parentCommentID") !== "-1");
 
         const linkedComments = linkUpBlogComments(rootComments, nonRootComments, activeUser);
         setBlogComments(linkedComments);
@@ -224,7 +260,7 @@ export function voteOnBlogComment(voteType: VoteType, blogID: string, commentID:
 
             let data: any = {};
             data[VOTE_MAP_FIELD_NAME + "." + userID] = voteType;
-            data["voteTotal"] = (prevVoteTotal + voteChange);
+            data[VOTE_TOTAL_FIELD_NAME] = (prevVoteTotal + voteChange);
 
             transaction.update(commentDocRef, data);
         });
