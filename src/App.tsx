@@ -13,11 +13,36 @@ import { auth } from './data/firebase';
 import { getRedirectResult } from '@firebase/auth';
 import { activeUserAtom, loginOrCreateNewUser } from './data/users_db';
 import { useSetRecoilState } from 'recoil';
+import { createTheme, ThemeProvider } from '@material-ui/core';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#282c34"
+    },
+    secondary: {
+      main: "#202020"
+    },
+    tertiary: {
+      main: "#1481BA"
+    },
+    accent: {
+      main: "#faf4eb"
+    },
+    text: {
+      primary: "#282c34"
+    },
+    paper: {
+      main: "#faf4eb"
+    }
+  }
+});
 
 function App() {
-  
+  applyGlobalStyles();
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
       {AuthenticateUser()}
       <Router>
         <TitleBar/>
@@ -34,9 +59,10 @@ function App() {
         </Switch>
         <Footer/>
       </Router>
-    </>
+    </ThemeProvider>
   );
 }
+
 
 function AuthenticateUser() {
   const setActiveUser = useSetRecoilState(activeUserAtom);
@@ -62,6 +88,11 @@ function AuthenticateUser() {
       loginOrCreateNewUser(user, setActiveUser);
     }
   })
+}
+
+function applyGlobalStyles() {
+  document.getElementsByTagName("html").item(0)?.style.setProperty("background-color", theme.palette.primary.main);
+  document.getElementsByTagName("html").item(0)?.style.setProperty("color", theme.palette.text.primary);
 }
 
 export default App;

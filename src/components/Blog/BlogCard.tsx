@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardMedia, CardContent, makeStyles, Grid, CardActions, Button } from "@material-ui/core";
+import { Card, CardHeader, CardMedia, CardContent, makeStyles, Grid, CardActions, Button, Theme } from "@material-ui/core";
 import { IBlogReference } from "../../data/blogs_db";
 import paellaImage from "../../assets/images/projectgallery/paella.jpg"
 import { NavLink, useRouteMatch } from "react-router-dom";
@@ -18,14 +18,14 @@ const BlogCard: React.FunctionComponent<IBlogCardProps> = (props:IBlogCardProps)
     return(
         <Grid item className={classes.gridItem}>
             <Card className={classes.card}>
+                <CardMedia 
+                    className={classes.cardMediaDimension}
+                    image={paellaImage} // eventually change this to blogRef.featuredImage
+                />
                 <CardHeader 
                     title={blogRef.title}
                     subheader={blogRef.postDate.toDate().toDateString()} 
                     className={classes.cardBackground}
-                />
-                <CardMedia 
-                    className={classes.cardMediaDimension}
-                    image={paellaImage} // eventually change this to blogRef.featuredImage
                 />
                 <CardContent className={classes.cardBackground}>
                     {blogRef.excerpt}
@@ -40,31 +40,35 @@ const BlogCard: React.FunctionComponent<IBlogCardProps> = (props:IBlogCardProps)
     );
 }
 
-const useCardStyles = makeStyles({
+const useCardStyles = makeStyles((theme:Theme) => {
     
-    card: {
-        borderRadius: "3px",
-        margin: "10px"
-    },
+    const paperColor = theme.palette.paper.main;
+    const textColor = theme.palette.text.primary;
 
-    cardMediaDimension: {
-        height: "25vh",
-        width: "25vw",
-    },
-
-    gridItem: {
-        maxWidth: "25vw",
-    },
-
-    cardBackground: {
-        backgroundColor: "#424242",
-        color: "white"
-    },
+    return({
+        card: {
+            borderRadius: "12px",
+            margin: "10px",
+        },
     
-    cardActions: {
-        backgroundColor: "#5e5e5e",
-        color: "white"
-    }
+        cardMediaDimension: {
+            height: "25vh",
+            width: "25vw",
+        },
+    
+        gridItem: {
+            maxWidth: "20vw",
+        },
+    
+        cardBackground: {
+            backgroundColor: paperColor,
+            color: textColor,
+        },
+        
+        cardActions: {
+            color: textColor
+        }
+    })
 });
 
 export default BlogCard;

@@ -1,6 +1,6 @@
 import AppBar from '@material-ui/core/AppBar';
 import { Slide, useScrollTrigger } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import SectionHeader from './SectionHeader';
 import PageLink from './PageLink';
 import LinkGroup from './LinkGroup';
@@ -16,7 +16,7 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
         <AppBar className={classes.root} position="sticky">
             <div className={classes.headerDiv}>
                 <SectionHeader headerText="Matthew Schwartz"/>
-                <div style={{borderLeft: "solid 1px white", margin: '5px 5px 5px 0px'}}></div>
+                <div className={classes.divider}></div>
                 <LinkGroup/> 
             </div>
             <div className={classes.pageLinkDiv}>
@@ -30,24 +30,31 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
     );
 }
 
-const useStyles = makeStyles({
-    root: {
-        flexDirection: 'row',
-        opacity: .9,
-        backgroundImage: 'linear-gradient(to bottom right, #4267B2, #5973ff)'
-    },
+const useStyles = makeStyles((theme: Theme) => {
+    return({
+        root: {
+            flexDirection: 'row',
+            backgroundColor: theme.palette.tertiary.main,
+            color: theme.palette.paper.main,
+        },
 
-    pageLinkDiv: {
-        display: "flex",
-        flexGrow: 1,
-        margin: "auto",
-        justifyContent: "space-evenly"
-    },
+        pageLinkDiv: {
+            display: "flex",
+            flexGrow: 1,
+            margin: "auto",
+            justifyContent: "space-evenly",
+        },
 
-    headerDiv: {
-        display: "flex",
-        flexGrow: 3,
-    },
+        headerDiv: {
+            display: "flex",
+            flexGrow: 3,
+        },
+
+        divider: {
+            borderLeft: "solid 1px " + theme.palette.paper.main,
+            margin: '10px 5px 10px 0px'
+        },
+    });
 });
 
 

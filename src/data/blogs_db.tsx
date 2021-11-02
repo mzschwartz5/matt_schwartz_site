@@ -1,6 +1,5 @@
 import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc, doc, runTransaction, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { blogContentFolder } from "./database";
 import { db, storage } from "./firebase";
 import { AppUser, getAppUserByID } from "./users_db";
 

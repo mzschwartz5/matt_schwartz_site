@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Theme } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 
 interface IPageLink {
@@ -20,23 +20,26 @@ const PageLink: React.FunctionComponent<IPageLink> = (props:IPageLink): JSX.Elem
     );
 }
 
-const useLinkStyles = makeStyles({
-    activeLink: {
-        backgroundColor: "rgb(198 198 255 / 20%)",
-        borderRadius: "5px",
-    },
-
-    baseLink: {
-        color: "white",
-        textDecoration: "none",
-        padding: "5px 15px 5px 15px",
-        fontSize: "18px",
-
-        "&:hover": {
-            backgroundColor: "rgb(198 198 255 / 10%)",
+const useLinkStyles = makeStyles((theme: Theme) => {
+    
+    return({
+        activeLink: {
+            backgroundColor: "rgb(198 198 255 / 20%)",
             borderRadius: "5px",
-        }
-    },
+        },
+    
+        baseLink: {
+            textDecoration: "none",
+            padding: "5px 15px 5px 15px",
+            fontSize: "18px",
+            color: theme.palette.paper.main,
+    
+            "&:hover": {
+                backgroundColor: "rgb(198 198 255 / 10%)",
+                borderRadius: "5px",
+            }
+        },
+    })
 
 
 });

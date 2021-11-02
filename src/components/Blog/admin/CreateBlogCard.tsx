@@ -79,12 +79,15 @@ const createBlogStyles = makeStyles({
         border: "1px dotted white",
         borderRadius: "10px",
         backgroundColor: "#d3d3d326",
-        cursor: "pointer"
+        cursor: "pointer",
+        "&:hover": {
+            backgroundColor: "#d3d3d314"
+        }
     },
 
     icon: {
         width: "100%",
-        height: "100%"
+        height: "100%",
     },
 
     dialogContainer: {

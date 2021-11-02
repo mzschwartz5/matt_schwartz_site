@@ -1,3 +1,4 @@
+import { Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import LinkGroup from "./LinkGroup";
 
@@ -22,17 +23,19 @@ const Footer: React.FunctionComponent<IFooterProps> = (props:IFooterProps): JSX.
     );
 }
 
-const footerStyles = makeStyles({
-    footerContainer: {
-        backgroundColor: "rgb(31 34 40)",
-        height: "10vh"
-    },
+const footerStyles = makeStyles((theme: Theme) => {
+    return({
+        footerContainer: {
+            // backgroundColor: "rgb(31 34 40)",
+            backgroundColor: theme.palette.tertiary.main,
+            height: "10vh"
+        },
 
-    footerContent: {
-        textAlign: "center",
-        position: "relative",
-        top: "25%"
-    }
+        footerContent: {
+            textAlign: "center",
+            position: "relative",
+            top: "25%"}
+    });
 });
 
 export default Footer;

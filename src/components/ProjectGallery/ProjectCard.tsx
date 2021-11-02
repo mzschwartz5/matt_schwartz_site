@@ -1,4 +1,4 @@
-import { Grid, Card, CardHeader, CardMedia, CardContent, makeStyles } from "@material-ui/core";
+import { Grid, Card, CardHeader, CardMedia, CardContent, makeStyles, Theme } from "@material-ui/core";
 import paellaImage from "../../assets/images/projectgallery/paella.jpg"
 import { IProject } from "../../data/projects_db";
 
@@ -14,15 +14,15 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
     return(
         <Grid item className={classes.gridItem}>
             <Card className={classes.card}>
-                <CardHeader 
-                    title={project.title}
-                    subheader={project.dateStarted.toDate().toDateString()} 
-                    className={classes.cardBackground}
-                />
                 <CardMedia 
                     className={classes.cardMediaDimension}
                     image={paellaImage}   // later this should be card.featuredImage
                     title={"This is a paella!"} // later this should be card.featuredImageAltText
+                />
+                <CardHeader 
+                    title={project.title}
+                    subheader={project.dateStarted.toDate().toDateString()} 
+                    className={classes.cardBackground}
                 />
                 <CardContent className={classes.cardBackground}>
                     {project.description}
@@ -34,24 +34,29 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
 
 export default ProjectCard;
 
-const useCardStyles = makeStyles({
+const useCardStyles = makeStyles((theme:Theme) => {
     
-    card: {
-        borderRadius: "3px",
-        margin: "10px"
-    },
+    const paperColor = theme.palette.paper.main;
+    const textColor = theme.palette.text.primary;
 
-    cardMediaDimension: {
-        height: "25vh",
-        width: "25vw",
-    },
-
-    gridItem: {
-        maxWidth: "25vw",
-    },
-
-    cardBackground: {
-        backgroundColor: "#424242",
-        color: "white"
-    }
+    return({
+        card: {
+            borderRadius: "12px",
+            margin: "10px",
+        },
+    
+        cardMediaDimension: {
+            height: "25vh",
+            width: "25vw",
+        },
+    
+        gridItem: {
+            maxWidth: "20vw",
+        },
+    
+        cardBackground: {
+            backgroundColor: paperColor,
+            color: textColor,
+        }
+    })
 });

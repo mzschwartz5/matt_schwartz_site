@@ -3,17 +3,32 @@ import EmailIcon from '@material-ui/icons/Email';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import DescriptionIcon from '@material-ui/icons/Description';
+import { makeStyles } from "@material-ui/styles";
+import { Theme } from "@material-ui/core";
 
 const LinkGroup: React.FunctionComponent = () =>
 {
+    const linkStyles = useLinkGroupStyles();
+
     return(
     <>
-        <IconLink image={<EmailIcon style={{color:"white"}} />} altText="Email address link" linkTo="mailto: mzschwartz5@gmail.com" />
-        <IconLink image={<GitHubIcon style={{color:"white"}}/>} altText="GitHub link" linkTo="https://github.com/mzschwartz5" />
-        <IconLink image={<LinkedInIcon style={{color:"white"}}/>} altText="LinkedIn link" linkTo="https://www.linkedin.com/in/matthew-schwartz-37019016b/" />
-        <IconLink image={<DescriptionIcon style={{color:"white"}}/>} altText="Resume" linkTo="../../assets/file/Resume2021.pdf" /> 
+        <IconLink image={<EmailIcon className={linkStyles.icon} />} altText="Email address link" linkTo="mailto: mzschwartz5@gmail.com" />
+        <IconLink image={<GitHubIcon className={linkStyles.icon}/>} altText="GitHub link" linkTo="https://github.com/mzschwartz5" />
+        <IconLink image={<LinkedInIcon className={linkStyles.icon}/>} altText="LinkedIn link" linkTo="https://www.linkedin.com/in/matthew-schwartz-37019016b/" />
+        <IconLink image={<DescriptionIcon className={linkStyles.icon}/>} altText="Resume" linkTo="../../assets/file/Resume2021.pdf" /> 
     </>
     );
 }
+
+const useLinkGroupStyles = makeStyles((theme:Theme) => {
+
+    return(
+        {
+            icon: {
+                color: theme.palette.paper.main
+            }
+        }
+    );
+})
 
 export default LinkGroup;
