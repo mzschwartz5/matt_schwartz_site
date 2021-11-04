@@ -118,23 +118,28 @@ export function createNewBlog(blogRef: IBlogReference) {
     return blogDoc.id;
 }
 
-export function saveBlogDraft(blogRef: IBlogReference, blogContent: string) {
+export function saveBlogDraft(blogRef: IBlogReference, blogContent: string, rawText: string) {
     
     // Update the blog reference
     const blogPath = BLOG_COLLECTION + "/" + blogRef.ID
     const blogDoc = doc(db, blogPath);
     setDoc(blogDoc, blogRef);
 
-    // Update the blog content itself
-    const filePath = blogRef.storagePath + "/content.md.html";
-    const storageRef = ref(storage, filePath);
-    uploadString(storageRef, blogContent);
+    // Save the HTML content
+    const htmlFilePath = blogRef.storagePath + "/content.md.html";
+    const htmlStorageRef = ref(storage, htmlFilePath);
+    uploadString(htmlStorageRef, blogContent);
+
+    // Save the raw text
+    const rawTextFilePath = blogRef.storagePath + "/rawText.txt";
+    const rawTextStorageRef = ref(storage, rawTextFilePath);
+    uploadString(rawTextStorageRef, rawText);
 }
 
-export function publishBlog(blogRef: IBlogReference, blogContent: string) {
+export function publishBlog(blogRef: IBlogReference, htmlContent: string, rawText: string) {
     blogRef.status = BlogStatus.published;
     blogRef.postDate = Timestamp.now();
-    saveBlogDraft(blogRef, blogContent);
+    saveBlogDraft(blogRef, htmlContent, rawText);
 }
 
 // ======================= EVERYTHING BELOW IS FOR BLOG COMMENTS ================ //

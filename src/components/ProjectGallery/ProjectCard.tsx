@@ -32,7 +32,7 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                     {project.description}
                 </CardContent>
                 <CardActions className={classes.cardActions}>
-                    <IconLink image={<GitHubIcon/>}  altText="GitHub link" linkTo="https://github.com/mzschwartz5"/>
+                    <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo="https://github.com/mzschwartz5"/>
                 </CardActions>
             </Card>
         </Grid>
@@ -45,6 +45,7 @@ const useCardStyles = makeStyles((theme:Theme) => {
     
     const paperColor = theme.palette.paper.main;
     const textColor = theme.palette.text.primary;
+    const backgroundColor = theme.palette.primary.main;
 
     return({
         card: {
@@ -69,6 +70,7 @@ const useCardStyles = makeStyles((theme:Theme) => {
 
         cardActions: {
             backgroundColor: paperColor,
+            color: backgroundColor
         }
     })
 });

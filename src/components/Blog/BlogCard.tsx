@@ -5,15 +5,20 @@ import { NavLink, useRouteMatch } from "react-router-dom";
 
 interface IBlogCardProps {
     blogRef: IBlogReference,
+    adminView: boolean,
+    setEditedBlog: (editedBlogRef: IBlogReference) => void;
 }
 
 // UI element that represents a single blog entry and can be selected by the 
 // user to load content. Takes a blog reference object as its props.
 const BlogCard: React.FunctionComponent<IBlogCardProps> = (props:IBlogCardProps): JSX.Element =>
 {
-    const {blogRef} = props;
+    const {blogRef, adminView, setEditedBlog} = props;
     const classes = useCardStyles();
     const routeMatch = useRouteMatch();
+    const onClickEdit = () => {
+        setEditedBlog(blogRef);
+    }
 
     return(
         <Grid item className={classes.gridItem}>
@@ -30,10 +35,14 @@ const BlogCard: React.FunctionComponent<IBlogCardProps> = (props:IBlogCardProps)
                 <CardContent className={classes.cardBackground}>
                     {blogRef.excerpt}
                 </CardContent>
-                <CardActions className={classes.cardBackground}>
+                <CardActions className={classes.cardBackground + " " + classes.cardActions}>
                     <NavLink exact to={routeMatch.path + "/" + blogRef.title} style={{textDecoration: "none"}}>
-                        <Button className={classes.cardActions}>Read more</Button>
+                        <Button>Read more</Button>
                     </NavLink>
+                    {adminView ? 
+                    <NavLink exact to={routeMatch.path + "/create/" + blogRef.title} style={{textDecoration: "none"}}>
+                        <Button onClick={onClickEdit}>Edit</Button>
+                    </NavLink> : ""}
                 </CardActions>
             </Card>    
         </Grid>

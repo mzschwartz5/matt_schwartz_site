@@ -10,17 +10,19 @@ const BlogWriter: React.FunctionComponent<IBlogWriterProps> = (props:IBlogWriter
 {
     const {blogRef} = props;
     const [blogContent, setBlogContent] = useState("");
-    
+
     useEffect(() => {
         try {
-            loadBlogContent((blogRef.storagePath + "/content.md.html"), setBlogContent);            
+            loadBlogContent((blogRef.storagePath + "/rawText.txt"), setBlogContent);            
         } catch (error) {
             console.log(error);
         }
     }, [])
 
     return(
-        <MarkdownEditor blogRef={blogRef} defaultValue={blogContent}/>
+        <>
+            { blogContent ? <MarkdownEditor blogRef={blogRef} defaultValue={blogContent}/> : ""}
+        </>
     );
 }
 

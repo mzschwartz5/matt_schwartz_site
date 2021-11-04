@@ -64,7 +64,8 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
 
 const usePostStyles = makeStyles({
     postContainer: {
-        marginTop: "15px"
+        marginTop: "15px",
+        marginBottom: "15px",
     },
 
     avatar: {

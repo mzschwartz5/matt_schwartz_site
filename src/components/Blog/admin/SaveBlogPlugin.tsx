@@ -5,10 +5,16 @@ import { IBlogReference, saveBlogDraft } from "../../../data/blogs_db";
 const SaveBlogPlugin = (props: PluginProps) =>
 {
     const blogRef: IBlogReference = props.config.blogRef;
+    console.log(props.editor.getHtmlValue());
 
     const saveOnClick = () => {
-        const content = props.editor.getHtmlValue();
-        saveBlogDraft(blogRef, content);
+        const htmlContent = props.editor.getHtmlValue();
+        const rawText = props.editor.getMdValue();
+        const blogDraft: IBlogReference = {
+            ...blogRef,
+            excerpt: getExcerpt(htmlContent)
+        }
+        saveBlogDraft(blogDraft, htmlContent, rawText);
     }
 
     return(
@@ -16,6 +22,18 @@ const SaveBlogPlugin = (props: PluginProps) =>
             Save
         </span>
     );
+}
+
+const getExcerpt = (htmlValue: string) => {
+    const regEx = /<p>([ -~])*<\/p>/g;  // regex to find all paragraphs in the blog
+    const paragraphArray = htmlValue.match(regEx);
+
+    const content = paragraphArray?.map(par => {
+        return par.replace("<p>","").replace("</p>","");
+    }).join(" ");
+
+
+    return String(content?.slice(0, 500));
 }
 
 // The npm package for this markdown editor frankly has a really dumb API for overriding behavior. As a result, I'm 

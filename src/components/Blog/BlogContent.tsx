@@ -1,4 +1,5 @@
-import { Snackbar } from '@material-ui/core';
+import { Snackbar, Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { useEffect, useState, useCallback } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import { useParams } from 'react-router-dom';
@@ -16,6 +17,7 @@ interface IBlogContentProps {
 const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogContentProps): JSX.Element =>
 {
     const { blogTitle } = useParams<{blogTitle: string}>(); // if page loaded from URL, we won't have access to the blog object yet. So get title from URL -> load blog.
+    const classes = useBlogStyles();
     const [blogContent, setBlogContent] = useState<string>("");
     const [blogComments, setBlogComments] = useState<BlogCommentData[]>();
     const [blogRef, setBlogRef] = useState<IBlogReference>();
@@ -65,11 +67,14 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
     })
 
     return(
+        // Note: most styles on this component are applied via a separate style sheet file, to allow targeting of 
+        // injected html (the blog is loaded as a markdown document). Styles that rely on the Theme are applied 
+        // the usual way, via makeStyles.
         <>
-            <div className="blog-container">
-                <h1 className="blog-title">{blogTitle}</h1>
+            <div className={"blog-container " + classes.blogContainer}>
+                <h1 id="blog-title">{blogTitle}</h1>
                 <div className="blog-meta" >{blogRef?.author + " - " + blogRef?.postDate.toDate().toDateString()}</div>
-                <hr />
+                <hr id="blog-divider"/>
                 {blogContent ? ReactHtmlParser(blogContent) : <DocumentSkeleton/>}
                 <hr />
                 <CommentSection comments={comments} postNewComment={postNewComment}/>
@@ -78,5 +83,13 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
         </>
     );
 }
+
+const useBlogStyles = makeStyles((theme: Theme) => {
+    return({
+        blogContainer: {
+            color: theme.palette.paper.main,
+        }
+    })
+})
 
 export default BlogContent;

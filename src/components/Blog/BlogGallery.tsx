@@ -3,7 +3,7 @@ import { Grid } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { IBlogReference, loadAllBlogReferences } from "../../data/blogs_db";
+import { BlogStatus, IBlogReference, loadAllBlogReferences } from "../../data/blogs_db";
 import { activeUserAtom } from "../../data/users_db";
 import CardSkeleton from "../core/CardSkeleton";
 import BlogWriter from "./admin/BlogWriter";
@@ -19,8 +19,8 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     const classes = useCardStyles();
     const routeMatch = useRouteMatch();
     const [blogReferences,setBlogReferences] = useState<IBlogReference[]>([]);
-    const [newBlog, setNewBlog] = useState<IBlogReference>();
-    const activeUser = useRecoilValue(activeUserAtom)
+    const [editedBlog, setEditedBlog] = useState<IBlogReference>();
+    const activeUser = useRecoilValue(activeUserAtom);
 
     // Load metadata for all blogs upon component mount
     useEffect(() => {
@@ -28,7 +28,8 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     }, []);     
 
     const blogCards = blogReferences.map((ref) => {
-        return <BlogCard blogRef={ref} key={ref.ID}/>
+        if (!userCanViewBlog(activeUser?.isAdmin, ref.status)) return;
+        return <BlogCard blogRef={ref} key={ref.ID} adminView={activeUser?.isAdmin || false} setEditedBlog={setEditedBlog}/>
     })
 
     const blogCardSkeletons = Array.from(Array(12).keys()).map((_val, idx) => {
@@ -36,7 +37,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     });
 
     if (activeUser?.isAdmin) {
-        blogCards.push(<CreateBlogCard setCreatedBlogRef={setNewBlog} key="CreateBlogCard"/>);
+        blogCards.push(<CreateBlogCard setCreatedBlogRef={setEditedBlog} key="CreateBlogCard"/>);
     }
 
     return(
@@ -53,8 +54,8 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
                     </Grid>
                 </div>
             </Route>
-            <Route path={routeMatch.path + "/create/" + newBlog?.title}>
-                {newBlog ? <BlogWriter blogRef={newBlog}/> : ""}
+            <Route path={routeMatch.path + "/create/" + editedBlog?.title}>
+                {editedBlog ? <BlogWriter blogRef={editedBlog}/> : ""}
             </Route> 
             <Route path={routeMatch.path + "/:blogTitle"}>
                 <BlogContent/>
@@ -63,6 +64,11 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
 
 
     );
+}
+
+const userCanViewBlog = (userIsAdmin: boolean | undefined, blogStatus: BlogStatus) => {
+    if (!userIsAdmin && !(blogStatus === BlogStatus.published)) return false;
+    return true
 }
 
 const useCardStyles = makeStyles({
