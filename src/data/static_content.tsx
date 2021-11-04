@@ -1,0 +1,17 @@
+export const educationText = `
+    In 2015, I matriculated at Rice University with a love for outerspace and a plan to study astrophysics. Rice's physics department did not disappoint, but over the course of several research experiences, I found that I didn't enjoy academia. This wasn't the sort of scientific discovery I was hoping to make, to say the least! Still deeply interested in physics, however, I decided to change course slightly and pursue a degree in computational physics - a more applied side of the discipline, which strives to use computer science and applied mathematics to simulate physics phenomena. In 2019, I graduated with a BS in computational physics, and a minor in applied mathematics, with a 3.88 GPA.
+`;
+
+export const workExperienceText = `
+    After graduating, I started work at Epic Systems as a software developer, creating a suite of healthcare products used by over 250 million patients worldwide. I wore many hats at Epic - most often as a backend engineer developing a set of RESTful APIs used to exchange healthcare data with third parties in the standard HL7 FHIR format. I also, however, helped build the App Orchard website, a marketplace for healthcare apps to advertise their products and test our APIs. And, as time permitted, I occasionally built the handy internal tool, often spurred by a personal desire to automate tedious workflows or to better visualize data.
+`;
+
+export const personalProjectText = `
+    In my spare time, I enjoy learning about and creating video games. This began in college, when I recreated a card game called Morels in a virtual, online format, so I could continue to play with friends and family. This proved to be quite a challenge for me, consuming my spare time for two semesters while I studied the Unity framework and fundamentals of networking and server-client architecture. Naturally, by the time I finished, the company itself had released a sleek mobile app of the game! Nonetheless, it was a learning experience for me and a new hobby. I occasionally participate in game jams, most recently creating a game called Jewel3d, which is the 3D successor to the classic game Bejeweled. You can see Morels, Jewel3d, and other projects from my college and professional experiences in the Projects tab. 
+`;
+
+export const whatsNextText = `
+    I recently left my job at Epic due to a combination of factors. Briefly - a desire to be closer to family on the east coast, an interest in pursuing higher education, and limited growth opportunities. I would love to continue my education in computer science, and even study video game development, if possible. To that end, I'm currently applying to masters programs in CS. Until I matriculate, however, I'm spending time on personal projects and study -- creating this website, first, and then building a physics engine from the ground up. If that interests you, please check out my blog on this site, where I will detail the design and progress of my work on my projects. Also, though I'm currently applying to graduate programs, I'm still interested in potential job offers, so please do reach out! You can find my contact information in the header or footer of this site.
+    
+    Congrats for reaching the bottom of the page! There's no reward for making it this far, but you did it anyway!  
+`;

@@ -28,7 +28,8 @@ const footerStyles = makeStyles((theme: Theme) => {
         footerContainer: {
             // backgroundColor: "rgb(31 34 40)",
             backgroundColor: theme.palette.tertiary.main,
-            height: "10vh"
+            height: "10vh",
+            color: theme.palette.paper.main
         },
 
         footerContent: {

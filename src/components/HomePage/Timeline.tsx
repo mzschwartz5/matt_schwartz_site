@@ -12,23 +12,25 @@ import { makeStyles } from "@material-ui/core/styles";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { useMemo, useRef } from "react";
 import { Theme } from '@material-ui/core';
-import RiceImagePath from '../../assets/images/homepage/with_friends_at_rice.jpg';
-import MarathonImagePath from '../../assets/images/homepage/marathon_pic.jpg';
+import WorkImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
+import ProjectImagePath from '../../assets/images/homepage/projects_image.png';
 import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
 import SchoolIcon from '@material-ui/icons/School';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
+import HelpIcon from '@material-ui/icons/Help';
+import { educationText, workExperienceText, personalProjectText, whatsNextText } from '../../data/static_content';
 
 const Timeline: React.FunctionComponent = () =>
 {
-    const imageText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     const classes = useTimelineRootStyles();
 
     return(
         <MuiTimeline align="alternate" className={classes.timelineRoot}>
-            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={imageText} imageTitle="Education" DotIcon={SchoolIcon}/>
-            <TimelineItemWrapper imagePath={RiceImagePath} imageAltText="Rice University" imageDesc={imageText} imageTitle="Work Experience" DotIcon={WorkIcon}/>
-            <TimelineItemWrapper imagePath={MarathonImagePath} imageAltText="Half Marathon 2019" imageDesc={imageText} imageTitle="Personal Projects" DotIcon={HomeWorkIcon}/>
+            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={educationText} imageTitle="Education" DotIcon={SchoolIcon}/>
+            <TimelineItemWrapper imagePath={WorkImagePath} imageAltText="Rice University" imageDesc={workExperienceText} imageTitle="Work Experience" DotIcon={WorkIcon}/>
+            <TimelineItemWrapper imagePath={ProjectImagePath} imageAltText="Half Marathon 2019" imageDesc={personalProjectText} imageTitle="Personal Projects" DotIcon={HomeWorkIcon}/>
+            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={whatsNextText} imageTitle="What's Next?" DotIcon={HelpIcon}/>
         </MuiTimeline>
     );
 }
@@ -53,7 +55,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
 
     return(
         <TimelineItem className={classes.timelineItemContent} >
-            <TimelineContent className={classes.timelineItemText}>
+            <TimelineContent className={classes.timelineItemImage}>
                 <Card className={classes.card}>
                     <CardMedia
                         ref={ref} 
@@ -75,7 +77,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                     <h2 className="imageTitle">{imageTitle}</h2>
                     <Card className={classes.cardOppositeContent}>
                         <CardContent>
-                            {imageDesc}
+                            {imageDesc.split('\n').map(str => <p>{str}</p>)}
                         </CardContent>  
                     </Card>
                 </div>
@@ -98,8 +100,8 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
     const accentColor = theme.palette.accent.main;
 
     return({
-        timelineItemText: {
-            textAlign: 'left',  
+        timelineItemImage: {
+            textAlign: 'left',
         },
 
         // All alternating styles applied to the timeline are here
@@ -137,14 +139,16 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
         },
 
         cardHeight: {
-            height: '100vh',
+            height: '90vh',
         },
 
         card: ({intersectionRatio}) => ({
             marginTop: '20px',
             marginLeft: '10px',
             marginRight: '10px',
+            marginBottom: '20px',
             opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
+            borderRadius: "10px"
         }),
 
         timelineOppositeContent: {
@@ -159,7 +163,14 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
             alignSelf: "center",
             backgroundColor: paperColor,
-            textAlign: "left"
+            textAlign: "left",
+            padding: "0px 12px 0px 12px",
+            "& p": {
+                margin: "8px 0px 8px 0px",
+                lineHeight: "1.6em",
+                fontSize: "17px",
+                textIndent: "35px"
+            }
         }),
 
         timelineDot: {
