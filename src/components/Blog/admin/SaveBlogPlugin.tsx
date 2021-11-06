@@ -5,14 +5,14 @@ import { IBlogReference, saveBlogDraft } from "../../../data/blogs_db";
 const SaveBlogPlugin = (props: PluginProps) =>
 {
     const blogRef: IBlogReference = props.config.blogRef;
-    console.log(props.editor.getHtmlValue());
 
     const saveOnClick = () => {
         const htmlContent = props.editor.getHtmlValue();
         const rawText = props.editor.getMdValue();
         const blogDraft: IBlogReference = {
             ...blogRef,
-            excerpt: getExcerpt(htmlContent)
+            excerpt: getExcerpt(htmlContent, 500),
+            featuredImage: getFeaturedImage(rawText)
         }
         saveBlogDraft(blogDraft, htmlContent, rawText);
     }
@@ -24,8 +24,9 @@ const SaveBlogPlugin = (props: PluginProps) =>
     );
 }
 
-const getExcerpt = (htmlValue: string) => {
-    const regEx = /<p>([ -~])*<\/p>/g;  // regex to find all paragraphs in the blog
+// Get the first numChars characters of the blog content, from within <p> tags (that is, ignore things like tables, quotes, etc.).
+const getExcerpt = (htmlValue: string, numChars: number) => {
+    const regEx = /<p>([ -;]|[=]|[?-~])*<\/p>/g;  // regex to find all paragraphs in the blog
     const paragraphArray = htmlValue.match(regEx);
 
     const content = paragraphArray?.map(par => {
@@ -33,7 +34,15 @@ const getExcerpt = (htmlValue: string) => {
     }).join(" ");
 
 
-    return String(content?.slice(0, 500));
+    return String(content?.slice(0, numChars));
+}
+
+const getFeaturedImage = (rawText: string) => {
+    const startIndex = rawText.indexOf("![](") + 4; // markdown syntax for an image
+    if (startIndex === -1) return "";
+    const endIndex = rawText.indexOf(")", startIndex);
+
+    return rawText.slice(startIndex, endIndex);
 }
 
 // The npm package for this markdown editor frankly has a really dumb API for overriding behavior. As a result, I'm 

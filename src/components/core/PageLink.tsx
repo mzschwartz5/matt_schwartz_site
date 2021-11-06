@@ -5,16 +5,17 @@ interface IPageLink {
     text: string;
     linkTo: string;
     onClick?: () => void;
-    overrideClass?: string;
+    className?: string;
+    id?: string;
 }
 
 const PageLink: React.FunctionComponent<IPageLink> = (props:IPageLink): JSX.Element =>
 {
-    const {text,linkTo,onClick,overrideClass} = props;
+    const {text,linkTo,onClick,className = "", id = ""} = props;
     const classes = useLinkStyles();
 
     return(
-        <NavLink exact onClick={onClick} activeClassName={classes.activeLink} to={linkTo} className={overrideClass ? overrideClass : classes.baseLink }>
+        <NavLink exact id={id} onClick={onClick} activeClassName={classes.activeLink} to={linkTo} className={classes.baseLink + " " + className}>
             {text}
         </NavLink>
     );
@@ -33,10 +34,10 @@ const useLinkStyles = makeStyles((theme: Theme) => {
             padding: "5px 15px 5px 15px",
             fontSize: "18px",
             color: theme.palette.paper.main,
+            borderRadius: "5px",
     
             "&:hover": {
                 backgroundColor: "rgb(198 198 255 / 10%)",
-                borderRadius: "5px",
             }
         },
     })

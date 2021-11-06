@@ -3,8 +3,14 @@ import { useRouteMatch } from "react-router-dom";
 import { auth } from "../../data/firebase";
 import PageLink from "./PageLink";
 
-const AuthLogin: React.FunctionComponent = () =>
+interface IAuthLoginProps {
+    className?: string,
+    id?: string
+}
+
+const AuthLogin: React.FunctionComponent<IAuthLoginProps> = (props: IAuthLoginProps) =>
 {
+    const {className = "", id} = props;
     const provider = new GoogleAuthProvider();
     const routeMatch = useRouteMatch();
 
@@ -13,7 +19,7 @@ const AuthLogin: React.FunctionComponent = () =>
     }
 
     return(
-        <PageLink onClick={onClickLogin} text={"Login"} linkTo={routeMatch.path} />
+        <PageLink onClick={onClickLogin} text={"Login"} linkTo={routeMatch.path} className={className} id={id}/>
     );
 }
 

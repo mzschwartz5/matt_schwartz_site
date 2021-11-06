@@ -7,11 +7,12 @@ interface IPostCommentProps {
     active: boolean,
     postComment: (text: string) => void,
     setActiveState: (value: boolean) => void,
+    className?: string,
 }
 
 const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostCommentProps): JSX.Element =>
 {
-    const {active, postComment, setActiveState} = props;
+    const {active, postComment, setActiveState, className = ""} = props;
     const [commentText, setCommentText] = useState("");
     const [successMessageActive, setSuccessMessageActive] = useState(false);
     const activeUser = useRecoilValue(activeUserAtom);
@@ -47,14 +48,16 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
 
     return(
         <>
-            <div className={classes.postContainer} style={active ? {} : {display: "none"}}>
-                <div className={classes.avatar}>
-                    <Avatar src={activeUser ? activeUser.photoUrl : ""} imgProps={{referrerPolicy: "no-referrer"}} />
-                </div>
+            <div className={classes.postContainer + " " + className} style={active ? {} : {display: "none"}}>
                 <div className={classes.interactions}>
+                    <div className={classes.avatar}>
+                        <Avatar src={activeUser ? activeUser.photoUrl : ""} imgProps={{referrerPolicy: "no-referrer"}} />
+                     </div>
                     <TextField multiline variant="filled" value={commentText} className={classes.textField} placeholder="Add a comment..." onChange={onInputChange}/>
-                    <Button onClick={onClickReply} variant="outlined" size="small" className={classes.buttons}>Reply</Button>
-                    <Button onClick={onClickClear} variant="outlined" size="small" className={classes.buttons} >Clear</Button>
+                    <div>
+                        <Button onClick={onClickReply} variant="outlined" size="small" className={classes.buttons}>Reply</Button>
+                        <Button onClick={onClickClear} variant="outlined" size="small" className={classes.buttons}>Clear</Button>    
+                    </div>
                 </div>
             </div>
             <Snackbar open={successMessageActive} autoHideDuration={6000} message="Post in progress. Please refresh to see changes" onClose={onCloseSnackbar}/>
@@ -76,7 +79,8 @@ const usePostStyles = makeStyles({
     },
 
     interactions: {
-        display: "inline-block",
+        display: "flex",
+        alignItems: "center"
     },
 
     textField: {
@@ -92,7 +96,7 @@ const usePostStyles = makeStyles({
         marginLeft: "5px",
         "&:hover": {
             backgroundColor: "grey"
-        }
+        },
     }
 })
 
