@@ -65,12 +65,10 @@ interface IContentSetCallback {
 export function loadBlogContent(blogPath: string, contentSetCallback: IContentSetCallback) {
     
     // Use blog path to get URL to content, then make an HTTP request to load content.
-    // Content is in form of a markdown file with references to images on the blob that will get resolved automatically.
-    try {        
-        getDownloadURL(ref(storage, blogPath))
+    // Content is in form of a markdown file with references to images on the blob that will get resolved automatically.     
+    getDownloadURL(ref(storage, blogPath))
         .then((url) => {
-
-            try {             
+            
                 const xhr = new XMLHttpRequest();
                 xhr.responseType = 'blob';
                 
@@ -81,14 +79,11 @@ export function loadBlogContent(blogPath: string, contentSetCallback: IContentSe
                 xhr.open('GET', url);
 
                 xhr.send();   
-            } catch (error) {
-                console.log(error);
-            }
+        }).catch((reason) => {
+            console.log("Blog load failed: " + reason)
+        }).finally(() => {
+            contentSetCallback(""); // set null string as content. Make this better later
         });
-    }
-    catch (e: any) {
-        throw new Error(e);
-    }
 }
 
 interface IBlogSetCallback {

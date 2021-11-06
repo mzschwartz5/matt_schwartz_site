@@ -20,7 +20,8 @@ const MarkdownEditor: React.FunctionComponent<IMarkDownEditorProps> = (props:IMa
     const savePluginConfig = {blogRef: blogRef}
     MdEditor.use(ImageUploadPlugin, imagePlugingConfig);
     MdEditor.use(SaveBlogPlugin, savePluginConfig);
-    
+    console.log("Default Value is: " + defaultValue);
+
     return(
         <MdEditor
             renderHTML={(text) => mdParser.render(text)}
