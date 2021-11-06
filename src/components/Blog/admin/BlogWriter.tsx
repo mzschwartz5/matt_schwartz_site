@@ -9,16 +9,14 @@ interface IBlogWriterProps {
 const BlogWriter: React.FunctionComponent<IBlogWriterProps> = (props:IBlogWriterProps): JSX.Element =>
 {
     const {blogRef} = props;
-    const [blogContent, setBlogContent] = useState("");
     const [mdEditor, setMdEditor] = useState<JSX.Element>();
 
-    const initializeBlog = (blogContent: string) => {
+    const initializeBlog = (content: string) => {
         setMdEditor(
-            <MarkdownEditor blogRef={blogRef} defaultValue={blogContent}/>  // we initialize it here because once defaultText is set, it cannot be changed. To do so requires a whole new component.
+            <MarkdownEditor blogRef={blogRef} defaultValue={content}/>
         );
-        setBlogContent(blogContent);
     }
-
+    
     useEffect(() => {
         try {
             loadBlogContent((blogRef.storagePath + "/rawText.txt"), initializeBlog);            
