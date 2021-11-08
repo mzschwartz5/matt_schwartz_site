@@ -4,17 +4,18 @@ import PostComment from "./PostComment";
 
 interface ICommentSection {
     comments: JSX.Element[] | undefined;
-    postNewComment: (text: string) => void; 
+    postNewComment: (text: string) => void;
+    id: string; 
 }
 
 const CommentSection: React.FunctionComponent<ICommentSection> = (props:ICommentSection): JSX.Element =>
 {
-    const {comments, postNewComment} = props;
+    const {comments, postNewComment, id} = props;
     const classes = useCommentStyles();
 
     return(
         <>
-            <div className = {classes.root}>
+            <div id={id} className = {classes.root}>
                 <PostComment className={classes.post} active={true} setActiveState={(val: boolean) => {/* permanantly active */}} postComment={postNewComment} />
                 <AuthLogin id="login" />
             </div>

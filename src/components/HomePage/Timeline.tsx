@@ -15,6 +15,7 @@ import { Theme } from '@material-ui/core';
 import WorkImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
 import ProjectImagePath from '../../assets/images/homepage/projects_image.png';
 import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
+import BikeImagePath from "../../assets/images/homepage/bike_image.jpg";
 import SchoolIcon from '@material-ui/icons/School';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
@@ -30,7 +31,7 @@ const Timeline: React.FunctionComponent = () =>
             <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={educationText} imageTitle="Education" DotIcon={SchoolIcon}/>
             <TimelineItemWrapper imagePath={WorkImagePath} imageAltText="Rice University" imageDesc={workExperienceText} imageTitle="Work Experience" DotIcon={WorkIcon}/>
             <TimelineItemWrapper imagePath={ProjectImagePath} imageAltText="Half Marathon 2019" imageDesc={personalProjectText} imageTitle="Personal Projects" DotIcon={HomeWorkIcon}/>
-            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={whatsNextText} imageTitle="What's Next?" DotIcon={HelpIcon}/>
+            <TimelineItemWrapper imagePath={BikeImagePath} imageAltText="LinkedIn" imageDesc={whatsNextText} imageTitle="What's Next?" DotIcon={HelpIcon}/>
         </MuiTimeline>
     );
 }
@@ -139,7 +140,7 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
         },
 
         cardHeight: {
-            height: '90vh',
+            height: '95vh',
         },
 
         card: ({intersectionRatio}) => ({

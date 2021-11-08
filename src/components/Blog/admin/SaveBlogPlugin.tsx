@@ -26,15 +26,17 @@ const SaveBlogPlugin = (props: PluginProps) =>
 
 // Get the first numChars characters of the blog content, from within <p> tags (that is, ignore things like tables, quotes, etc.).
 const getExcerpt = (htmlValue: string, numChars: number) => {
-    const regEx = /<p>([ -;]|[=]|[?-~])*<\/p>/g;  // regex to find all paragraphs in the blog
-    const paragraphArray = htmlValue.match(regEx);
+    // Old way of getting excerpt, before I realized that smarter people on StackOverflow had already solved this long ago.
+    // const regEx = /<p>([ -;]|[=]|[?-~])*<\/p>/g;  // regex to find all paragraphs in the blog
+    // const paragraphArray = htmlValue.match(regEx);
 
-    const content = paragraphArray?.map(par => {
-        return par.replace("<p>","").replace("</p>","");
-    }).join(" ");
+    // const content = paragraphArray?.map(par => {
+    //     return par.replace("<p>","").replace("</p>","");
+    // }).join(" ");
 
-
-    return String(content?.slice(0, numChars));
+    const temp = document.createElement("DIV");
+    temp.innerHTML = htmlValue;
+    return String(temp.textContent?.slice(0, numChars)) + "...";
 }
 
 const getFeaturedImage = (rawText: string) => {
@@ -52,3 +54,4 @@ SaveBlogPlugin.pluginName = "Save";
 SaveBlogPlugin.align = 'left';
 
 export default SaveBlogPlugin;
+

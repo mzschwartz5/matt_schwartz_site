@@ -1,18 +1,13 @@
 .blog-container p 
 {
     font-size: 1.1em;
-    text-indent: 35px;
 }
 
 .blog-container img {
     display: block;
     margin: auto;
-    width: 100%;
+    width: 90%;
     height: 100%;
-}
-
-.blog-container {
-    color: #333;
 }
 
 .blog-container h1 {
@@ -43,7 +38,15 @@
 
 
 .blog-container a {
-    color: #0052d9;
+    color: #5cc7ff;
+}
+
+.blog-container a:visited {
+    color: #308ebf
+}
+
+.blog-container a:hover {
+    color: #5cb4e1
 }
 
 .blog-container a:hover {
@@ -56,9 +59,7 @@
 
 .blog-container ol,
 .blog-container ul {
-    font-size: 14px;
     line-height: 28px;
-    padding-left: 36px;
 }
 
 .blog-container li {
@@ -167,7 +168,8 @@
 {
     margin: auto;
     padding-bottom: 5vh;
-    width: 75%;
+    width: 60%;
+    color: #333;
 }
 
 #blog-title

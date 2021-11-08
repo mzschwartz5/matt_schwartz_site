@@ -1,4 +1,5 @@
-import { Snackbar, Theme } from '@material-ui/core';
+import { Button, Snackbar, Theme } from '@material-ui/core';
+import { SpeedDial } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
 import { useEffect, useState, useCallback } from 'react';
 import ReactHtmlParser from 'react-html-parser';
@@ -10,6 +11,8 @@ import DocumentSkeleton from '../core/DocumentSkeleton';
 import BlogComment from './BlogComment';
 import './BlogContent.css';
 import CommentSection from './CommentSection';
+import UpArrow from "@material-ui/icons/ArrowUpward";
+import CommentIcon from "@material-ui/icons/Comment";
 
 interface IBlogContentProps {
 }
@@ -77,17 +80,62 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
                 <hr id="blog-divider"/>
                 {blogContent ? ReactHtmlParser(blogContent) : <DocumentSkeleton/>}
                 <hr />
-                <CommentSection comments={comments} postNewComment={postNewComment}/>
+                <CommentSection id="comment-section" comments={comments} postNewComment={postNewComment}/>
             </div>
+            <Button onClick={toTopOfPage} className={classes.buttons + " " + classes.pageTopButton}>    
+                <UpArrow/>
+            </Button>
+            <Button onClick={toCommentSection} className={classes.buttons + " " + classes.commentSectionButton} >    
+                <CommentIcon/>
+            </Button>
             <Snackbar open={errorMessage !== ""} autoHideDuration={6000} message={errorMessage} onClose={closeSnackbar}/>
         </>
     );
+}
+
+const toTopOfPage = () => {
+    document.getElementById("root")?.scrollIntoView({behavior: 'smooth'});   
+}
+
+const toCommentSection = () => {
+    document.getElementById("comment-section")?.scrollIntoView({behavior: 'smooth'});   
 }
 
 const useBlogStyles = makeStyles((theme: Theme) => {
     return({
         blogContainer: {
             color: theme.palette.paper.main,
+        },
+
+        buttons: {
+            color: theme.palette.paper.main,
+            backgroundColor: theme.palette.tertiary.main,
+            height: "50px",
+            maxWidth: "50px",
+            minWidth: "50px",
+            padding: "0px",
+            borderRadius: "100%",
+            position: "fixed",
+            cursor: "pointer",
+            border: "1px outset",
+            borderColor: theme.palette.primary.main,
+            zIndex: 1,
+            boxShadow: "1px 1px 2px black",
+
+            "&:hover": {
+                boxShadow: "0px 0px 0px",
+                backgroundColor: "#10608a"
+            },
+        },
+
+        pageTopButton: {
+            bottom: "2%",
+            right: "1.5%",
+        },
+
+        commentSectionButton: {
+            bottom: "2%",
+            right: "6%",
         }
     })
 })
