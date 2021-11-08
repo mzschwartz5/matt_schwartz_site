@@ -60,6 +60,7 @@
 .blog-container ol,
 .blog-container ul {
     line-height: 28px;
+    font-size: 1.1em;
 }
 
 .blog-container li {

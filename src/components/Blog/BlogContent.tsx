@@ -120,7 +120,7 @@ const useBlogStyles = makeStyles((theme: Theme) => {
             border: "1px outset",
             borderColor: theme.palette.primary.main,
             zIndex: 1,
-            boxShadow: "1px 1px 2px black",
+            boxShadow: "1px 1px 4px black",
 
             "&:hover": {
                 boxShadow: "0px 0px 0px",
@@ -129,13 +129,13 @@ const useBlogStyles = makeStyles((theme: Theme) => {
         },
 
         pageTopButton: {
-            bottom: "2%",
+            bottom: "12%",
             right: "1.5%",
         },
 
         commentSectionButton: {
             bottom: "2%",
-            right: "6%",
+            right: "1.5%",
         }
     })
 })
