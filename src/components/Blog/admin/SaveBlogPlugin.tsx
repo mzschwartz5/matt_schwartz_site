@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { PluginProps } from "react-markdown-editor-lite";
 import { IBlogReference, saveBlogDraft } from "../../../data/blogs_db";
 
@@ -6,7 +7,7 @@ const SaveBlogPlugin = (props: PluginProps) =>
 {
     const blogRef: IBlogReference = props.config.blogRef;
 
-    const saveOnClick = () => {
+    const save = () => {
         const htmlContent = props.editor.getHtmlValue();
         const rawText = props.editor.getMdValue();
         const blogDraft: IBlogReference = {
@@ -15,10 +16,16 @@ const SaveBlogPlugin = (props: PluginProps) =>
             featuredImage: getFeaturedImage(rawText)
         }
         saveBlogDraft(blogDraft, htmlContent, rawText);
+        console.log("Saved!");
     }
 
+    useEffect(() => { 
+        const autoSave = setInterval(save, 60000); // autosave once per minute
+        return () => clearInterval(autoSave);
+    },[]);
+
     return(
-        <span onClick={saveOnClick} className="button button-type-image" title="Save" style={{position: "relative"}}>
+        <span onClick={save} className="button button-type-image" title="Save" style={{position: "relative"}}>
             Save
         </span>
     );

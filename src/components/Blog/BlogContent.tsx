@@ -1,5 +1,4 @@
 import { Button, Snackbar, Theme } from '@material-ui/core';
-import { SpeedDial } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/styles';
 import { useEffect, useState, useCallback } from 'react';
 import ReactHtmlParser from 'react-html-parser';
@@ -36,6 +35,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
             setBlogRef(blogRef);
         }
 
+        jumpToTopofPage();
         getBlogFromTitle(blogTitle, loadBlog);
     },[]);
 
@@ -82,10 +82,10 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
                 <hr />
                 <CommentSection id="comment-section" comments={comments} postNewComment={postNewComment}/>
             </div>
-            <Button onClick={toTopOfPage} className={classes.buttons + " " + classes.pageTopButton}>    
+            <Button onClick={scrollToTopOfPage} className={classes.buttons + " " + classes.pageTopButton}>    
                 <UpArrow/>
             </Button>
-            <Button onClick={toCommentSection} className={classes.buttons + " " + classes.commentSectionButton} >    
+            <Button onClick={scrollToCommentSection} className={classes.buttons + " " + classes.commentSectionButton} >    
                 <CommentIcon/>
             </Button>
             <Snackbar open={errorMessage !== ""} autoHideDuration={6000} message={errorMessage} onClose={closeSnackbar}/>
@@ -93,12 +93,16 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
     );
 }
 
-const toTopOfPage = () => {
+const scrollToTopOfPage = () => {
     document.getElementById("root")?.scrollIntoView({behavior: 'smooth'});   
 }
 
-const toCommentSection = () => {
+const scrollToCommentSection = () => {
     document.getElementById("comment-section")?.scrollIntoView({behavior: 'smooth'});   
+}
+
+const jumpToTopofPage = () => {
+    document.getElementById("root")?.scrollIntoView();
 }
 
 const useBlogStyles = makeStyles((theme: Theme) => {

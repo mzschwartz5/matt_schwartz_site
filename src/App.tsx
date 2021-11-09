@@ -14,6 +14,8 @@ import { getRedirectResult } from '@firebase/auth';
 import { activeUserAtom, loginOrCreateNewUser } from './data/users_db';
 import { useSetRecoilState } from 'recoil';
 import { createTheme, ThemeProvider } from '@material-ui/core';
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 const theme = createTheme({
   palette: {
@@ -42,24 +44,26 @@ function App() {
   applyGlobalStyles();
 
   return (
-    <ThemeProvider theme={theme}>
-      {AuthenticateUser()}
-      <Router>
-        <TitleBar/>
-        <Switch>
-          <Route exact path="/">
-            <HomePage/>
-          </Route>
-          <Route path="/project_gallery" >
-            <ProjectGallery/>
-          </Route>
-          <Route path="/blog">
-            <BlogGallery/>
-          </Route>
-        </Switch>
-        <Footer/>
-      </Router>
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <ThemeProvider theme={theme}>
+        {AuthenticateUser()}
+        <Router>
+          <TitleBar/>
+          <Switch>
+            <Route exact path="/">
+              <HomePage/>
+            </Route>
+            <Route path="/project_gallery" >
+              <ProjectGallery/>
+            </Route>
+            <Route path="/blog">
+              <BlogGallery/>
+            </Route>
+          </Switch>
+          <Footer/>
+        </Router>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 

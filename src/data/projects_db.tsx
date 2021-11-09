@@ -7,6 +7,7 @@ const PROJECT_COLLECTION = "Projects"
 export interface IProject {
     blogReference: DocumentReference<IBlogReference>;
     dateStarted: Timestamp;
+    dateEnded: Timestamp | null;
     description: string;
     featuredImage: string;
     githubUrl: string;
