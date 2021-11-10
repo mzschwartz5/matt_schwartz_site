@@ -1,6 +1,8 @@
 import { makeStyles, Grid} from "@material-ui/core";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 import { loadAllProjects, IProject } from "../../data/projects_db";
+import { activeUserAtom } from "../../data/users_db";
 import CardSkeleton from "../core/CardSkeleton";
 import CreateProjectCard from "./admin/CreateProjectCard";
 import ProjectCard from "./ProjectCard";
@@ -13,7 +15,7 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
 {
     const classes = useCardStyles();
     const [projects, setProjects] = useState<IProject[]>([]);
-    const [createdProj, setCreatedProj] = useState<IProject>();
+    const activeUser = useRecoilValue(activeUserAtom);
     
     useEffect(() => {
         loadAllProjects(setProjects)
@@ -23,9 +25,15 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
         return <ProjectCard project={proj} key={proj.title}/> // change proj.title to ID later
     });
 
-    projectCards.push(
-        <CreateProjectCard setCreatedProjectRef={setCreatedProj}/>
-    )
+    const createNewProject = (projectRef: IProject) => {
+        setProjects((prevProjs) => [...prevProjs, projectRef]);
+    }
+
+    if (activeUser?.isAdmin) {
+        projectCards.push(
+            <CreateProjectCard setCreatedProjectRef={createNewProject} key="CreateCard"/>
+        )
+    }
 
     const cardSkeletons = Array.from(Array(12).keys()).map((_val, idx) => {
         return <CardSkeleton key={idx}/>

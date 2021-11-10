@@ -169,8 +169,14 @@
 {
     margin: auto;
     padding-bottom: 5vh;
-    width: 60%;
     color: #333;
+    width: 90%
+}
+
+@media screen and (min-width: 1200px) {
+    .blog-container {
+        width: 60%;
+    }
 }
 
 #blog-title

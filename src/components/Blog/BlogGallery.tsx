@@ -28,7 +28,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     }, []);     
 
     const blogCards = blogReferences.map((ref) => {
-        if (!userCanViewBlog(activeUser?.isAdmin, ref.status)) return;
+        if (!userCanViewBlog(activeUser?.isAdmin, ref.status)) return null;
         return <BlogCard blogRef={ref} key={ref.ID} adminView={activeUser?.isAdmin || false} setEditedBlog={setEditedBlog}/>
     })
 
@@ -75,6 +75,7 @@ const useCardStyles = makeStyles({
 
     gridContainer: {
         height: "100%",
+        padding: "15px 15px 0px 15px",
         width: "100%"
     },
 });

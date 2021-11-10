@@ -81,13 +81,15 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
                 {blogContent ? ReactHtmlParser(blogContent) : <DocumentSkeleton/>}
                 <hr />
                 <CommentSection id="comment-section" comments={comments} postNewComment={postNewComment}/>
+                <div className={classes.buttonContainer}>
+                    <Button onClick={scrollToTopOfPage} className={classes.buttons}>    
+                        <UpArrow/>
+                    </Button>
+                    <Button onClick={scrollToCommentSection} className={classes.buttons} >    
+                        <CommentIcon/>
+                    </Button>
+                </div>
             </div>
-            <Button onClick={scrollToTopOfPage} className={classes.buttons + " " + classes.pageTopButton}>    
-                <UpArrow/>
-            </Button>
-            <Button onClick={scrollToCommentSection} className={classes.buttons + " " + classes.commentSectionButton} >    
-                <CommentIcon/>
-            </Button>
             <Snackbar open={errorMessage !== ""} autoHideDuration={6000} message={errorMessage} onClose={closeSnackbar}/>
         </>
     );
@@ -111,36 +113,36 @@ const useBlogStyles = makeStyles((theme: Theme) => {
             color: theme.palette.paper.main,
         },
 
+        buttonContainer: {
+            position: "fixed",
+            right: "0",
+            bottom: "0",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+        },
+
         buttons: {
             color: theme.palette.paper.main,
             backgroundColor: theme.palette.tertiary.main,
-            height: "50px",
-            maxWidth: "50px",
-            minWidth: "50px",
+            height: "8vh",
+            maxWidth: "8vh",
+            minWidth: "8vh",
             padding: "0px",
             borderRadius: "100%",
-            position: "fixed",
             cursor: "pointer",
             border: "1px outset",
             borderColor: theme.palette.primary.main,
             zIndex: 1,
             boxShadow: "1px 1px 4px black",
+            margin: "0px 15px 15px 0px",
+            alignSelf: "flex-end",
 
             "&:hover": {
                 boxShadow: "0px 0px 0px",
                 backgroundColor: "#10608a"
             },
         },
-
-        pageTopButton: {
-            bottom: "12%",
-            right: "1.5%",
-        },
-
-        commentSectionButton: {
-            bottom: "2%",
-            right: "1.5%",
-        }
     })
 })
 

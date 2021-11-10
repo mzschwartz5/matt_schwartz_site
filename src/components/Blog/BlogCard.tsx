@@ -21,11 +21,12 @@ const BlogCard: React.FunctionComponent<IBlogCardProps> = (props:IBlogCardProps)
     }
 
     return(
-        <Grid item className={classes.gridItem}>
+        <Grid item className={classes.gridItem} xs={12} sm={6} md={4} lg={3} xl={3}>
             <Card className={classes.card}>
                 <CardMedia 
-                    className={classes.cardMediaDimension}
+                    className={classes.cardMedia}
                     image={blogRef.featuredImage ? blogRef.featuredImage : defaultImage} // eventually change this to blogRef.featuredImage
+                    component="img"
                 />
                 <CardHeader 
                     title={blogRef.title}
@@ -60,13 +61,11 @@ const useCardStyles = makeStyles((theme:Theme) => {
             margin: "10px",
         },
     
-        cardMediaDimension: {
-            height: "25vh",
-            width: "25vw",
+        cardMedia: {
         },
     
         gridItem: {
-            maxWidth: "20vw",
+            height: "50%"
         },
     
         cardBackground: {

@@ -1,5 +1,5 @@
 import { Grid, Card, CardHeader, CardMedia, CardContent, makeStyles, Theme, CardActions } from "@material-ui/core";
-import paellaImage from "../../assets/images/projectgallery/paella.jpg"
+import defaultImage from "../../assets/images/projectgallery/paella.jpg"
 import { IProject } from "../../data/projects_db";
 import IconLink from "../core/IconLink";
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -15,24 +15,25 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
     const classes = useCardStyles();
 
     return(
-        <Grid item className={classes.gridItem}>
+        <Grid item className={classes.gridItem} xs={12} sm={6} md={6} lg={4} xl={4}>
             <Card className={classes.card}>
                 <CardMedia 
-                    className={classes.cardMediaDimension}
-                    image={paellaImage}   // later this should be card.featuredImage
+                    className={classes.cardMedia}
+                    image={project.featuredImage ?? defaultImage}   // later this should be card.featuredImage
                     title={"This is a paella!"} // later this should be card.featuredImageAltText
+                    component="img"
                 />
                 <CardHeader 
                     title={project.title}
                     subheader={project.dateStarted.toDate().toDateString()} 
                     className={classes.cardBackground}
-                    subheaderTypographyProps={{variant: "subtitle2"}}
+                    subheaderTypographyProps={{variant: "subtitle1"}}
                 />
                 <CardContent className={classes.cardBackground}>
                     {project.description}
                 </CardContent>
                 <CardActions className={classes.cardActions}>
-                    <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo="https://github.com/mzschwartz5"/>
+                    <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>
                 </CardActions>
             </Card>
         </Grid>
@@ -53,13 +54,10 @@ const useCardStyles = makeStyles((theme:Theme) => {
             margin: "10px",
         },
     
-        cardMediaDimension: {
-            height: "25vh",
-            width: "25vw",
+        cardMedia: {
         },
     
         gridItem: {
-            maxWidth: "20vw",
         },
     
         cardBackground: {
