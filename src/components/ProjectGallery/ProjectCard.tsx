@@ -20,7 +20,7 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                 <CardMedia 
                     className={classes.cardMedia}
                     image={project.featuredImage ?? defaultImage}   // later this should be card.featuredImage
-                    title={"This is a paella!"} // later this should be card.featuredImageAltText
+                    title={project.title} 
                     component="img"
                 />
                 <CardHeader 

@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { BlogComment as BlogCommentData, getBlogFromTitle, IBlogReference, loadBlogContent, loadCommentsForBlog, postBlogComment, voteOnBlogComment, VoteType } from '../../data/blogs_db';
+import { BlogComment as BlogCommentData, editBlogComment, getBlogFromTitle, IBlogReference, loadBlogContent, loadCommentsForBlog, postBlogComment, voteOnBlogComment, VoteType } from '../../data/blogs_db';
 import { activeUserAtom } from '../../data/users_db';
 import DocumentSkeleton from '../core/DocumentSkeleton';
 import BlogComment from './BlogComment';
@@ -58,6 +58,11 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
         postBlogComment(blogRef!.ID, text, "-1", activeUser!.userId);
     },[blogRef, activeUser, validateBlogContext]);
 
+    const editComment = useCallback((newText: string, commentID: string) => {
+        if (!validateBlogContext("Please log in to edit a comment.")) return;
+        editBlogComment(commentID, newText, blogRef!.ID);
+    },[blogRef, activeUser, validateBlogContext]);
+
     const voteOnBlog = useCallback((voteType: VoteType, voteChange: number, commentID: string) => {
         if (!validateBlogContext("Please log in to vote on a comment.")) return;
         voteOnBlogComment(voteType, voteChange, blogRef!.ID, commentID, activeUser!.userId);
@@ -68,7 +73,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
     // in a useCallback, dependent on blogComments, so it only remounts when blogComments change (e.g. when the activeUser changes). (Making it dependent on activeUser
     // wouldn't be sufficient, because we'd just hit another race condition between the user getting defined and the comments loading)
     const comments = useCallback(() => blogComments?.map((comment) => {
-        return <BlogComment comment={comment} key={comment.ID + Date.now()} postComment={postReplyToComment} voteOnBlog={voteOnBlog}/>
+        return <BlogComment comment={comment} key={comment.ID + Date.now()} postComment={postReplyToComment} editComment={editComment} voteOnBlog={voteOnBlog}/>
     }), [blogComments])();
 
 

@@ -6,24 +6,35 @@ import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import { BlogComment as BlogCommentData, VoteType} from "../../data/blogs_db";
 import PostComment from "./PostComment";
 import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { activeUserAtom } from "../../data/users_db";
 
 interface IBlogCommentProps {
     comment: BlogCommentData,
     postComment: (text: string, parentCommentID: string) => void;
+    editComment: (newText: string, commentID: string) => void;
     voteOnBlog: (voteType: VoteType, voteChange: number, commentID: string) => void;
 }
 
 const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogCommentProps): JSX.Element =>
 {
-    const {comment, postComment, voteOnBlog} = props;
+    const {comment, postComment, editComment, voteOnBlog} = props;
     const [replyActive, setReplyActive] = useState(false);
+    const [editingActive, setEditingActive] = useState(false);
     const [voteState, setVoteState] = useState<VoteType>(comment.userVote);
     const [totalVotes, setTotalVotes] = useState(comment.voteTotal);
+    const [text, setText] = useState(comment.text);
+    const activeUser = useRecoilValue(activeUserAtom);
     const classes = commentStyles();
 
     const children = comment.childComments.map((child) => {
-        return <BlogComment comment={child} key={child.ID} postComment={postComment} voteOnBlog={voteOnBlog}/>
+        return <BlogComment comment={child} key={child.ID} postComment={postComment} editComment={editComment} voteOnBlog={voteOnBlog}/>
     });
+
+    const editThisComment = (newText: string) => {
+        editComment(newText, comment.ID);
+        setText(newText);
+    }
 
     const replyToThisComment = (text: string) => {
         postComment(text, comment.ID);
@@ -31,6 +42,10 @@ const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogComm
 
     const onClickReplyButton = (_event: any) => {
         setReplyActive((currState) => !currState);
+    }
+
+    const onClickEditButton = (_event: any) => {
+        setEditingActive((currState) => !currState);
     }
 
     const onClickVoteButton = (voteType: VoteType) => {
@@ -49,27 +64,34 @@ const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogComm
 
     return(
         <div className={classes.commentContainer}>
-            <div className={classes.avatar}>
-                <Avatar src={comment.userPhotoUrl} imgProps={{referrerPolicy: "no-referrer"}} />
-            </div>
-            <div className={classes.commentData}>
-                <div className={classes.metaDataSection}>
-                    <span className={classes.userName}>{comment.userName}</span>
-                    <span className={classes.date}>{comment.postDate.toDate().toDateString()}</span>
+            {editingActive ? <PostComment defaultText={text} active={editingActive} postComment={editThisComment} setActiveState={setEditingActive}/> 
+            : <div>
+                <div className={classes.avatar}>
+                    <Avatar src={comment.userPhotoUrl} imgProps={{referrerPolicy: "no-referrer"}} />
                 </div>
-                <div className={classes.textSection}>
-                    <span>{comment.text}</span>
+                <div className={classes.commentData}>
+                    <div className={classes.metaDataSection}>
+                        <span className={classes.userName}>{comment.userName}</span>
+                        <span className={classes.date}>{comment.postDate.toDate().toDateString()}</span>
+                        <span className={classes.edited}>{comment.edited ? "*edited" : ""}</span>
+                    </div>
+                    <div className={classes.textSection}>
+                        {text}
+                    </div>
+                    <div className={classes.interactSection}>
+                        {totalVotes}
+                        {(voteState === VoteType.Up) ? <ThumbUpIcon className={classes.votingIcons} fontSize="small" onClick={onClickVoteButton(VoteType.None)}/> : <ThumbUpOutlinedIcon className={classes.votingIcons} fontSize="small" onClick={onClickVoteButton(VoteType.Up)}/> }
+                        {(voteState === VoteType.Down) ? <ThumbDownIcon className={classes.votingIcons} fontSize="small" onClick={onClickVoteButton(VoteType.None)} /> : <ThumbDownOutlinedIcon className={classes.votingIcons} fontSize="small" onClick={onClickVoteButton(VoteType.Down)}/>}
+                        <div className={classes.buttonContainer}>
+                            <div onClick={onClickReplyButton} className={classes.button}> Reply </div>
+                            {(activeUser?.userId === comment.userId) ? <div onClick={onClickEditButton} className={classes.button}> Edit </div> : ""} 
+                        </div>
+                    </div>
+                    <div className={classes.replyArea}>
+                        <PostComment active={replyActive} postComment={replyToThisComment} setActiveState={setReplyActive}/>
+                    </div>
                 </div>
-                <div className={classes.interactSection}>
-                    {totalVotes}
-                    {(voteState === VoteType.Up) ? <ThumbUpIcon className={classes.votingIcons} fontSize="small" onClick={onClickVoteButton(VoteType.None)}/> : <ThumbUpOutlinedIcon className={classes.votingIcons} fontSize="small" onClick={onClickVoteButton(VoteType.Up)}/> }
-                    {(voteState === VoteType.Down) ? <ThumbDownIcon className={classes.votingIcons} fontSize="small" onClick={onClickVoteButton(VoteType.None)} /> : <ThumbDownOutlinedIcon className={classes.votingIcons} fontSize="small" onClick={onClickVoteButton(VoteType.Down)}/>}
-                    <div className={classes.replyButton} onClick={onClickReplyButton}> Reply </div>
-                </div>
-                <div className={classes.replyArea}>
-                    <PostComment active={replyActive} postComment={replyToThisComment} setActiveState={setReplyActive}/>
-                </div>
-            </div>
+            </div>}
             {children}
         </div>
     );
@@ -99,7 +121,14 @@ const commentStyles = makeStyles({
 
     date: {
         color: "lightgray",
-        fontWeight: "lighter"
+        fontWeight: "lighter",
+        marginRight: "10px"
+    },
+
+    edited: {
+        color: "lightgray",
+        fontWeight: "lighter",
+        fontStyle: "italic"
     },
 
     votingIcons: {
@@ -122,14 +151,16 @@ const commentStyles = makeStyles({
     
     },
 
-    replyButton: {
+    buttonContainer: {
         cursor: "pointer",
         fontWeight: "bold",
-        marginLeft: "30px",
+        marginLeft: "15px",
         color: "lightgrey",
-        display: "flex",  // this isn't working... tried to center the text but no luck.
-        alignItems: "center",
-        justifyContent: "center"
+        display: "flex",  
+    },
+
+    button: {
+        marginLeft: "10px"
     },
 
     replyArea: {

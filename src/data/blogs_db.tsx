@@ -1,4 +1,4 @@
-import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc, doc, runTransaction, setDoc } from "firebase/firestore";
+import { collection, query, getDocs, Timestamp, where, DocumentData, QueryDocumentSnapshot, addDoc, doc, runTransaction, setDoc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { db, storage } from "./firebase";
 import { AppUser, getAppUserByID } from "./users_db";
@@ -154,6 +154,7 @@ export class BlogComment {
     postDate: Timestamp = Timestamp.now();
     userVote: VoteType;                   // The active user's vote on this comment
     voteTotal: number;                    // updated offline via cloud functions (triggered by vote actions), to prevent traversing the votes map.
+    userId: string = "";
     userName: string = "";
     userPhotoUrl: string = "";
 
@@ -168,6 +169,7 @@ export class BlogComment {
         this.voteTotal = blogCommentObj.get(VOTE_TOTAL_FIELD_NAME);
 
         getAppUserByID(blogCommentObj.get("userID")).then((userSnapshot) => {
+            this.userId = userSnapshot.get("userId");
             this.userName = userSnapshot.get("name");
             this.userPhotoUrl = userSnapshot.get("photoUrl");
         });
@@ -240,6 +242,14 @@ export function postBlogComment(blogID: string, text: string, parentCommentID: s
     const commentsCollectionRef = collection(db, commentsCollectionPath);
 
     addDoc(commentsCollectionRef,firebaseComment);
+}
+
+export function editBlogComment(commentID: string, newText: string, blogID: string) {
+    const commentsCollectionPath = BLOG_COLLECTION + "/" + blogID + "/" + BLOG_COMMENT_COLLECTION + "/";
+    const commentsCollectionRef = collection(db, commentsCollectionPath);
+    const commentDocRef = doc(commentsCollectionRef, commentID);
+
+    updateDoc(commentDocRef, {text: newText, edited: true})
 }
 
 export function voteOnBlogComment(voteType: VoteType, voteChange: number, blogID: string, commentID: string, userID: string) {

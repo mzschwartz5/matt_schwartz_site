@@ -7,13 +7,14 @@ interface IPostCommentProps {
     active: boolean,
     postComment: (text: string) => void,
     setActiveState: (value: boolean) => void,
+    defaultText?: string,
     className?: string,
 }
 
 const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostCommentProps): JSX.Element =>
 {
-    const {active, postComment, setActiveState, className = ""} = props;
-    const [commentText, setCommentText] = useState("");
+    const {active, postComment, setActiveState, defaultText ="", className = ""} = props;
+    const [commentText, setCommentText] = useState(defaultText);
     const [successMessageActive, setSuccessMessageActive] = useState(false);
     const activeUser = useRecoilValue(activeUserAtom);
     const classes = usePostStyles(); 
@@ -67,8 +68,8 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
 
 const usePostStyles = makeStyles({
     postContainer: {
-        marginTop: "15px",
-        marginBottom: "15px",
+        paddingTop: "15px",
+        paddingBottom: "15px",
     },
 
     avatar: {
