@@ -10,7 +10,7 @@ import { useState } from "react";
 interface IBlogCommentProps {
     comment: BlogCommentData,
     postComment: (text: string, parentCommentID: string) => void;
-    voteOnBlog: (voteType: VoteType, commentID: string) => void;
+    voteOnBlog: (voteType: VoteType, voteChange: number, commentID: string) => void;
 }
 
 const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogCommentProps): JSX.Element =>
@@ -35,9 +35,10 @@ const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogComm
 
     const onClickVoteButton = (voteType: VoteType) => {
         return ((_event: any) => {
-            try { // will fail if no user logged in. Handled in parent.
-                voteOnBlog(voteType, comment.ID);
-                setTotalVotes(comment.voteTotal + voteType); 
+            try { // will fail if no user logged in. Handled in parent component.
+                const voteChange = (voteType - voteState); 
+                voteOnBlog(voteType, voteChange, comment.ID);
+                setTotalVotes(totalVotes + voteChange); 
                 setVoteState(voteType);
             }
             catch(e) {

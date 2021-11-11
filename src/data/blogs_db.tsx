@@ -242,7 +242,7 @@ export function postBlogComment(blogID: string, text: string, parentCommentID: s
     addDoc(commentsCollectionRef,firebaseComment);
 }
 
-export function voteOnBlogComment(voteType: VoteType, blogID: string, commentID: string, userID: string) {
+export function voteOnBlogComment(voteType: VoteType, voteChange: number, blogID: string, commentID: string, userID: string) {
 
     const commentPath = BLOG_COLLECTION + "/" + blogID + "/" + BLOG_COMMENT_COLLECTION + "/" + commentID;
     const commentDocRef = doc(db, commentPath);
@@ -254,9 +254,6 @@ export function voteOnBlogComment(voteType: VoteType, blogID: string, commentID:
             if (!commentDoc.exists()) throw new Error("Voted comment does not exist");
 
             const prevVoteTotal: number = commentDoc.data().voteTotal;
-            const prevUserVote: number = commentDoc.data().voteMap[userID] || VoteType.None;
-            const voteChange: number = (prevUserVote === VoteType.None) ? voteType : -prevUserVote;
-
             let data: any = {};
             data[VOTE_MAP_FIELD_NAME + "." + userID] = voteType;
             data[VOTE_TOTAL_FIELD_NAME] = (prevVoteTotal + voteChange);

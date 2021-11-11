@@ -25,7 +25,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
     const [blogRef, setBlogRef] = useState<IBlogReference>();
     const [errorMessage, setErrorMessage] = useState("");
     const closeSnackbar = () => setErrorMessage("");
-    const activeUser = useRecoilValue(activeUserAtom)
+    const activeUser = useRecoilValue(activeUserAtom);
 
     useEffect(() => {
         // Load blog content and comments on mount
@@ -35,10 +35,9 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
             setBlogRef(blogRef);
         }
 
-        jumpToTopofPage();
+        jumpToTopOfPage();
         getBlogFromTitle(blogTitle, loadBlog);
-    },[]);
-
+    },[activeUser]);
 
     const validateBlogContext = useCallback((errorText: string) => {
         if (!blogRef) return false;
@@ -59,15 +58,19 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
         postBlogComment(blogRef!.ID, text, "-1", activeUser!.userId);
     },[blogRef, activeUser, validateBlogContext]);
 
-    const voteOnBlog = useCallback((voteType: VoteType, commentID: string) => {
+    const voteOnBlog = useCallback((voteType: VoteType, voteChange: number, commentID: string) => {
         if (!validateBlogContext("Please log in to vote on a comment.")) return;
-        voteOnBlogComment(voteType, blogRef!.ID, commentID, activeUser!.userId);
+        voteOnBlogComment(voteType, voteChange, blogRef!.ID, commentID, activeUser!.userId);
     }, [blogRef, activeUser, validateBlogContext]);
 
+    // Because the active user can lag behind blog-load on page refresh, the comments get mounted with an undefined user. By adding Date.now() to the key,
+    // each comment gets re-mounted on every render, which clears the state with the undefined user. For the sake of performance, we then need to wrap this 
+    // in a useCallback, dependent on blogComments, so it only remounts when blogComments change (e.g. when the activeUser changes). (Making it dependent on activeUser
+    // wouldn't be sufficient, because we'd just hit another race condition between the user getting defined and the comments loading)
+    const comments = useCallback(() => blogComments?.map((comment) => {
+        return <BlogComment comment={comment} key={comment.ID + Date.now()} postComment={postReplyToComment} voteOnBlog={voteOnBlog}/>
+    }), [blogComments])();
 
-    const comments = blogComments?.map((comment) => {
-        return <BlogComment comment={comment} key={comment.ID} postComment={postReplyToComment} voteOnBlog={voteOnBlog}/>
-    })
 
     return(
         // Note: most styles on this component are applied via a separate style sheet file, to allow targeting of 
@@ -103,7 +106,7 @@ const scrollToCommentSection = () => {
     document.getElementById("comment-section")?.scrollIntoView({behavior: 'smooth'});   
 }
 
-const jumpToTopofPage = () => {
+const jumpToTopOfPage = () => {
     document.getElementById("root")?.scrollIntoView();
 }
 
