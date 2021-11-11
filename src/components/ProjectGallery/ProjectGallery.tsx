@@ -1,4 +1,4 @@
-import { makeStyles, Grid} from "@material-ui/core";
+import { makeStyles, Grid, Theme} from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { loadAllProjects, IProject } from "../../data/projects_db";
@@ -13,8 +13,8 @@ interface IProjectGaleryProps {
 
 const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IProjectGaleryProps): JSX.Element =>
 {
-    const classes = useCardStyles();
     const [projects, setProjects] = useState<IProject[]>([]);
+    const classes = useCardStyles(projects.length)();
     const activeUser = useRecoilValue(activeUserAtom);
     
     useEffect(() => {
@@ -46,19 +46,30 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
             alignItems="flex-start"
             spacing={3}
             className={classes.gridContainer}
+            direction="column"
         >   
             {projectCards.length ? projectCards : cardSkeletons}
         </Grid>
     );
 }
 
-const useCardStyles = makeStyles({
-    
-    gridContainer: {
-        height: "100%",
-        padding: "15px 15px 0px 15px"
-    },
+const useCardStyles = (numGridItems: number) => makeStyles((theme: Theme) => ({
 
-});
+    // If this ever has problems, try looking into mui Image List component instead.
+    gridContainer: {
+            padding: "15px 15px 0px 15px",
+            [theme.breakpoints.only("xs")]: {
+                height: String(75 * numGridItems) + "vh"
+            },
+            [theme.breakpoints.between("sm","md")]: {
+                height: String(75 * numGridItems / 2) + "vh"
+            },
+            [theme.breakpoints.up("lg")]: {
+                height: String(75 * numGridItems / 3) + "vh"
+            },
+
+        },
+    })
+);
 
 export default ProjectGallery;

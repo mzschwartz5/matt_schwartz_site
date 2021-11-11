@@ -76,7 +76,10 @@ const usePostStyles = makeStyles({
         width: "auto",
         display: "inline-block",
         verticalAlign: "top",
-        marginRight: "15px"
+        marginRight: "15px",
+        "& .MuiAvatar-img": {
+            width: "100%"
+        }
     },
 
     interactions: {

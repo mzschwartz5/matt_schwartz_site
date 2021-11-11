@@ -1,5 +1,7 @@
-import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
+import { useRecoilValue } from "recoil";
 import { auth } from "../../data/firebase";
+import { activeUserAtom } from "../../data/users_db";
 import PageLink from "./PageLink";
 
 interface IAuthLoginProps {
@@ -10,14 +12,24 @@ interface IAuthLoginProps {
 const AuthLogin: React.FunctionComponent<IAuthLoginProps> = (props: IAuthLoginProps) =>
 {
     const {className = "", id} = props;
+    const activeUser = useRecoilValue(activeUserAtom);
     const provider = new GoogleAuthProvider();
 
     const onClickLogin = () => {
         signInWithRedirect(auth, provider);
     }
 
+    const onClickLogout = () => {
+        signOut(auth);
+    }
+
     return(
-        <PageLink onClick={onClickLogin} text={"Login"} linkTo={"/"} className={className} id={id}/>
+        <>
+            {activeUser ? 
+                <PageLink onClick={onClickLogout} text="Logout" linkTo="/" className={className} id={id}/> : 
+                <PageLink onClick={onClickLogin} text="Login" linkTo="/" className={className} id={id}/>
+            }
+        </>
     );
 }
 

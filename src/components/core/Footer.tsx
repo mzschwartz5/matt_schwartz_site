@@ -35,7 +35,9 @@ const footerStyles = makeStyles((theme: Theme) => {
         footerContent: {
             textAlign: "center",
             position: "relative",
-            top: "25%"}
+            top: "25%",
+            pointerEvents: "none"
+        }
     });
 });
 

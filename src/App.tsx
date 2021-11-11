@@ -91,6 +91,9 @@ function AuthenticateUser() {
     if (user) { // user is authenticated
       loginOrCreateNewUser(user, setActiveUser);
     }
+    else {
+      setActiveUser(undefined);
+    }
   })
 }
 

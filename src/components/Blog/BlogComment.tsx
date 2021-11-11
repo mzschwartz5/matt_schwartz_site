@@ -105,7 +105,10 @@ const commentStyles = makeStyles({
     avatar: {
         width: "auto",
         display: "inline-block",
-        verticalAlign: "top"
+        verticalAlign: "top",
+        "& .MuiAvatar-img": {
+            width: "100%"
+        }
     },
 
     commentData: {

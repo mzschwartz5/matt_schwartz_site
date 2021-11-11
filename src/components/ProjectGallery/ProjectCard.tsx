@@ -58,6 +58,7 @@ const useCardStyles = makeStyles((theme:Theme) => {
         },
     
         gridItem: {
+            flexBasis: 0
         },
     
         cardBackground: {

@@ -26,7 +26,8 @@ const useLinkGroupStyles = makeStyles((theme:Theme) => {
     return(
         {
             icon: {
-                color: theme.palette.paper.main
+                color: theme.palette.paper.main,
+                pointerEvents: "all"
             }
         }
     );
