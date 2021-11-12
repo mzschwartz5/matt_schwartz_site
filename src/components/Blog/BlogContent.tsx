@@ -12,6 +12,7 @@ import './BlogContent.css';
 import CommentSection from './CommentSection';
 import UpArrow from "@material-ui/icons/ArrowUpward";
 import CommentIcon from "@material-ui/icons/Comment";
+import smoothscroll from 'smoothscroll-polyfill';
 
 interface IBlogContentProps {
 }
@@ -37,6 +38,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
 
         jumpToTopOfPage();
         getBlogFromTitle(blogTitle, loadBlog);
+        smoothscroll.polyfill(); // kick off polyfill support for smooth scrolling (for browsers like Safari that don't natively support it) 
     },[activeUser]);
 
     const validateBlogContext = useCallback((errorText: string) => {

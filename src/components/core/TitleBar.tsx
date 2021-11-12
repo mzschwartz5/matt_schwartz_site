@@ -41,9 +41,15 @@ const useStyles = makeStyles((theme: Theme) => {
             flexGrow: 1,
             margin: "auto",
             justifyContent: "space-evenly",
+            [theme.breakpoints.down("xs")]: {
+                margin: "10px 0px"
+            }
         },
 
         headerDiv: {
+            [theme.breakpoints.down("xs")]: {
+                display: "none",
+            },
             display: "flex",
             flexGrow: 3,
         },
