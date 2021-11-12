@@ -1,4 +1,5 @@
-import { Grid, Card, CardHeader, CardMedia, CardContent, makeStyles, Theme, CardActions } from "@material-ui/core";
+import { Card, CardHeader, CardMedia, CardContent, makeStyles, Theme, CardActions } from "@material-ui/core";
+import ImageListItem from '@mui/material/ImageListItem';
 import defaultImage from "../../assets/images/projectgallery/paella.jpg"
 import { IProject } from "../../data/projects_db";
 import IconLink from "../core/IconLink";
@@ -15,7 +16,7 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
     const classes = useCardStyles();
 
     return(
-        <Grid item className={classes.gridItem} xs={12} sm={6} md={6} lg={4} xl={4}>
+        <ImageListItem sx={{lineHeight: "inherit"}}>
             <Card className={classes.card}>
                 <CardMedia 
                     className={classes.cardMedia}
@@ -36,7 +37,7 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                     <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>
                 </CardActions>
             </Card>
-        </Grid>
+        </ImageListItem>
     );
 }   
 
@@ -55,10 +56,6 @@ const useCardStyles = makeStyles((theme:Theme) => {
         },
     
         cardMedia: {
-        },
-    
-        gridItem: {
-            flexBasis: 0
         },
     
         cardBackground: {

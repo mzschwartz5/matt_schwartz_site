@@ -1,14 +1,15 @@
+import { Theme, useMediaQuery } from '@material-ui/core';
+import MobileAbout from './MobileAbout';
 import Timeline from './Timeline'
 
-/*
-    Main page - Container for whole site.
-    In the future, will add routing to control when each tab renders and to be able to link to a specific tab.
-*/
+
 const HomePage: React.FunctionComponent = (): JSX.Element =>
 {
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
+
     return(
     <>  
-        <Timeline/>
+        { isSmallScreen ? <MobileAbout/> : <Timeline/> }
     </>
     );
 }

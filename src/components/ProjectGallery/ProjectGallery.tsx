@@ -1,4 +1,5 @@
-import { makeStyles, Grid, Theme} from "@material-ui/core";
+import { Theme, useMediaQuery} from "@material-ui/core";
+import ImageList from '@mui/material/ImageList';
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { loadAllProjects, IProject } from "../../data/projects_db";
@@ -14,9 +15,11 @@ interface IProjectGaleryProps {
 const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IProjectGaleryProps): JSX.Element =>
 {
     const [projects, setProjects] = useState<IProject[]>([]);
-    const classes = useCardStyles(projects.length)();
     const activeUser = useRecoilValue(activeUserAtom);
-    
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
+    const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.between("sm","md"));
+
+
     useEffect(() => {
         loadAllProjects(setProjects)
     }, []);
@@ -41,35 +44,11 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
 
 
     return(
-        <Grid container
-            alignContent="flex-start"
-            alignItems="flex-start"
-            spacing={3}
-            className={classes.gridContainer}
-            direction="column"
-        >   
+        <ImageList variant="masonry" cols={isSmallScreen ? 1 : (isMediumScreen ? 2 : 3)}>
             {projectCards.length ? projectCards : cardSkeletons}
-        </Grid>
+        </ImageList>
     );
 }
 
-const useCardStyles = (numGridItems: number) => makeStyles((theme: Theme) => ({
-
-    // If this ever has problems, try looking into mui Image List component instead.
-    gridContainer: {
-            padding: "15px 15px 0px 15px",
-            [theme.breakpoints.only("xs")]: {
-                height: String(75 * numGridItems) + "vh"
-            },
-            [theme.breakpoints.between("sm","md")]: {
-                height: String(75 * numGridItems / 2) + "vh"
-            },
-            [theme.breakpoints.up("lg")]: {
-                height: String(75 * numGridItems / 3) + "vh"
-            },
-
-        },
-    })
-);
 
 export default ProjectGallery;
