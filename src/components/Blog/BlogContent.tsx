@@ -90,7 +90,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
                 <hr id="blog-divider"/>
                 {blogContent ? ReactHtmlParser(blogContent) : <DocumentSkeleton/>}
                 <hr />
-                <CommentSection id="comment-section" comments={comments} postNewComment={postNewComment}/>
+                <CommentSection id="comment-section-top" comments={comments} postNewComment={postNewComment}/>
                 <div className={classes.buttonContainer}>
                     <Button onClick={scrollToTopOfPage} className={classes.buttons}>    
                         <UpArrow/>
@@ -110,7 +110,7 @@ const scrollToTopOfPage = () => {
 }
 
 const scrollToCommentSection = () => {
-    document.getElementById("comment-section")?.scrollIntoView({behavior: 'smooth'});   
+    document.getElementById("comment-section-top")?.scrollIntoView({behavior: 'smooth'});   
 }
 
 const jumpToTopOfPage = () => {

@@ -25,6 +25,7 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
 
     const onClickReply = (_event: any) => {
         try {
+            if (commentText === "") return;
             postComment(commentText);
             setSuccessMessageActive(true);
             clearReply();    
@@ -50,15 +51,13 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
     return(
         <>
             <div className={classes.postContainer + " " + className} style={active ? {} : {display: "none"}}>
-                <div className={classes.interactions}>
-                    <div className={classes.avatar}>
-                        <Avatar src={activeUser ? activeUser.photoUrl : ""} imgProps={{referrerPolicy: "no-referrer"}} />
-                     </div>
-                    <TextField multiline variant="filled" value={commentText} className={classes.textField} placeholder="Add a comment..." onChange={onInputChange}/>
-                    <div>
-                        <Button onClick={onClickReply} variant="outlined" size="small" className={classes.buttons}>Reply</Button>
-                        <Button onClick={onClickClear} variant="outlined" size="small" className={classes.buttons}>Clear</Button>    
-                    </div>
+                <div className={classes.avatar}>
+                    <Avatar src={activeUser ? activeUser.photoUrl : ""} imgProps={{referrerPolicy: "no-referrer"}} />
+                </div>
+                <TextField multiline variant="filled" value={commentText} className={classes.textField} placeholder="Add a comment..." onChange={onInputChange}/>
+                <div className={classes.interactButtons}>
+                    <Button onClick={onClickReply} variant="outlined" size="small" className={classes.buttons}>Reply</Button>
+                    <Button onClick={onClickClear} variant="outlined" size="small" className={classes.buttons}>Clear</Button>    
                 </div>
             </div>
             <Snackbar open={successMessageActive} autoHideDuration={6000} message="Post in progress. Please refresh to see changes" onClose={onCloseSnackbar}/>
@@ -68,8 +67,9 @@ const PostComment: React.FunctionComponent<IPostCommentProps> = (props:IPostComm
 
 const usePostStyles = makeStyles({
     postContainer: {
-        paddingTop: "15px",
-        paddingBottom: "15px",
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap"
     },
 
     avatar: {
@@ -82,16 +82,14 @@ const usePostStyles = makeStyles({
         }
     },
 
-    interactions: {
-        display: "flex",
-        alignItems: "center"
-    },
-
     textField: {
-        width: "30vw",
+        flex: "50%",
         "& .MuiFilledInput-multiline": {
-            color: "white"
-        }
+            color: "white",
+            padding: "20px 12px 10px",
+            marginTop: "4px",
+            marginBottom: "4px"
+        },
     },
 
     buttons: {
@@ -101,6 +99,11 @@ const usePostStyles = makeStyles({
         "&:hover": {
             backgroundColor: "grey"
         },
+    },
+
+    interactButtons: {
+        marginLeft: "auto",
+        marginTop: "5px"
     }
 })
 

@@ -4,6 +4,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import SectionHeader from './SectionHeader';
 import PageLink from './PageLink';
 import LinkGroup from './LinkGroup';
+import AuthLogin from './AuthLogin';
 
 const TitleBar: React.FunctionComponent = (): JSX.Element =>
 {
@@ -19,9 +20,10 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
                 <LinkGroup/> 
             </div>
             <div className={classes.pageLinkDiv}>
-                <PageLink text={"Home"} linkTo={"/"} />
-                <PageLink text={"Projects"} linkTo={"/project_gallery"}/>
-                <PageLink text={"Blog"} linkTo={"/blog"} />
+                <PageLink text={"Home"} linkTo={"/"} className={classes.pageLink}/>
+                <PageLink text={"Projects"} linkTo={"/project_gallery"} className={classes.pageLink}/>
+                <PageLink text={"Blog"} linkTo={"/blog"} className={classes.pageLink}/>
+                <AuthLogin/>
             </div>
         </AppBar>
     </Slide>
@@ -44,6 +46,10 @@ const useStyles = makeStyles((theme: Theme) => {
             [theme.breakpoints.down("xs")]: {
                 margin: "10px 0px"
             }
+        },
+
+        pageLink: {
+            margin:"auto"
         },
 
         headerDiv: {

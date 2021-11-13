@@ -1,36 +1,45 @@
+import { Avatar, makeStyles, Theme, Tooltip } from "@material-ui/core";
 import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
+import { NavLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { auth } from "../../data/firebase";
 import { activeUserAtom } from "../../data/users_db";
-import PageLink from "./PageLink";
 
 interface IAuthLoginProps {
-    className?: string,
-    id?: string
+
 }
 
 const AuthLogin: React.FunctionComponent<IAuthLoginProps> = (props: IAuthLoginProps) =>
 {
-    const {className = "", id} = props;
     const activeUser = useRecoilValue(activeUserAtom);
     const provider = new GoogleAuthProvider();
+    const classes = useLoginStyles(); 
 
-    const onClickLogin = () => {
-        signInWithRedirect(auth, provider);
-    }
-
-    const onClickLogout = () => {
-        signOut(auth);
+    const onClickAvatar = () => {
+        activeUser ? signOut(auth) : signInWithRedirect(auth, provider)
     }
 
     return(
-        <>
-            {activeUser ? 
-                <PageLink onClick={onClickLogout} text="Logout" linkTo="/" className={className} id={id}/> : 
-                <PageLink onClick={onClickLogin} text="Login" linkTo="/" className={className} id={id}/>
-            }
-        </>
+        <Tooltip title={activeUser ? "Logout" : "Login"} arrow>
+            <div onClick={onClickAvatar} style={{margin: "auto"}}>
+                <Avatar src={activeUser ? activeUser.photoUrl : ""} className={classes.avatar}  imgProps={{referrerPolicy: "no-referrer"}} />
+            </div>
+        </Tooltip>
     );
 }
+
+const useLoginStyles = makeStyles((theme: Theme) => {
+    return(
+        {
+            avatar: {
+                cursor: "pointer",
+                boxShadow: "1px 1px 4px black",
+                "& :hover": {
+                    opacity: ".8"
+                }
+            }
+        }
+    )
+})
 
 export default AuthLogin;

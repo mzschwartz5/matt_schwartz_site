@@ -37,7 +37,14 @@ const theme = createTheme({
     paper: {
       main: "#faf4eb"
     }
-  }
+  },
+  overrides: {
+    MuiTooltip: {
+        tooltip: {
+            fontSize: "1em",
+        },
+    },
+},
 });
 
 function App() {

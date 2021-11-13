@@ -15,10 +15,7 @@ const CommentSection: React.FunctionComponent<ICommentSection> = (props:IComment
 
     return(
         <>
-            <div id={id} className = {classes.root}>
-                <PostComment className={classes.post} active={true} setActiveState={(val: boolean) => {/* permanantly active */}} postComment={postNewComment} />
-                <AuthLogin id="login" />
-            </div>
+            <PostComment className={classes.post} active={true} setActiveState={(val: boolean) => {/* permanantly active */}} postComment={postNewComment} />
             <div className="comment-container">
                 {comments}
             </div>
@@ -28,25 +25,13 @@ const CommentSection: React.FunctionComponent<ICommentSection> = (props:IComment
 
 const useCommentStyles = makeStyles((theme: Theme) => {
     return({
-        root: {
-            display: "flex",
-            alignItems: "center",
-            "& #login": {
-                backgroundColor: "transparent",
-                color: theme.palette.paper.main,
-                borderColor: theme.palette.paper.main,
-                border: "1px solid",
-
-                "&:hover": {
-                    backgroundColor: theme.palette.secondary.main
-                }
-           }
-        },
-
         post: {
-            flexBasis: "95%"
+            marginBottom: "15px"
         },
 
+        login: {
+            marginLeft: "auto"
+        }
         
     })
 })

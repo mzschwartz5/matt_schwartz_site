@@ -1,4 +1,4 @@
-import { Avatar, makeStyles } from "@material-ui/core";
+import { Avatar, makeStyles, Theme } from "@material-ui/core";
 import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@material-ui/icons/ThumbDownOutlined";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
@@ -65,7 +65,7 @@ const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogComm
     return(
         <div className={classes.commentContainer}>
             {editingActive ? <PostComment defaultText={text} active={editingActive} postComment={editThisComment} setActiveState={setEditingActive}/> 
-            : <div>
+            : <div style={{display: "flex"}}>
                 <div className={classes.avatar}>
                     <Avatar src={comment.userPhotoUrl} imgProps={{referrerPolicy: "no-referrer"}} />
                 </div>
@@ -87,9 +87,7 @@ const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogComm
                             {(activeUser?.userId === comment.userId) ? <div onClick={onClickEditButton} className={classes.button}> Edit </div> : ""} 
                         </div>
                     </div>
-                    <div className={classes.replyArea}>
-                        <PostComment active={replyActive} postComment={replyToThisComment} setActiveState={setReplyActive}/>
-                    </div>
+                    <PostComment active={replyActive} postComment={replyToThisComment} setActiveState={setReplyActive}/>
                 </div>
             </div>}
             {children}
@@ -97,78 +95,83 @@ const BlogComment: React.FunctionComponent<IBlogCommentProps> = (props:IBlogComm
     );
 }
 
-const commentStyles = makeStyles({
-    commentContainer: {
-        margin: "10px 0px 15px 50px"
-    },
+const commentStyles = makeStyles((theme:Theme) => {
 
-    avatar: {
-        width: "auto",
-        display: "inline-block",
-        verticalAlign: "top",
-        "& .MuiAvatar-img": {
-            width: "100%"
+    return(
+        {
+            commentContainer: {
+                margin: "10px 0px 15px 50px",
+                [theme.breakpoints.down("xs")]: {
+                    marginLeft: "0px"
+                }
+            },
+        
+            avatar: {
+                width: "auto",
+                display: "inline-block",
+                verticalAlign: "top",
+                "& .MuiAvatar-img": {
+                    width: "100%"
+                }
+            },
+        
+            commentData: {
+                display: "inline-block",
+                marginLeft: "10px",
+                flex: 1
+            },
+        
+            userName: {
+                color: "lightblue",
+                margin: "0px 5px 0px 0px",
+                fontWeight: "bold"
+            },
+        
+            date: {
+                color: "lightgray",
+                fontWeight: "lighter",
+                marginRight: "10px"
+            },
+        
+            edited: {
+                color: "lightgray",
+                fontWeight: "lighter",
+                fontStyle: "italic"
+            },
+        
+            votingIcons: {
+                cursor: "pointer",
+                marginLeft: "10px",
+                color: "lightgrey"
+            },
+        
+            interactSection: {
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px"
+            },
+        
+            textSection: {
+                margin: "5px 0px 5px 0px"
+            },
+        
+            metaDataSection: {
+            
+            },
+        
+            buttonContainer: {
+                cursor: "pointer",
+                fontWeight: "bold",
+                marginLeft: "15px",
+                color: "lightgrey",
+                display: "flex",  
+            },
+        
+            button: {
+                marginLeft: "10px"
+            },
         }
-    },
-
-    commentData: {
-        display: "inline-block",
-        marginLeft: "10px"
-    },
-
-    userName: {
-        color: "lightblue",
-        margin: "0px 5px 0px 0px",
-        fontWeight: "bold"
-    },
-
-    date: {
-        color: "lightgray",
-        fontWeight: "lighter",
-        marginRight: "10px"
-    },
-
-    edited: {
-        color: "lightgray",
-        fontWeight: "lighter",
-        fontStyle: "italic"
-    },
-
-    votingIcons: {
-        cursor: "pointer",
-        marginLeft: "10px",
-        color: "lightgrey"
-    },
-
-    interactSection: {
-        display: "flex",
-        alignItems: "center",
-        marginBottom: "5px"
-    },
-
-    textSection: {
-        margin: "5px 0px 5px 0px"
-    },
-
-    metaDataSection: {
-    
-    },
-
-    buttonContainer: {
-        cursor: "pointer",
-        fontWeight: "bold",
-        marginLeft: "15px",
-        color: "lightgrey",
-        display: "flex",  
-    },
-
-    button: {
-        marginLeft: "10px"
-    },
-
-    replyArea: {
-
-    }
+    )
 }); 
 
 export default BlogComment;
