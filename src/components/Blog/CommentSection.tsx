@@ -16,7 +16,7 @@ const CommentSection: React.FunctionComponent<ICommentSection> = (props:IComment
     return(
         <>
             <PostComment className={classes.post} active={true} setActiveState={(val: boolean) => {/* permanantly active */}} postComment={postNewComment} />
-            <div className="comment-container">
+            <div id={id} className="comment-container">
                 {comments}
             </div>
         </>
