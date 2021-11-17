@@ -18,7 +18,7 @@ export enum BlogStatus {
 export interface IBlogReference {
     ID: string;
     author: string;
-    category: string; // eventually turn into enum
+    category: string; 
     excerpt: string;
     featuredImage: string; // reference to blob. Can we use storagereference datatype?
     lastUpdate: Timestamp;
@@ -44,7 +44,10 @@ export function loadAllBlogReferences(refSetCallback: IBlogRefSetCallback) {
         getDocs(BLOGS_COLL_REF).then((querySnapshot) => {
 
             querySnapshot.forEach((doc) => {
-                let blogRef = doc.data();
+                let blogRef = {
+                    ...doc.data(),
+                    ID: doc.id
+                };
                 docs.push(blogRef as IBlogReference);
             }); 
 
@@ -97,7 +100,11 @@ export function getBlogFromTitle(title: string, setBlogCallback: IBlogSetCallbac
     // but we'll enforce it during publishing of a blog.
     try {
         getDocs(queryString).then((querySnapshot) => {
-            setBlogCallback(querySnapshot.docs[0].data() as IBlogReference);
+            let blogRef = {
+                ...querySnapshot.docs[0].data(),
+                ID: querySnapshot.docs[0].id
+            }
+            setBlogCallback(blogRef as IBlogReference);
         });
     }
     catch (e: any) {
@@ -107,7 +114,6 @@ export function getBlogFromTitle(title: string, setBlogCallback: IBlogSetCallbac
 
 export function createNewBlog(blogRef: IBlogReference) {
     const blogDoc = doc(BLOGS_COLL_REF);
-    blogRef.ID = blogDoc.id;
     setDoc(blogDoc, blogRef);
     
     return blogDoc.id;
