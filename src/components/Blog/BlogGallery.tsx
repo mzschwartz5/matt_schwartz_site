@@ -43,16 +43,14 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     return(
         <Switch>
             <Route exact path={routeMatch.path}>
-                <div>
-                    <Grid container
-                        alignContent="flex-start"
-                        alignItems="center"
-                        spacing={3}
-                        className={classes.gridContainer}
-                    >  
-                        {blogCards.length ? blogCards : blogCardSkeletons}
-                    </Grid>
-                </div>
+                <Grid container
+                    alignContent="flex-start"
+                    alignItems="stretch"
+                    spacing={3}
+                    className={classes.gridContainer}
+                >  
+                    {blogCards.length ? blogCards : blogCardSkeletons}
+                </Grid>
             </Route>
             <Route path={routeMatch.path + "/create/" + editedBlog?.title}>
                 {editedBlog ? <BlogWriter blogRef={editedBlog}/> : ""}
