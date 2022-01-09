@@ -30,7 +30,7 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     const blogCards = blogReferences.map((ref) => {
         if (!userCanViewBlog(activeUser?.isAdmin, ref.status)) return null;
         return <BlogCard blogRef={ref} key={ref.ID} adminView={activeUser?.isAdmin || false} setEditedBlog={setEditedBlog}/>
-    })
+    });
 
     const blogCardSkeletons = Array.from(Array(12).keys()).map((_val, idx) => {
         return <CardSkeleton key={idx}/>

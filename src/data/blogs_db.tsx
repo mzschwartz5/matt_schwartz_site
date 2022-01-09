@@ -51,12 +51,16 @@ export function loadAllBlogReferences(refSetCallback: IBlogRefSetCallback) {
                 docs.push(blogRef as IBlogReference);
             }); 
 
-            refSetCallback(docs);
+            refSetCallback(docs.sort(sortBlogReferencesByDate));
         });
     }
     catch (e: any) {
         throw new Error(e);
     }
+}
+
+const sortBlogReferencesByDate = (a: IBlogReference, b: IBlogReference) => {
+    return(a.postDate.seconds - b.postDate.seconds);
 }
 
 interface IContentSetCallback {

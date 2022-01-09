@@ -1,13 +1,20 @@
-import { useEffect } from "react";
-import { PluginProps } from "react-markdown-editor-lite";
+import { useEffect, useState } from "react";
+import Editor, { PluginProps } from "react-markdown-editor-lite";
 import { IBlogReference, saveBlogDraft } from "../../../data/blogs_db";
 
 // Override the built-in image button in the markdown editor toolbar 
 const SaveBlogPlugin = (props: PluginProps) =>
 {
     const blogRef: IBlogReference = props.config.blogRef;
-
+    const [hasChanged, setHasChanged] = useState(false);
+    const setHasChangedTrue = () => {
+        setHasChanged(true);
+    }
+    props.editor.on("change", setHasChangedTrue);
+    
     const save = () => {
+        if (!hasChanged) return;
+
         const htmlContent = props.editor.getHtmlValue();
         const rawText = props.editor.getMdValue();
         const blogDraft: IBlogReference = {
@@ -16,6 +23,7 @@ const SaveBlogPlugin = (props: PluginProps) =>
             featuredImage: getFeaturedImage(rawText)
         }
         saveBlogDraft(blogDraft, htmlContent, rawText);
+        setHasChanged(false); // reset flag
         console.log("Saved!");
     }
 

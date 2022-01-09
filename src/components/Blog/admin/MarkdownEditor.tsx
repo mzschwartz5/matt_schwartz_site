@@ -20,7 +20,7 @@ const MarkdownEditor: React.FunctionComponent<IMarkDownEditorProps> = (props:IMa
     const [value, setValue] = useState(defaultValue);
 
     const imagePlugingConfig = {filePath: (blogRef.storagePath + "/images")} ;
-    const savePluginConfig = {blogRef: blogRef}
+    const savePluginConfig = {blogRef: blogRef};
     MdEditor.use(ImageUploadPlugin, imagePlugingConfig);
     MdEditor.use(SaveBlogPlugin, savePluginConfig);
 
@@ -30,7 +30,7 @@ const MarkdownEditor: React.FunctionComponent<IMarkDownEditorProps> = (props:IMa
     }
 
     const onEditorChange = (data: IEditorData) => {
-        setValue(data.text);
+        setValue(data.text);        
     }
 
     useEffect(() => {
