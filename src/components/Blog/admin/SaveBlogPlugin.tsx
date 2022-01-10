@@ -30,7 +30,7 @@ const SaveBlogPlugin = (props: PluginProps) =>
     }
 
     useEffect(() => { 
-        const autoSave = setTimeout(save, 10000); // autosave once per minute (setTimeout occurs once but will rerun when dependency changes)
+        const autoSave = setTimeout(save, 60000); // autosave once per minute (setTimeout occurs once but will rerun when dependency changes)
     },[hasChanged]);
 
     return(
