@@ -22,15 +22,16 @@ const SaveBlogPlugin = (props: PluginProps) =>
             excerpt: getExcerpt(htmlContent, 500),
             featuredImage: getFeaturedImage(rawText)
         }
+
         saveBlogDraft(blogDraft, htmlContent, rawText);
         setHasChanged(false); // reset flag
+
         console.log("Saved!");
     }
 
     useEffect(() => { 
-        const autoSave = setInterval(save, 60000); // autosave once per minute
-        return () => clearInterval(autoSave);
-    },[]);
+        const autoSave = setTimeout(save, 10000); // autosave once per minute (setTimeout occurs once but will rerun when dependency changes)
+    },[hasChanged]);
 
     return(
         <span onClick={save} className="button button-type-image" title="Save" style={{position: "relative"}}>
