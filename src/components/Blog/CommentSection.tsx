@@ -1,5 +1,4 @@
 import { makeStyles, Theme } from "@material-ui/core";
-import AuthLogin from "../core/AuthLogin";
 import PostComment from "./PostComment";
 
 interface ICommentSection {

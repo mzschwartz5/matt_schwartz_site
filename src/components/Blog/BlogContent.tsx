@@ -37,7 +37,9 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
         }
 
         jumpToTopOfPage();
-        getBlogFromTitle(blogTitle, loadBlog);
+        const blogRef = getBlogFromTitle(blogTitle);
+        blogRef.then(ref => loadBlog(ref));
+
         smoothscroll.polyfill(); // kick off polyfill support for smooth scrolling (for browsers like Safari that don't natively support it) 
     },[activeUser]);
 

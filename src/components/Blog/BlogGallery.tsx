@@ -24,7 +24,8 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
 
     // Load metadata for all blogs upon component mount
     useEffect(() => {
-        loadAllBlogReferences(setBlogReferences);
+        const blogRefs = loadAllBlogReferences();
+        blogRefs.then(refs => setBlogReferences(refs));
     }, []);     
 
     const blogCards = blogReferences.map((ref) => {

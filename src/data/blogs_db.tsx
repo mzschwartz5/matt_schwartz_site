@@ -29,34 +29,29 @@ export interface IBlogReference {
     storagePath: string;
 }
 
-interface IBlogRefSetCallback {
-     (refs: IBlogReference[]): void;
-}
-
 // Load all blog reference documents from the Firebase datastore
 // Used primarily to show a selection of all avaiable blogs to users.
-export function loadAllBlogReferences(refSetCallback: IBlogRefSetCallback) {
+export async function loadAllBlogReferences() {
+    let docs: IBlogReference[] = [];
 
     try {
-        let docs: IBlogReference[] = [];
-
         // A "QuerySnapshot" is Firebase's term for a query result
-        getDocs(BLOGS_COLL_REF).then((querySnapshot) => {
-
-            querySnapshot.forEach((doc) => {
-                let blogRef = {
-                    ...doc.data(),
-                    ID: doc.id
-                };
-                docs.push(blogRef as IBlogReference);
-            }); 
-
-            refSetCallback(docs.sort(sortBlogReferencesByDate));
-        });
+        const querySnapshot = await getDocs(BLOGS_COLL_REF);
+        
+        querySnapshot.forEach((doc) => {
+            let blogRef = {
+                ...doc.data(),
+                ID: doc.id
+            };
+            docs.push(blogRef as IBlogReference);
+        }); 
+        
     }
     catch (e: any) {
         throw new Error(e);
     }
+
+    return docs;
 }
 
 const sortBlogReferencesByDate = (a: IBlogReference, b: IBlogReference) => {
@@ -69,51 +64,50 @@ interface IContentSetCallback {
 
 // Load the content for a single blog entry. Pass in callback for setting content. 
 // Content is set in the form of a string. Use ReactHtmlParser before using content.
-export function loadBlogContent(blogPath: string, contentSetCallback: IContentSetCallback) {
+export async function loadBlogContent(blogPath: string, contentSetCallback: IContentSetCallback) {
     
     // Use blog path to get URL to content, then make an HTTP request to load content.
     // Content is in form of a markdown file with references to images on the blob that will get resolved automatically by the browser.     
-    getDownloadURL(ref(storage, blogPath))
-        .then((url) => {
+    const url = await getDownloadURL(ref(storage, blogPath))
             
-                const xhr = new XMLHttpRequest();
-                xhr.responseType = 'blob';
-                
-                xhr.onload = (event) => {
-                    const response = xhr.response;
-                    response.text().then((text: string) => contentSetCallback(text));
-                };
-                xhr.open('GET', url);
-
-                xhr.send();   
-        }).catch((reason) => {
-            console.log("Blog load failed: " + reason)
-        }).finally(() => {
-            contentSetCallback(""); // set null string as content. Make this better later
-        });
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    
+    xhr.onload = (event) => {
+        const response = xhr.response;
+        response.text().then((text: string) => contentSetCallback(text));
+    };
+    xhr.open('GET', url);
+    
+    try {
+        xhr.send();   
+    }
+    catch(reason) {
+        console.log("Blog load failed: " + reason)
+    }    
+    finally {
+        contentSetCallback(""); // set null string as content. Make this better later
+    };
 }
 
-interface IBlogSetCallback {
-    (blogRef: IBlogReference): void;
-}
-
-export function getBlogFromTitle(title: string, setBlogCallback: IBlogSetCallback) {
+export async function getBlogFromTitle(title: string) {
     const queryString = query(BLOGS_COLL_REF, where("title","==",title));
+    let blogRef = {}
 
     // This should only ever return one document. Firebase doesn't support uniqueness constraints
     // but we'll enforce it during publishing of a blog.
     try {
-        getDocs(queryString).then((querySnapshot) => {
-            let blogRef = {
-                ...querySnapshot.docs[0].data(),
-                ID: querySnapshot.docs[0].id
-            }
-            setBlogCallback(blogRef as IBlogReference);
-        });
+        const querySnapshot = await getDocs(queryString);
+        blogRef = {
+            ...querySnapshot.docs[0].data(),
+            ID: querySnapshot.docs[0].id
+        }
     }
     catch (e: any) {
         throw new Error(e);
     }
+
+    return (blogRef as IBlogReference);
 }
 
 export function createNewBlog(blogRef: IBlogReference) {

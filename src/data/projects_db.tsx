@@ -1,5 +1,4 @@
-import {collection, doc, DocumentReference, getDocs, query, setDoc, Timestamp} from "firebase/firestore";
-import {IBlogReference} from "./blogs_db";
+import {collection, doc, getDocs, query, setDoc, Timestamp} from "firebase/firestore";
 import { db } from "./firebase";
 
 const PROJECT_COLLECTION = "Projects"
@@ -21,29 +20,23 @@ export enum ProjectStatus {
     published = 1
 }
 
-interface IProjectSetCallback {
-    (refs: IProject[]): void;
-}
-
 // Can we extract this logic into the database.tsx routine for common use in projects_db and blogs_db?
-export function loadAllProjects (projectSetCallback: IProjectSetCallback) {
+export async function loadAllProjects() {
     const collectionRef = collection(db, PROJECT_COLLECTION);
     const queryString = query(collectionRef);
+    let docs: IProject[] = [];
 
     try {
-        let docs: IProject[] = [];
-
         // A "QuerySnapshot" is Firebase's term for a query result
-        getDocs(queryString).then((querySnapshot) => {
-
-            querySnapshot.forEach((doc) => docs.push(doc.data() as IProject)); // is this type assertion dangerous?
-
-            projectSetCallback(docs.sort(sortProjectsByStartDate));
-        });
+        const querySnapshot = await getDocs(queryString)
+        querySnapshot.forEach((doc) => docs.push(doc.data() as IProject)); // is this type assertion dangerous?
+        docs.sort(sortProjectsByStartDate);
     }
     catch (e: any) {
         throw new Error(e);
     }
+
+    return docs;
 }
 
 // Newest first

@@ -1,6 +1,5 @@
 import { Avatar, makeStyles, Theme, Tooltip } from "@material-ui/core";
 import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
-import { NavLink } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { auth } from "../../data/firebase";
 import { activeUserAtom } from "../../data/users_db";

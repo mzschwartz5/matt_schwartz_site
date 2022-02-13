@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Editor, { PluginProps } from "react-markdown-editor-lite";
+import { PluginProps } from "react-markdown-editor-lite";
 import { IBlogReference, saveBlogDraft } from "../../../data/blogs_db";
 
 // Override the built-in image button in the markdown editor toolbar 
@@ -30,7 +30,7 @@ const SaveBlogPlugin = (props: PluginProps) =>
     }
 
     useEffect(() => { 
-        const autoSave = setTimeout(save, 60000); // autosave once per minute (setTimeout occurs once but will rerun when dependency changes)
+        setTimeout(save, 60000); // autosave once per minute (setTimeout occurs once but will rerun when dependency changes)
     },[hasChanged]);
 
     return(

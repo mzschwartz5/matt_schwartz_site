@@ -21,7 +21,8 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
 
 
     useEffect(() => {
-        loadAllProjects(setProjects)
+        const projectData = loadAllProjects();
+        projectData.then(data => setProjects(data));
     }, []);
 
     const projectCards = projects.map((proj) => {
