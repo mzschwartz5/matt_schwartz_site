@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, makeStyles, DialogContent, DialogTitle } from "@material-ui/core";
-import TextField from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { useState } from "react";
 import { createProject, IProject, ProjectStatus } from "../../../data/projects_db";
 import CreateCard from "../../core/CreateCard";
@@ -82,8 +82,8 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                     <DialogTitle>New Project</DialogTitle>
                     <DialogContent className={classes.dialogContent}>
                         <TextField placeholder="Project Title" value={title} onChange={onTitleInputChange} className={classes.inputField}/>
-                        <DesktopDatePicker label="Start date" inputFormat="MM/dd/yyyy" value={startDate} onChange={onStartDateChange}  renderInput={props => <TextField {...props} />} InputProps={{style:{marginTop: "10px", marginBottom: "10px"}}}/>
-                        <DesktopDatePicker label="End date" inputFormat="MM/dd/yyyy" value={endDate} onChange={onEndDateChange} renderInput={props => <TextField {...props} />} InputProps={{style:{marginTop: "10px", marginBottom: "10px"}}} />
+                        <DesktopDatePicker label="Start date" inputFormat="MM/dd/yyyy" value={startDate} onChange={onStartDateChange}  renderInput={(props: TextFieldProps) => <TextField {...props} />} InputProps={{style:{marginTop: "10px", marginBottom: "10px"}}}/>
+                        <DesktopDatePicker label="End date" inputFormat="MM/dd/yyyy" value={endDate} onChange={onEndDateChange} renderInput={(props: TextFieldProps) => <TextField {...props} />} InputProps={{style:{marginTop: "10px", marginBottom: "10px"}}} />
                         <TextField multiline placeholder="Description" value={description} onChange={onDescriptionChange} className={classes.inputField}/>
                         <TextField placeholder="Github URL" value={githubUrl} onChange={onGithubUrlChange} className={classes.inputField}/>
                         <label>Featured Image</label>

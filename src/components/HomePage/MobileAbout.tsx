@@ -1,9 +1,10 @@
 import { Avatar, Theme, makeStyles, Card, CardContent } from "@material-ui/core";
 import WorkImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
+import AmazonWorkImagePath from '../../assets/images/homepage/amazon.png';
 import ProjectImagePath from '../../assets/images/homepage/projects_image.png';
 import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
 import BikeImagePath from "../../assets/images/homepage/bike_image.jpg";
-import { educationText, workExperienceText, personalProjectText, whatsNextText } from '../../data/static_content';
+import { amazonWorkExperienceText, educationText, epicWorkExperienceText, personalProjectText, whatsNextText } from '../../data/static_content';
 
 const MobileAbout: React.FunctionComponent = () =>
 {
@@ -11,7 +12,8 @@ const MobileAbout: React.FunctionComponent = () =>
     return(
         <>
             <AboutSection src={LinkedInImagePath} sectionTitle="Education" imageDesc={educationText}/>
-            <AboutSection src={WorkImagePath} sectionTitle="Work Experience" imageDesc={workExperienceText}/>
+            <AboutSection src={WorkImagePath} sectionTitle="Epic" imageDesc={epicWorkExperienceText}/>
+            <AboutSection src={AmazonWorkImagePath} sectionTitle="Amazon Web Services" imageDesc={amazonWorkExperienceText}/>
             <AboutSection src={ProjectImagePath} sectionTitle="Projects" imageDesc={personalProjectText}/>
             <AboutSection src={BikeImagePath} sectionTitle="What's Next?" imageDesc={whatsNextText}/>
         </>

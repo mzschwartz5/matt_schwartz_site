@@ -12,7 +12,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { useMemo, useRef } from "react";
 import { Theme } from '@material-ui/core';
-import WorkImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
+import EpicImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
+import AmazonImagePath from '../../assets/images/homepage/amazon.png';
 import ProjectImagePath from '../../assets/images/homepage/projects_image.png';
 import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
 import BikeImagePath from "../../assets/images/homepage/bike_image.jpg";
@@ -20,7 +21,7 @@ import SchoolIcon from '@material-ui/icons/School';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
 import HelpIcon from '@material-ui/icons/Help';
-import { educationText, workExperienceText, personalProjectText, whatsNextText } from '../../data/static_content';
+import { educationText, epicWorkExperienceText, amazonWorkExperienceText, personalProjectText, whatsNextText } from '../../data/static_content';
 
 const Timeline: React.FunctionComponent = () =>
 {
@@ -29,9 +30,10 @@ const Timeline: React.FunctionComponent = () =>
     return(
         <MuiTimeline align="alternate" className={classes.timelineRoot}>
             <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={educationText} imageTitle="Education" DotIcon={SchoolIcon}/>
-            <TimelineItemWrapper imagePath={WorkImagePath} imageAltText="Rice University" imageDesc={workExperienceText} imageTitle="Work Experience" DotIcon={WorkIcon}/>
-            <TimelineItemWrapper imagePath={ProjectImagePath} imageAltText="Half Marathon 2019" imageDesc={personalProjectText} imageTitle="Personal Projects" DotIcon={HomeWorkIcon}/>
-            <TimelineItemWrapper imagePath={BikeImagePath} imageAltText="LinkedIn" imageDesc={whatsNextText} imageTitle="What's Next?" DotIcon={HelpIcon}/>
+            <TimelineItemWrapper imagePath={EpicImagePath} imageAltText="Epic" imageDesc={epicWorkExperienceText} imageTitle="Epic" DotIcon={WorkIcon}/>
+            <TimelineItemWrapper imagePath={AmazonImagePath} imageAltText="Amazon" imageDesc={amazonWorkExperienceText} imageTitle="Amazon Web Services" DotIcon={WorkIcon}/>
+            <TimelineItemWrapper imagePath={ProjectImagePath} imageAltText="Bejewel3d" imageDesc={personalProjectText} imageTitle="Personal Projects" DotIcon={HomeWorkIcon}/>
+            <TimelineItemWrapper imagePath={BikeImagePath} imageAltText="Biking" imageDesc={whatsNextText} imageTitle="What's Next?" DotIcon={HelpIcon}/>
         </MuiTimeline>
     );
 }
