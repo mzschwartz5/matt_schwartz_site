@@ -15,7 +15,7 @@ export const personalProjectText = `
 `;
 
 export const whatsNextText = `
-    The writing is on the wall! As I've put down my roots in Philadelphia, my place of work has decided to force its employees to relocate (in my case, across the country). I'm now looking for new opportunities - either using my existing skill set in backend software engineering and distributed systems, or exploring my passion for computer graphics. Shortly, I'll be starting a masters' program at University of Pennsylvania in Computer Graphics and Game Technology, part time. And, hopefully, I'll find a full-time job to occupy the rest of my time, before I'm forced to jump ship at AWS. If you or anyone you know if looking for a Philadelphia-based software engineer, please get in touch!
+    The writing is on the wall! As I've put down my roots in Philadelphia, my place of work has decided to force its employees to relocate (in my case, across the country). I'm now looking for new opportunities - either using my existing skill set in backend software engineering and distributed systems, or exploring my passion for computer graphics. Shortly, I'll be starting a masters' program at University of Pennsylvania in Computer Graphics and Game Technology, part time. And, hopefully, I'll find a full-time job to occupy the rest of my time, before I'm forced to jump ship at AWS. If you or anyone you know is looking for a Philadelphia-based software engineer, please get in touch!
     
     Congrats for reaching the bottom of the page! There's no reward for making it this far, but you did it anyway!  
 `;
