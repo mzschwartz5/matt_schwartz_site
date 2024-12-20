@@ -10,7 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from "@material-ui/core/styles";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
-import { useMemo, useRef } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Theme } from '@material-ui/core';
 import EpicImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
 import AmazonImagePath from '../../assets/images/homepage/amazon.png';
@@ -51,10 +51,15 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
     const {imagePath, imageAltText, imageDesc, imageTitle, DotIcon} = props;
 
     // When an observed element passes a threshold of on-screen visibility, update its opacity accordingly for fade effect.
+    const [hasAnimated, setHasAnimated] = useState(false);
     const ref = useRef(null); // becomes ref to the element to fade
     const thresholds = useMemo(() => Array(100).fill(0.01).map((val,idx) => (val += 0.01*idx)), []);
     const entry = useIntersectionObserver(ref, {threshold: thresholds});             
     const classes = useTimelineItemStyles({intersectionRatio: Number(entry?.intersectionRatio)});
+
+    if (Number(entry?.intersectionRatio) >= 0.5 && !hasAnimated) {
+        setHasAnimated(true);
+    }
 
     return(
         <TimelineItem className={classes.timelineItem} >
@@ -68,7 +73,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                     />
                 </Card>
             </TimelineContent>
-            <TimelineSeparator>
+            <TimelineSeparator className={classes.timelineSeparator}>
                 <TimelineConnector className={classes.timelineConnector}/>
                 <TimelineDot className={classes.timelineDot} variant="outlined">
                     <DotIcon/>
@@ -76,7 +81,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                 <TimelineConnector className={classes.timelineConnector}/>
             </TimelineSeparator>
             <TimelineOppositeContent className={classes.timelineOppositeContent}>
-                <div className={Number(entry?.intersectionRatio) >= 0.5 ? "cardTextAnimated" : "cardText"}>
+                <div className={hasAnimated ? "cardTextAnimated" : "cardText"}>
                     <h2 className="imageTitle">{imageTitle}</h2>
                     <Card className={classes.cardOppositeContent}>
                         <CardContent>
@@ -127,6 +132,8 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
                     justifyContent: "flex-start",
                 },
                 "& .imageTitle": {
+                    marginLeft: "10px",
+                    marginRight: "10px",
                     textAlign: "right",
                     color: accentColor,
                 }
@@ -149,6 +156,8 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
                     justifyContent: "flex-end",
                 },
                 "& .imageTitle": {
+                    marginLeft: "10px",
+                    marginRight: "10px",
                     textAlign: "left",
                     color: accentColor,
                 }
@@ -173,8 +182,6 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
         },
 
         cardOppositeContent: ({intersectionRatio}) => ({
-            marginLeft: '10px',
-            marginRight: '10px',
             opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
             backgroundColor: paperColor,
             textAlign: "left",
@@ -197,6 +204,10 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             backgroundColor: tertiaryColor,
             width: "4px",
         },
+
+        timelineSeparator: {
+            padding: "0px 10px 0px 10px",
+        }
     });   
 });
 
