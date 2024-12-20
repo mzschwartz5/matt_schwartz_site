@@ -57,14 +57,14 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
     const classes = useTimelineItemStyles({intersectionRatio: Number(entry?.intersectionRatio)});
 
     return(
-        <TimelineItem className={classes.timelineItemContent} >
-            <TimelineContent className={classes.timelineItemImage}>
+        <TimelineItem className={classes.timelineItem} >
+            <TimelineContent className="timelineContent">
                 <Card className={classes.card}>
                     <CardMedia
                         ref={ref} 
                         image={imagePath}
                         title={imageAltText}
-                        className={classes.cardHeight}
+                        className={classes.cardMedia}
                     />
                 </Card>
             </TimelineContent>
@@ -76,7 +76,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                 <TimelineConnector className={classes.timelineConnector}/>
             </TimelineSeparator>
             <TimelineOppositeContent className={classes.timelineOppositeContent}>
-                <div className={Number(entry?.intersectionRatio) >= 0.5 ? "cardTextAnimated" : "cardText"}  style={{marginTop: "-52px"}}> {/*change this inline style later*/}
+                <div className={Number(entry?.intersectionRatio) >= 0.5 ? "cardTextAnimated" : "cardText"}>
                     <h2 className="imageTitle">{imageTitle}</h2>
                     <Card className={classes.cardOppositeContent}>
                         <CardContent>
@@ -103,55 +103,67 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
     const accentColor = theme.palette.accent.main;
 
     return({
-        timelineItemImage: {
-            textAlign: 'left',
-        },
-
         // All alternating styles applied to the timeline are here
-        timelineItemContent: { 
+        timelineItem: {
+            height: "75vh",
             overflowX: "hidden",
+            overflowY: "hidden",
             "&:nth-child(even)": {
                 backgroundColor: secondaryColor,
-                "& .imageTitle": {
-                    textAlign: "right",
-                    color: accentColor
-                },
                 "& .cardTextAnimated": {
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
                     transitionDuration: "600ms",
                     transitionTimingFunction: "cubic-bezier(0.33, 1, 0.68, 1)",
                     transitionDelay: "100ms"
                 },
                 "& .cardText": {
                     transform: "translate(-105%)",
+                },
+                "& .timelineContent": {
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                },
+                "& .imageTitle": {
+                    textAlign: "right",
+                    color: accentColor,
                 }
             },
             "&:nth-child(odd)": {
-                "& .imageTitle": {
-                    textAlign: "left",
-                    color: accentColor
-                },
                 "& .cardTextAnimated": {        
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
                     transitionDuration: "600ms",
                     transitionTimingFunction: "cubic-bezier(0.33, 1, 0.68, 1)",
                     transitionDelay: "100ms"
                 },
                 "& .cardText": {
                     transform: "translate(105%)",
+                },
+                "& .timelineContent": {
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                },
+                "& .imageTitle": {
+                    textAlign: "left",
+                    color: accentColor,
                 }
-            }
+            },
         },
 
-        cardHeight: {
-            height: '95vh',
+        cardMedia: {
+            height: '100%',
         },
 
         card: ({intersectionRatio}) => ({
-            marginTop: '20px',
-            marginLeft: '10px',
-            marginRight: '10px',
-            marginBottom: '20px',
             opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
-            borderRadius: "10px"
+            borderRadius: "5px",
+            width: "65%",
+            height: '90%',
         }),
 
         timelineOppositeContent: {
@@ -164,7 +176,6 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             marginLeft: '10px',
             marginRight: '10px',
             opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
-            alignSelf: "center",
             backgroundColor: paperColor,
             textAlign: "left",
             padding: "0px 12px 0px 12px",
@@ -173,12 +184,13 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
                 lineHeight: "1.6em",
                 fontSize: "17px",
                 textIndent: "35px"
-            }
+            },
+            width: "80%",
         }),
 
         timelineDot: {
-            color: paperColor ,
-            borderColor: tertiaryColor ,
+            color: paperColor,
+            borderColor: tertiaryColor,
         },
 
         timelineConnector: {
