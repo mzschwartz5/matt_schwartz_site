@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => {
         pageLinkDiv: {
             display: "flex",
             flexGrow: 1,
-            margin: "auto",
+            marginRight: "10px",
             justifyContent: "space-evenly",
             [theme.breakpoints.down("xs")]: {
                 margin: "10px 0px"
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => {
                 display: "none",
             },
             display: "flex",
-            flexGrow: 3,
+            flexGrow: 15,
         },
 
         divider: {
