@@ -76,11 +76,11 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                 </Card>
             </TimelineContent>
             <TimelineSeparator className={classes.timelineSeparator}>
-                <TimelineConnector className={classes.timelineConnector}/>
+                <TimelineConnector className="timelineConnector"/>
                 <TimelineDot className={classes.timelineDot} variant="outlined">
                     <DotIcon/>
                 </TimelineDot>
-                <TimelineConnector className={classes.timelineConnector}/>
+                <TimelineConnector className="timelineConnector"/>
             </TimelineSeparator>
             <TimelineOppositeContent className={classes.timelineOppositeContent}>
                 <div className={hasAnimated ? "cardTextAnimated" : "cardText"}>
@@ -119,6 +119,7 @@ const useTimelineRootStyles = makeStyles({
 
 const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((theme:Theme) => {
     const paperColor = theme.palette.paper.main;
+    const primaryColor = theme.palette.primary.main;
     const secondaryColor = theme.palette.secondary.main;
     const tertiaryColor = theme.palette.tertiary.main;
     const accentColor = theme.palette.accent.main;
@@ -152,8 +153,12 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
                     marginLeft: "10px",
                     marginRight: "10px",
                     textAlign: "right",
-                    color: accentColor,
-                }
+                    color: paperColor,
+                },
+                "& .timelineConnector": {
+                    backgroundColor: primaryColor,
+                    width: "4px",
+                },
             },
             "&:nth-child(odd)": {
                 "& .cardTextAnimated": {        
@@ -176,8 +181,12 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
                     marginLeft: "10px",
                     marginRight: "10px",
                     textAlign: "left",
-                    color: accentColor,
-                }
+                    color: paperColor,
+                },
+                "& .timelineConnector": {
+                    backgroundColor: secondaryColor,
+                    width: "4px",
+                },
             },
         },
 
@@ -214,26 +223,21 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             boxShadow: "10px 10px 5px 1px rgba(0,0,0,0.25)",
         }),
 
-        timelineDot: {
-            color: paperColor,
-            borderColor: tertiaryColor,
-        },
-
-        timelineConnector: {
-            backgroundColor: tertiaryColor,
-            width: "4px",
-        },
-
         timelineSeparator: {
             padding: "0px 20px 0px 20px",
             height: "90%",
             alignSelf: "center",
+        },
+
+        timelineDot: {
+            color: accentColor,
+            borderColor: accentColor,
         }
     });   
 });
 
 const useTimelineDateStyles = makeStyles<Theme, {intersectionRatio: number}>((theme:Theme) => {
-    const accentColor = theme.palette.accent.main;
+    const paperColor = theme.palette.paper.main;
 
     return {
         timelineDate: ({intersectionRatio}) => ({
@@ -242,10 +246,10 @@ const useTimelineDateStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             left: "50%",
             transform: "translate(-50%, -50%)",
             zIndex: 10,
-            color: accentColor,
+            color: paperColor,
             opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
-            fontWeight: 400,
-            fontSize: "1.8em",
+            fontWeight: 600,
+            fontSize: "1.7em",
         })
     };
 });

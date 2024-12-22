@@ -26,10 +26,10 @@ const theme = createTheme({
       main: "#202020"
     },
     tertiary: {
-      main: "#1481BA"
+      main: "#202020EB"
     },
     accent: {
-      main: "#faf4eb"
+      main: "#44BBA4"
     },
     text: {
       primary: "#282c34"

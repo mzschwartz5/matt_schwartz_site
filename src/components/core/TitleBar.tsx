@@ -15,7 +15,7 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
     <Slide appear={false} direction="down" in={!trigger}>
         <AppBar className={classes.root} position="sticky">
             <div className={classes.headerDiv}>
-                <SectionHeader headerText="Matthew Schwartz"/>
+                <SectionHeader headerText="Matthew Schwartz" overrideClass={classes.nameDiv}/>
                 <div className={classes.divider}></div>
                 <LinkGroup/> 
             </div>
@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) => {
             backgroundColor: theme.palette.tertiary.main,
             color: theme.palette.paper.main,
             boxShadow: "none",
+            height: "5.5vh"
         },
 
         pageLinkDiv: {
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => {
             justifyContent: "space-evenly",
             [theme.breakpoints.down("xs")]: {
                 margin: "10px 0px"
-            }
+            },
         },
 
         pageLink: {
@@ -62,9 +63,16 @@ const useStyles = makeStyles((theme: Theme) => {
         },
 
         divider: {
-            borderLeft: "solid 1px " + theme.palette.paper.main,
+            borderLeft: "solid 1px " + theme.palette.accent.main,
             margin: '10px 5px 10px 0px'
         },
+
+        nameDiv: {
+            alignSelf: "center",
+            marginLeft: '15px',
+            marginRight: '10px',
+            color: theme.palette.accent.main
+        }
     });
 });
 
