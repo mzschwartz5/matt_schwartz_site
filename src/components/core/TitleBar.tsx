@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) => {
             flexDirection: 'row',
             backgroundColor: theme.palette.tertiary.main,
             color: theme.palette.paper.main,
+            boxShadow: "none",
         },
 
         pageLinkDiv: {

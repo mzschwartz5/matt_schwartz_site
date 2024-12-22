@@ -29,11 +29,12 @@ const Timeline: React.FunctionComponent = () =>
 
     return(
         <MuiTimeline align="alternate" className={classes.timelineRoot}>
-            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={educationText} imageTitle="Education" DotIcon={SchoolIcon}/>
-            <TimelineItemWrapper imagePath={EpicImagePath} imageAltText="Epic" imageDesc={epicWorkExperienceText} imageTitle="Epic" DotIcon={WorkIcon}/>
-            <TimelineItemWrapper imagePath={AmazonImagePath} imageAltText="Amazon" imageDesc={amazonWorkExperienceText} imageTitle="Amazon Web Services" DotIcon={WorkIcon}/>
-            <TimelineItemWrapper imagePath={ProjectImagePath} imageAltText="Bejewel3d" imageDesc={personalProjectText} imageTitle="Personal Projects" DotIcon={HomeWorkIcon}/>
-            <TimelineItemWrapper imagePath={BikeImagePath} imageAltText="Biking" imageDesc={whatsNextText} imageTitle="What's Next?" DotIcon={HelpIcon}/>
+            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={educationText} imageTitle="Education" year={"2019"} DotIcon={SchoolIcon}/>
+            <TimelineItemWrapper imagePath={EpicImagePath} imageAltText="Epic" imageDesc={epicWorkExperienceText} imageTitle="Epic" year={"2021"} DotIcon={WorkIcon}/>
+            <TimelineItemWrapper imagePath={AmazonImagePath} imageAltText="Amazon" imageDesc={amazonWorkExperienceText} imageTitle="Amazon Web Services" year={"2023"} DotIcon={WorkIcon}/>
+            <TimelineItemWrapper imagePath={ProjectImagePath} imageAltText="Bejewel3d" imageDesc={personalProjectText} imageTitle="Personal Projects" year={"2024"} DotIcon={HomeWorkIcon}/>
+            <TimelineItemWrapper imagePath={BikeImagePath} imageAltText="Biking" imageDesc={whatsNextText} imageTitle="What's Next?" year={"2025"} DotIcon={HelpIcon}/>
+            <TimelineItem></TimelineItem> {/* Empty item just to provide buffer at the bottom */}
         </MuiTimeline>
     );
 }
@@ -43,6 +44,7 @@ interface ITimelineItemWrapperProps {
     imageAltText: string,
     imageDesc: string,
     imageTitle: string,
+    year: string,
     DotIcon: React.FunctionComponent,
 }
 
@@ -90,7 +92,21 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                     </Card>
                 </div>
             </TimelineOppositeContent>
+            <TimelineDate year={props.year} intersectionRatio={Number(entry?.intersectionRatio)}/>
         </TimelineItem>
+    );
+}
+
+interface TimelineDateProps {
+    year: string,
+    intersectionRatio: number;
+}
+
+const TimelineDate: React.FunctionComponent<TimelineDateProps> = ({ year, intersectionRatio }) => {
+    const classes = useTimelineDateStyles({intersectionRatio: intersectionRatio});
+
+    return(
+        <div className={classes.timelineDate}>{year}</div>
     );
 }
 
@@ -110,9 +126,10 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
     return({
         // All alternating styles applied to the timeline are here
         timelineItem: {
+            position: "relative",
             height: "75vh",
-            overflowX: "hidden",
-            overflowY: "hidden",
+            overflowX: "clip",
+            overflowY: "visible",
             "&:nth-child(even)": {
                 backgroundColor: secondaryColor,
                 "& .cardTextAnimated": {
@@ -173,6 +190,7 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             borderRadius: "5px",
             width: "65%",
             height: '90%',
+            boxShadow: "10px 10px 5px 1px rgba(0,0,0,0.25)",
         }),
 
         timelineOppositeContent: {
@@ -193,6 +211,7 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
                 textIndent: "35px"
             },
             width: "80%",
+            boxShadow: "10px 10px 5px 1px rgba(0,0,0,0.25)",
         }),
 
         timelineDot: {
@@ -206,10 +225,29 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
         },
 
         timelineSeparator: {
-            padding: "0px 10px 0px 10px",
+            padding: "0px 20px 0px 20px",
+            height: "90%",
+            alignSelf: "center",
         }
     });   
 });
 
+const useTimelineDateStyles = makeStyles<Theme, {intersectionRatio: number}>((theme:Theme) => {
+    const accentColor = theme.palette.accent.main;
+
+    return {
+        timelineDate: ({intersectionRatio}) => ({
+            position: "absolute",
+            top: "100%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 10,
+            color: accentColor,
+            opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
+            fontWeight: 400,
+            fontSize: "1.8em",
+        })
+    };
+});
 
 export default Timeline;
