@@ -1,21 +1,21 @@
 import { Avatar, Theme, makeStyles, Card, CardContent } from "@material-ui/core";
-import WorkImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
-import AmazonWorkImagePath from '../../assets/images/homepage/amazon.png';
-import ProjectImagePath from '../../assets/images/homepage/projects_image.png';
+import EpicImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
+import AmazonImagePath from '../../assets/images/homepage/amazon.png';
 import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
-import BikeImagePath from "../../assets/images/homepage/bike_image.jpg";
-import { amazonWorkExperienceText, educationText, epicWorkExperienceText, personalProjectText, whatsNextText } from '../../data/static_content';
+import UPennImagePath from '../../assets/images/homepage/UPennImage.png';
+import RiceImagePath from '../../assets/images/homepage/riceuniv.png';
+import { riceText, epicWorkExperienceText, amazonWorkExperienceText, uPennText, aboutMeText } from '../../data/static_content';
 
 const MobileAbout: React.FunctionComponent = () =>
 {
 
     return(
         <>
-            <AboutSection src={LinkedInImagePath} sectionTitle="Education" imageDesc={educationText}/>
-            <AboutSection src={WorkImagePath} sectionTitle="Epic" imageDesc={epicWorkExperienceText}/>
-            <AboutSection src={AmazonWorkImagePath} sectionTitle="Amazon Web Services" imageDesc={amazonWorkExperienceText}/>
-            <AboutSection src={ProjectImagePath} sectionTitle="Projects" imageDesc={personalProjectText}/>
-            <AboutSection src={BikeImagePath} sectionTitle="What's Next?" imageDesc={whatsNextText}/>
+            <AboutSection src={LinkedInImagePath} sectionTitle="About me" imageDesc={aboutMeText}/>
+            <AboutSection src={UPennImagePath} sectionTitle="University of Pennsylvania" imageDesc={uPennText}/>
+            <AboutSection src={AmazonImagePath} sectionTitle="Amazon Web Services" imageDesc={amazonWorkExperienceText}/>
+            <AboutSection src={EpicImagePath} sectionTitle="Epic" imageDesc={epicWorkExperienceText}/>
+            <AboutSection src={RiceImagePath} sectionTitle="Rice University" imageDesc={riceText}/>
         </>
     );
 }
@@ -27,7 +27,7 @@ interface IAboutSectionProps {
 }
 
 const AboutSection: React.FunctionComponent<IAboutSectionProps> = (props: IAboutSectionProps) => {
-    
+
     const {src, sectionTitle, imageDesc} = props;
     const classes = useAboutSectionStyles();
 
@@ -38,7 +38,7 @@ const AboutSection: React.FunctionComponent<IAboutSectionProps> = (props: IAbout
             <Card className={classes.description}>
                 <CardContent >
                     {imageDesc.split('\n').map(str => <p>{str}</p>)}
-                </CardContent>  
+                </CardContent>
             </Card>
         </>
     );

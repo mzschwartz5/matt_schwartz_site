@@ -14,14 +14,13 @@ import { useState, useMemo, useRef } from "react";
 import { Theme } from '@material-ui/core';
 import EpicImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
 import AmazonImagePath from '../../assets/images/homepage/amazon.png';
-import ProjectImagePath from '../../assets/images/homepage/projects_image.png';
 import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
-import BikeImagePath from "../../assets/images/homepage/bike_image.jpg";
+import UPennImagePath from '../../assets/images/homepage/UPennImage.png';
+import RiceImagePath from '../../assets/images/homepage/riceuniv.png';
 import SchoolIcon from '@material-ui/icons/School';
 import WorkIcon from '@material-ui/icons/Work';
-import HomeWorkIcon from '@material-ui/icons/HomeWork';
-import HelpIcon from '@material-ui/icons/Help';
-import { educationText, epicWorkExperienceText, amazonWorkExperienceText, personalProjectText, whatsNextText } from '../../data/static_content';
+import HomeIcon from '@mui/icons-material/Home';
+import { riceText, epicWorkExperienceText, amazonWorkExperienceText, uPennText, aboutMeText } from '../../data/static_content';
 
 const Timeline: React.FunctionComponent = () =>
 {
@@ -29,11 +28,11 @@ const Timeline: React.FunctionComponent = () =>
 
     return(
         <MuiTimeline align="alternate" className={classes.timelineRoot}>
-            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="LinkedIn" imageDesc={educationText} imageTitle="Education" year={"2019"} DotIcon={SchoolIcon}/>
-            <TimelineItemWrapper imagePath={EpicImagePath} imageAltText="Epic" imageDesc={epicWorkExperienceText} imageTitle="Epic" year={"2021"} DotIcon={WorkIcon}/>
-            <TimelineItemWrapper imagePath={AmazonImagePath} imageAltText="Amazon" imageDesc={amazonWorkExperienceText} imageTitle="Amazon Web Services" year={"2023"} DotIcon={WorkIcon}/>
-            <TimelineItemWrapper imagePath={ProjectImagePath} imageAltText="Bejewel3d" imageDesc={personalProjectText} imageTitle="Personal Projects" year={"2024"} DotIcon={HomeWorkIcon}/>
-            <TimelineItemWrapper imagePath={BikeImagePath} imageAltText="Biking" imageDesc={whatsNextText} imageTitle="What's Next?" year={"2025"} DotIcon={HelpIcon}/>
+            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="About me" imageDesc={aboutMeText} imageTitle="About me" year="2024" DotIcon={HomeIcon}/>
+            <TimelineItemWrapper imagePath={UPennImagePath} imageAltText="University of Pennsylvania" imageDesc={uPennText} imageTitle="Master's in Computer Graphics" year="2023" DotIcon={SchoolIcon}/>
+            <TimelineItemWrapper imagePath={AmazonImagePath} imageAltText="Amazon Web Services" imageDesc={amazonWorkExperienceText} imageTitle="Amazon Web Services" year={"2021"} DotIcon={WorkIcon}/>
+            <TimelineItemWrapper imagePath={EpicImagePath} imageAltText="Epic Systems" imageDesc={epicWorkExperienceText} imageTitle="Epic Systems" year={"2019"} DotIcon={WorkIcon}/>
+            <TimelineItemWrapper imagePath={RiceImagePath} imageAltText="Rice University" imageDesc={riceText} imageTitle="B.S. in Computational Physics" year="2015" DotIcon={SchoolIcon}/>
             <TimelineItem></TimelineItem> {/* Empty item just to provide buffer at the bottom */}
         </MuiTimeline>
     );
@@ -56,7 +55,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
     const [hasAnimated, setHasAnimated] = useState(false);
     const ref = useRef(null); // becomes ref to the element to fade
     const thresholds = useMemo(() => Array(100).fill(0.01).map((val,idx) => (val += 0.01*idx)), []);
-    const entry = useIntersectionObserver(ref, {threshold: thresholds});             
+    const entry = useIntersectionObserver(ref, {threshold: thresholds});
     const classes = useTimelineItemStyles({intersectionRatio: Number(entry?.intersectionRatio)});
 
     if (Number(entry?.intersectionRatio) >= 0.5 && !hasAnimated) {
@@ -68,7 +67,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
             <TimelineContent className="timelineContent">
                 <Card className={classes.card}>
                     <CardMedia
-                        ref={ref} 
+                        ref={ref}
                         image={imagePath}
                         title={imageAltText}
                         className={classes.cardMedia}
@@ -88,7 +87,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                     <Card className={classes.cardOppositeContent}>
                         <CardContent>
                             {imageDesc.split('\n').map(str => <p>{str}</p>)}
-                        </CardContent>  
+                        </CardContent>
                     </Card>
                 </div>
             </TimelineOppositeContent>
@@ -161,7 +160,7 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
                 },
             },
             "&:nth-child(odd)": {
-                "& .cardTextAnimated": {        
+                "& .cardTextAnimated": {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "flex-start",
@@ -233,7 +232,7 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             color: accentColor,
             borderColor: accentColor,
         }
-    });   
+    });
 });
 
 const useTimelineDateStyles = makeStyles<Theme, {intersectionRatio: number}>((theme:Theme) => {

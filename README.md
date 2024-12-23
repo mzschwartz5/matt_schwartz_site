@@ -15,5 +15,5 @@ To build and run locally:
 - Build the project: `npm run build`
 - Serve locally for testing: `npm start`
 
-To deploy to firebase
+To deploy to firebase manually (occurs implicitly on a commit through GH actions)
 - `firebase deploy`
