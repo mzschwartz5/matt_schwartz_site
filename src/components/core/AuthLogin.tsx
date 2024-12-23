@@ -1,8 +1,9 @@
-import { Avatar, makeStyles, Theme, Tooltip } from "@material-ui/core";
+import { Avatar, makeStyles, Theme } from "@material-ui/core";
 import { GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
 import { useRecoilValue } from "recoil";
 import { auth } from "../../data/firebase";
 import { activeUserAtom } from "../../data/users_db";
+import Tooltip from "@mui/material/Tooltip";
 
 interface IAuthLoginProps {
 

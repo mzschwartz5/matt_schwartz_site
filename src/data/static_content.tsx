@@ -1,7 +1,7 @@
 export const aboutMeText = `
     Hi, I'm Matt Schwartz! I'm a software engineer with nearly five years of industry experience, now working on obtaining my master's degree at University of Pennsylvania in Computer Graphics and Game Technology. I have experience designing and implementing scalable distributed systems at AWS, and full-stack and web-development experience working on the App Orchard marketplace and API at Epic Systems. Before entering industry, my education was primarily in computational physics and applied mathematics. Now I'm looking to combine my passions for computer science, physics, and art at what I feel to be their natural intersection point: computer graphics.
 
-    In my free time, I enjoy playing piano, cycling and generally being healthy, card and board games, spending time with my family, and pretending a youtube binge is somehow a better use of time than just watching a full-length movie!
+    In my free time, I enjoy playing piano, cycling and generally being healthy, playing card and board games, spending time with my family, and pretending a youtube binge is somehow a better use of time than just watching a full-length movie!
 `;
 
 export const uPennText = `

@@ -86,7 +86,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
                     <h2 className="imageTitle">{imageTitle}</h2>
                     <Card className={classes.cardOppositeContent}>
                         <CardContent>
-                            {imageDesc.split('\n').map(str => <p>{str}</p>)}
+                            {imageDesc.split('\n').map((str, index) => <p key={index}>{str}</p>)}
                         </CardContent>
                     </Card>
                 </div>

@@ -7,7 +7,7 @@ import { getStorage } from "firebase/storage";
 const firebaseApp = initializeApp({
     projectId: "mattzschwartz",
     storageBucket: "gs://mattzschwartz.appspot.com",
-    authDomain: "mattzschwartz.firebaseapp.com",
+    authDomain: "mattzschwartz.web.app",
     databaseURL: "https://mattzschwartz.firebaseio.com",
     apiKey: "AIzaSyDM4F78Ow1JNHHfUrb-s6W0hpHrgEZguRM"
 })
