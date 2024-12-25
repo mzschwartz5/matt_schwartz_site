@@ -1,7 +1,7 @@
 import { Button, Snackbar, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { useEffect, useState, useCallback } from 'react';
-import ReactHtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { BlogComment as BlogCommentData, editBlogComment, getBlogFromTitle, IBlogReference, loadBlogContent, loadCommentsForBlog, postBlogComment, voteOnBlogComment, VoteType } from '../../data/blogs_db';
@@ -90,7 +90,7 @@ const BlogContent: React.FunctionComponent<IBlogContentProps> = (props:IBlogCont
                 <h1 id="blog-title">{blogTitle}</h1>
                 <div className="blog-meta" >{blogRef?.author + " - " + blogRef?.postDate.toDate().toDateString()}</div>
                 <hr id="blog-divider"/>
-                {blogContent ? ReactHtmlParser(blogContent) : <DocumentSkeleton/>}
+                {blogContent ? parse(blogContent) : <DocumentSkeleton/>}
                 <hr />
                 <CommentSection id="comment-section-top" comments={comments} postNewComment={postNewComment}/>
                 <div className={classes.buttonContainer}>
