@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { loadAllProjects, IProject } from "../../data/projects_db";
 import { activeUserAtom } from "../../data/users_db";
+import { makeStyles } from "@material-ui/core/styles";
 import CardSkeleton from "../core/CardSkeleton";
 import CreateProjectCard from "./admin/CreateProjectCard";
 import ProjectCard from "./ProjectCard";
@@ -18,7 +19,7 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
     const activeUser = useRecoilValue(activeUserAtom);
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("xs"));
     const isMediumScreen = useMediaQuery((theme: Theme) => theme.breakpoints.between("sm","md"));
-
+    const classes = useProjectGalleryStyles();
 
     useEffect(() => {
         const projectData = loadAllProjects();
@@ -45,11 +46,25 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
 
 
     return(
-        <ImageList variant="masonry" cols={isSmallScreen ? 1 : (isMediumScreen ? 2 : 3)}>
-            {projectCards.length ? projectCards : cardSkeletons}
-        </ImageList>
+        <div className={classes.rootDiv}>
+            <ImageList variant="masonry" gap={7} className={classes.imageList} cols={isSmallScreen ? 1 : (isMediumScreen ? 2 : 3)}>
+                {projectCards.length ? projectCards : cardSkeletons}
+            </ImageList>
+        </div>
     );
 }
+
+const useProjectGalleryStyles = makeStyles({
+    rootDiv: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    imageList: {
+        margin: "3vh"
+    }
+});
 
 
 export default ProjectGallery;

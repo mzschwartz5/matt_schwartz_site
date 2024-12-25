@@ -4,7 +4,7 @@ import defaultImage from "../../assets/images/projectgallery/paella.jpg"
 import { IProject } from "../../data/projects_db";
 import IconLink from "../core/IconLink";
 import GitHubIcon from '@material-ui/icons/GitHub';
-
+import { useMouse } from "../../hooks/useMouse";
 
 interface IProjectCard {
     project: IProject;
@@ -14,19 +14,20 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
 {
     const {project} = props;
     const classes = useCardStyles();
+    const [mouseState, ref] = useMouse();
 
     return(
         <ImageListItem sx={{lineHeight: "inherit"}}>
-            <Card className={classes.card}>
-                <CardMedia 
+            <Card className={classes.card} ref={ref}>
+                <CardMedia
                     className={classes.cardMedia}
                     image={project.featuredImage ?? defaultImage}   // later this should be card.featuredImage
-                    title={project.title} 
+                    title={project.title}
                     component="img"
                 />
-                <CardHeader 
+                <CardHeader
                     title={project.title}
-                    subheader={project.dateStarted.toDate().toDateString()} 
+                    subheader={project.dateStarted.toDate().toDateString()}
                     className={classes.cardBackground}
                     subheaderTypographyProps={{variant: "subtitle1"}}
                 />
@@ -51,7 +52,7 @@ const useCardStyles = makeStyles((theme:Theme) => {
 
     return({
         card: {
-            borderRadius: "12px",
+            borderRadius: "5px",
             margin: "10px",
         },
     
@@ -66,7 +67,7 @@ const useCardStyles = makeStyles((theme:Theme) => {
 
         cardActions: {
             backgroundColor: paperColor,
-            color: backgroundColor
+            color: backgroundColor,
         }
     })
 });
