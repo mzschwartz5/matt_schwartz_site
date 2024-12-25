@@ -1,13 +1,13 @@
 import { useState, useRef, useLayoutEffect } from 'react'
 
 /**
- * Custom react hook to get the mouse position (ratio) relative to the top-left corner of a reference element.
- * Returns -1 for the ratio components if the mouse is not within the reference element.
+ * Custom react hook to get the normalized mouse position relative to the center of a reference element.
+ * Returns 0 for the components if the mouse is not within the reference element.
  */
-export function useMouse() : [{elementX: number, elementY: number}, React.RefObject<HTMLElement>] {
+export function useMouse() : [{x: number, y: number}, React.RefObject<HTMLElement>] {
   const [state, setState] = useState({
-    elementX: -1,
-    elementY: -1,
+    y: 0,
+    x: 0,
   });
 
   const ref = useRef<HTMLElement | null>(null);
@@ -21,8 +21,8 @@ export function useMouse() : [{elementX: number, elementY: number}, React.RefObj
       if (ref.current?.nodeType !== Node.ELEMENT_NODE) {
         setState((s) => {
           return {
-            elementX: -1,
-            elementY: -1,
+            x: 0,
+            y: 0,
           };
         });
 
@@ -41,18 +41,18 @@ export function useMouse() : [{elementX: number, elementY: number}, React.RefObj
         event.pageY < elementTopLeftY ||
         event.pageY > elementBottomRightY
       ) {
-        newState.elementX = -1;
-        newState.elementY = -1;
+        newState.x = 0;
+        newState.y = 0;
       }
       else {
-        newState.elementX = (event.pageX - elementTopLeftX) / width;
-        newState.elementY = (event.pageY - elementTopLeftY) / height;
+        newState.x = ((event.pageX - elementTopLeftX) / (width / 2)) - 1;
+        newState.y = 1 - ((event.pageY - elementTopLeftY) / (height / 2));
       }
 
       setState((s) => {
         return {
-          elementX: newState.elementX,
-          elementY: newState.elementY,
+          x: newState.x,
+          y: newState.y,
         };
       });
     };

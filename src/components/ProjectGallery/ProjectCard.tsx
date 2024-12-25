@@ -5,6 +5,7 @@ import { IProject } from "../../data/projects_db";
 import IconLink from "../core/IconLink";
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { useMouse } from "../../hooks/useMouse";
+import { useState, useEffect } from "react";
 
 interface IProjectCard {
     project: IProject;
@@ -13,15 +14,20 @@ interface IProjectCard {
 const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard): JSX.Element =>
 {
     const {project} = props;
-    const classes = useCardStyles();
     const [mouseState, ref] = useMouse();
+    const [cardTransitionNeeded, setCardTransitionNeeded] = useState(false);
+    const classes = useCardStyles({x: mouseState.x, y: mouseState.y, transitionNeeded: cardTransitionNeeded});
 
     return(
-        <ImageListItem sx={{lineHeight: "inherit"}}>
-            <Card className={classes.card} ref={ref}>
+        <ImageListItem sx={{lineHeight: "inherit", perspective: "1000px"}}>
+            <Card className={classes.card}
+                  ref={ref}
+                  onMouseEnter={() => setCardTransitionNeeded(true)}
+                  onMouseLeave={() => setCardTransitionNeeded(true)}
+                  onTransitionEnd={() => setCardTransitionNeeded(false)}>
                 <CardMedia
                     className={classes.cardMedia}
-                    image={project.featuredImage ?? defaultImage}   // later this should be card.featuredImage
+                    image={project.featuredImage ?? defaultImage}
                     title={project.title}
                     component="img"
                 />
@@ -44,17 +50,23 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
 
 export default ProjectCard;
 
-const useCardStyles = makeStyles((theme:Theme) => {
+const useCardStyles = makeStyles<Theme, {x: number, y: number, transitionNeeded: boolean}>(theme => {
     
     const paperColor = theme.palette.paper.main;
     const textColor = theme.palette.text.primary;
     const backgroundColor = theme.palette.primary.main;
 
     return({
-        card: {
+
+        card: ({x, y, transitionNeeded}) => ({
+            transform: `translate3d(0px, 0px, 0.01px) rotateX(${y * -10}deg) rotateY(${x * -10}deg)`,
             borderRadius: "5px",
             margin: "10px",
-        },
+            boxShadow: "10px 10px 5px 1px rgba(0,0,0,0.25)",
+            // Push card forward onto new layer to allow for hardware acceleration
+            transition: `${transitionNeeded ? "transform 0.1s ease-out" : ""}`,
+            willChange: "transform", // helps browser optimize the animation
+        }),
     
         cardMedia: {
         },
