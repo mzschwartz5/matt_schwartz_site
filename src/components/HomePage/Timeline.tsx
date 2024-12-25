@@ -65,7 +65,7 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
     return(
         <TimelineItem className={classes.timelineItem} >
             <TimelineContent className="timelineContent">
-                <Card className={classes.card}>
+                <Card className={`${classes.card} ${classes.fadeWithScroll}`}>
                     <CardMedia
                         ref={ref}
                         image={imagePath}
@@ -83,8 +83,8 @@ const TimelineItemWrapper: React.FunctionComponent<ITimelineItemWrapperProps> = 
             </TimelineSeparator>
             <TimelineOppositeContent className={classes.timelineOppositeContent}>
                 <div className={hasAnimated ? "cardTextAnimated" : "cardText"}>
-                    <h2 className="imageTitle">{imageTitle}</h2>
-                    <Card className={classes.cardOppositeContent}>
+                    <h2 className={`${classes.fadeWithScroll} imageTitle`}>{imageTitle}</h2>
+                    <Card className={`${classes.cardOppositeContent} ${classes.fadeWithScroll}`}>
                         <CardContent>
                             {imageDesc.split('\n').map((str, index) => <p key={index}>{str}</p>)}
                         </CardContent>
@@ -193,13 +193,12 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             height: '100%',
         },
 
-        card: ({intersectionRatio}) => ({
-            opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
+        card: {
             borderRadius: "5px",
             width: "65%",
             height: '90%',
             boxShadow: "10px 10px 5px 1px rgba(0,0,0,0.25)",
-        }),
+        },
 
         timelineOppositeContent: {
             display: "flex",
@@ -207,8 +206,7 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             flexDirection: "column",
         },
 
-        cardOppositeContent: ({intersectionRatio}) => ({
-            opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
+        cardOppositeContent: {
             backgroundColor: paperColor,
             textAlign: "left",
             padding: "0px 12px 0px 12px",
@@ -220,6 +218,10 @@ const useTimelineItemStyles = makeStyles<Theme, {intersectionRatio: number}>((th
             },
             width: "80%",
             boxShadow: "10px 10px 5px 1px rgba(0,0,0,0.25)",
+        },
+
+        fadeWithScroll: ({intersectionRatio}) => ({
+            opacity: Math.sin(intersectionRatio * (Math.PI / 2)),
         }),
 
         timelineSeparator: {

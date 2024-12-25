@@ -35,7 +35,7 @@ const theme = createTheme({
       primary: "#282c34"
     },
     paper: {
-      main: "#faf4eb"
+      main: "#fffceb"
     }
   },
   overrides: {
