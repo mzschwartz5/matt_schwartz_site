@@ -32,7 +32,8 @@ const theme = createTheme({
       main: "#44BBA4"
     },
     text: {
-      primary: "#282c34"
+      primary: "#282c34",
+      secondary: "#fff",
     },
     paper: {
       main: "#fffceb"

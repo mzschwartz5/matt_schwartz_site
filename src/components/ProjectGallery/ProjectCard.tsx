@@ -20,9 +20,7 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
     const {project} = props;
     const [mouseState, mouseRef] = useMouse();
     const [isFlipped, setIsFlipped] = useState(false);
-    const [imageHeight, setImageHeight] = useState(0);
-
-    const classes = useCardStyles({flipped: isFlipped, frontHeight: imageHeight});
+    const classes = useCardStyles({flipped: isFlipped});
 
     const springProps = useSpring({
         transform: `rotateY(${MAX_ROATATION_DEGREES * mouseState.x + (Number(isFlipped) * 180)}deg)
@@ -35,22 +33,23 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
             <animated.div style={springProps}>
                 <Card className={classes.card} ref={mouseRef}>
                     <CardMedia
-                        className={`${classes.cardMedia} ${classes.frontSide}`}
+                        className={classes.cardMedia}
                         image={project.featuredImage ?? defaultImage}
                         title={project.title}
                         component="img"
-                        onLoad={(e: React.SyntheticEvent<HTMLImageElement, Event>) => setImageHeight((e.target as HTMLImageElement).clientHeight)}
                     />
-                    <CardHeader
-                        title={project.title}
-                        subheader={project.dateStarted.toDate().toDateString()}
-                        className={`${classes.cardBackground} ${classes.backSide}`}
-                        subheaderTypographyProps={{variant: "subtitle1"}}
-                    />
-                    <CardContent className={`${classes.cardBackground} ${classes.backSide}`}>
-                        {project.description}
-                    </CardContent>
-                    <CardActions className={`${classes.cardActions} ${classes.backSide}`}>
+                    <div className={classes.backSide + " " + classes.contentContainer}>
+                        <CardHeader
+                            title={project.title}
+                            subheader={project.dateStarted.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                            className={`${classes.cardContent} ${classes.backSide}`}
+                            subheaderTypographyProps={{variant: "subtitle1", color: "inherit"}}
+                        />
+                        <CardContent className={classes.cardContent}>
+                            {project.description}
+                        </CardContent>
+                    </div>
+                    <CardActions className={classes.cardActions + " " + classes.backSide}>
                         <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>
                     </CardActions>
                     <div className={classes.flipIconContainer}>
@@ -65,15 +64,13 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
 
 export default ProjectCard;
 
-const useCardStyles = makeStyles<Theme, {flipped: boolean, frontHeight: number}>((theme) => {
+const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
     
-    const paperColor = theme.palette.paper.main;
-    const textColor = theme.palette.text.primary;
-    const backgroundColor = theme.palette.primary.main;
+    const textColor = theme.palette.text.secondary;
 
     return({
 
-        card: ({frontHeight}) => ({
+        card: ({flipped}) => ({
             borderRadius: "5px",
             margin: "10px",
             boxShadow: "12px 12px 10px 2px rgba(0,0,0,0.25)",
@@ -84,23 +81,35 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean, frontHeight: number}>
                 },
             },
             position: "relative",
-            // For some reason there's a little extra whitespace on some cards... subtracting 1px to fix it ¯\_(ツ)_/¯
-            height: `${frontHeight - 1}px`,
+            backgroundColor: flipped ? "transparent" : "none",
         }),
     
-        cardMedia: {
+        cardMedia: ({flipped}) => ({
+            filter: flipped ? "grayScale(60%)" : "none",
+            opacity: flipped ? "0.5" : "1",
+        }),
+
+        contentContainer: {
+            position: "absolute",
+            top: "0",
+            left: "0",
+            maxHeight: "85%",
+            overflow: "auto"
         },
     
-        cardBackground: {
-            backgroundColor: paperColor,
-            color: textColor,
+        cardContent: {
+            backgroundColor: 'transparent',
+            color: `${textColor}`,
             paddingBottom: "0px",
-            transform: "rotateY(180deg)", // to flip text so its not inverted
+            transform: "rotateY(180deg)", // to flip text so its not inverted,
         },
 
         cardActions: {
-            backgroundColor: paperColor,
-            color: backgroundColor,
+            backgroundColor: "transparent",
+            color: `${textColor}`,
+            position: "absolute",
+            bottom: "0",
+            left: "0",
         },
 
         flipIconContainer: ({flipped}) => ({
@@ -109,7 +118,7 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean, frontHeight: number}>
             right: "5px",
             display: "none",
             alignItems: "center",
-            color: (flipped ? "black" : "white"),
+            color: `${textColor}`,
         }),
 
         flipIcon: {
