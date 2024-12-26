@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
@@ -44,12 +44,19 @@ const BlogGallery: React.FunctionComponent<IBlogGalleryProps> = (props:IBlogGall
     return(
         <Switch>
             <Route exact path={routeMatch.path}>
+                <Box className={classes.underConstruction} display="flex" justifyContent="center" alignItems="center" flexDirection={"column"}>
+                    <Typography variant="h5" color="textSecondary">
+                        Under Construction
+                    </Typography>
+                    <Typography variant="subtitle2" color="textSecondary">
+                        (Check back soon for more blogs!)
+                    </Typography>
+                </Box>
                 <Grid container
                     alignContent="flex-start"
-                    alignItems="stretch"
                     spacing={3}
                     className={classes.gridContainer}
-                >  
+                >
                     {blogCards.length ? blogCards : blogCardSkeletons}
                 </Grid>
             </Route>
@@ -73,10 +80,21 @@ const userCanViewBlog = (userIsAdmin: boolean | undefined, blogStatus: BlogStatu
 const useCardStyles = makeStyles({
 
     gridContainer: {
-        height: "100%",
         padding: "15px 15px 0px 15px",
-        width: "100%"
+        width: "100%",
+        height: "100%",
+        overflow: "auto"
     },
+
+    underConstruction: {
+        '--yellow': '255, 215, 0',  /* CSS gold */
+        background: 'rgba(var(--yellow), 0.2)',
+        borderLeftWidth: '50px',
+        borderLeftStyle: 'solid',
+        borderImage: 'repeating-linear-gradient(55deg, black, black 5px, rgb(var(--yellow)) 5px, rgb(var(--yellow)) 10px) 10',
+        height: "75px"
+    }
+
 });
 
 export default BlogGallery;

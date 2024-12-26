@@ -65,7 +65,6 @@ const useCardStyles = makeStyles((theme:Theme) => {
         },
     
         gridItem: {
-            height: "50%"
         },
     
         cardBackground: {
