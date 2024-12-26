@@ -10,6 +10,11 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
   overflow-y: scroll;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
 }
 
 body::-webkit-scrollbar {
