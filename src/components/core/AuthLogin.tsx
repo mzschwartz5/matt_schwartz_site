@@ -33,7 +33,6 @@ const useLoginStyles = makeStyles((theme: Theme) => {
         {
             avatar: {
                 cursor: "pointer",
-                boxShadow: "1px 1px 4px black",
                 "& :hover": {
                     opacity: ".8"
                 }
