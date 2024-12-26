@@ -42,6 +42,8 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
         const file = event.target.files?.item(0); // multiple file select is off by default
         setImageFile(file);
     }
+    const [tags, setTags] = useState<string[]>([]);
+    const onTagsChange = (event: any) => setTags(event.target.value.split(","));
 
     // Create the new project
     const createNewProject = () => {
@@ -57,6 +59,7 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                     featuredImage: url,
                     status: ProjectStatus.published, // not dealing with draft vs. published at the moment. Default to published.
                     title: title,
+                    tags: tags,
                     hidden: false
                 }
 
@@ -74,6 +77,7 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
         setDescription("");
         setGithubUrl("");
         setImageFile(null);
+        setTags([]);
     }
 
     return(
@@ -86,6 +90,7 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                         <DesktopDatePicker label="Start date" inputFormat="MM/dd/yyyy" value={startDate} onChange={onStartDateChange}  renderInput={(props: TextFieldProps) => <TextField {...props} />} InputProps={{style:{marginTop: "10px", marginBottom: "10px"}}}/>
                         <DesktopDatePicker label="End date" inputFormat="MM/dd/yyyy" value={endDate} onChange={onEndDateChange} renderInput={(props: TextFieldProps) => <TextField {...props} />} InputProps={{style:{marginTop: "10px", marginBottom: "10px"}}} />
                         <TextField multiline placeholder="Description" value={description} onChange={onDescriptionChange} className={classes.inputField}/>
+                        <TextField placeholder="Tags" value={tags.join(", ")} onChange={onTagsChange} className={classes.inputField}/>
                         <TextField placeholder="Github URL" value={githubUrl} onChange={onGithubUrlChange} className={classes.inputField}/>
                         <label>Featured Image</label>
                         <input type="file" onChange={onImageUpload} accept=""/>

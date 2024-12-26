@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardMedia, CardContent, makeStyles, Theme, CardActions } from "@material-ui/core";
+import { Card, CardHeader, CardMedia, CardContent, makeStyles, Theme, CardActions, Chip } from "@material-ui/core";
 import ImageListItem from '@mui/material/ImageListItem';
 import defaultImage from "../../assets/images/projectgallery/paella.jpg"
 import { IProject } from "../../data/projects_db";
@@ -23,8 +23,9 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
     const classes = useCardStyles({flipped: isFlipped});
 
     const springProps = useSpring({
-        transform: `rotateY(${MAX_ROATATION_DEGREES * mouseState.x + (Number(isFlipped) * 180)}deg)
-                    rotateX(${MAX_ROATATION_DEGREES * mouseState.y}deg)`,
+        // Multiply by !isFlipped to prevent rotation when flipped (it's hard to read the text and click buttons when the card moves)
+        transform: `rotateY(${MAX_ROATATION_DEGREES * mouseState.x * Number(!isFlipped) + (Number(isFlipped) * 180)}deg)
+                    rotateX(${MAX_ROATATION_DEGREES * mouseState.y * Number(!isFlipped)}deg)`,
         config: { tension: 100, friction: 10 },
     });
 
@@ -49,9 +50,16 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                             {project.description}
                         </CardContent>
                     </div>
-                    <CardActions className={classes.cardActions + " " + classes.backSide}>
-                        <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>
-                    </CardActions>
+                    <div className={classes.tagsAndActions}>
+                        <CardActions className={classes.cardActions}>
+                            <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>
+                        </CardActions>
+                        <div className={classes.projectTags}>
+                            {project.tags.map((tag) => {
+                                return <Chip key={tag} label={tag} color="secondary" size="small" className={classes.projectChip}/>
+                            })}
+                        </div>
+                    </div>
                     <div className={classes.flipIconContainer}>
                         {isFlipped ? "" : "Read"}
                         <ThreeSixtyIcon className={classes.flipIcon}/>
@@ -67,6 +75,8 @@ export default ProjectCard;
 const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
     
     const textColor = theme.palette.text.secondary;
+    const accentColor = theme.palette.accent.main;
+    const primaryColor = theme.palette.primary.main;
 
     return({
 
@@ -93,7 +103,7 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
             position: "absolute",
             top: "0",
             left: "0",
-            maxHeight: "85%",
+            maxHeight: "80%",
             overflow: "auto"
         },
     
@@ -104,18 +114,40 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
             transform: "rotateY(180deg)", // to flip text so its not inverted,
         },
 
-        cardActions: {
-            backgroundColor: "transparent",
-            color: `${textColor}`,
+        projectChip: {
+            margin: "2px",
+            color: `${accentColor}`,
+            outline: `1.5px solid ${primaryColor}`,
+        },
+
+        projectTags: {
+            transform: "rotateY(180deg)", // to flip text so its not inverted,
+            marginLeft: "auto",
+            marginRight: "5px",
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+        },
+
+        tagsAndActions: ({flipped}) => ({
             position: "absolute",
             bottom: "0",
             left: "0",
+            display: flipped ? "flex" : "none",
+            width: "100%",
+            justifyContent: "flex-start",
+        }),
+
+        cardActions: {
+            backgroundColor: "transparent",
+            color: `${textColor}`,
         },
 
         flipIconContainer: ({flipped}) => ({
             position: "absolute",
-            bottom: "5px",
-            right: "5px",
+            top: "5px",
+            right: flipped ? "auto" : "5px",
+            left: flipped ? "5px" : "auto",
             display: "none",
             alignItems: "center",
             color: `${textColor}`,
@@ -126,11 +158,11 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
         },
 
         frontSide: ({flipped}) => ({
-            display: flipped ? "none" : "block",
+            display: flipped ? "none" : "inherit",
         }),
 
         backSide: ({flipped}) => ({
-            display: flipped ? "block" : "none",
+            display: flipped ? "inherit" : "none",
         }),
     })
 });

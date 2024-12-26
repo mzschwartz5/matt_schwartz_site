@@ -13,6 +13,7 @@ export interface IProject {
     githubUrl: string;
     status: ProjectStatus;
     title: string;
+    tags: string[];
     hidden: boolean;
 }
 
@@ -32,6 +33,11 @@ export async function loadAllProjects() {
         const querySnapshot = await getDocs(queryString)
         querySnapshot.forEach((doc) => docs.push(doc.data() as IProject)); // is this type assertion dangerous?
         docs.sort(sortProjectsByStartDate);
+
+        docs.forEach((project) => {
+            console.log(project.title);
+            console.log(project.tags);
+        });
     }
     catch (e: any) {
         throw new Error(e);
