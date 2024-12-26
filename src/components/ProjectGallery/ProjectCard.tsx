@@ -4,9 +4,10 @@ import defaultImage from "../../assets/images/projectgallery/paella.jpg"
 import { IProject } from "../../data/projects_db";
 import IconLink from "../core/IconLink";
 import GitHubIcon from '@material-ui/icons/GitHub';
+import ThreeSixtyIcon from '@material-ui/icons/ThreeSixty';
 import { useMouse } from "../../hooks/useMouse";
 import { useSpring, animated } from '@react-spring/web';
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const MAX_ROATATION_DEGREES = -10;
 
@@ -17,9 +18,11 @@ interface IProjectCard {
 const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard): JSX.Element =>
 {
     const {project} = props;
-    const [mouseState, ref] = useMouse();
+    const [mouseState, mouseRef] = useMouse();
     const [isFlipped, setIsFlipped] = useState(false);
-    const classes = useCardStyles({flipped: isFlipped});
+    const [imageHeight, setImageHeight] = useState(0);
+
+    const classes = useCardStyles({flipped: isFlipped, frontHeight: imageHeight});
 
     const springProps = useSpring({
         transform: `rotateY(${MAX_ROATATION_DEGREES * mouseState.x + (Number(isFlipped) * 180)}deg)
@@ -30,12 +33,13 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
     return(
         <ImageListItem sx={{lineHeight: "inherit", perspective: "1000px"}} onClick={() => setIsFlipped(!isFlipped)}>
             <animated.div style={springProps}>
-                <Card className={classes.card} ref={ref}>
+                <Card className={classes.card} ref={mouseRef}>
                     <CardMedia
                         className={`${classes.cardMedia} ${classes.frontSide}`}
                         image={project.featuredImage ?? defaultImage}
                         title={project.title}
                         component="img"
+                        onLoad={(e: React.SyntheticEvent<HTMLImageElement, Event>) => setImageHeight((e.target as HTMLImageElement).clientHeight)}
                     />
                     <CardHeader
                         title={project.title}
@@ -49,6 +53,10 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                     <CardActions className={`${classes.cardActions} ${classes.backSide}`}>
                         <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>
                     </CardActions>
+                    <div className={classes.flipIconContainer}>
+                        {isFlipped ? "" : "Read"}
+                        <ThreeSixtyIcon className={classes.flipIcon}/>
+                    </div>
                 </Card>
             </animated.div>
         </ImageListItem>
@@ -57,7 +65,7 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
 
 export default ProjectCard;
 
-const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
+const useCardStyles = makeStyles<Theme, {flipped: boolean, frontHeight: number}>((theme) => {
     
     const paperColor = theme.palette.paper.main;
     const textColor = theme.palette.text.primary;
@@ -65,14 +73,20 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
 
     return({
 
-        card: {
+        card: ({frontHeight}) => ({
             borderRadius: "5px",
             margin: "10px",
             boxShadow: "12px 12px 10px 2px rgba(0,0,0,0.25)",
             "&:hover": {
-                cursor: "pointer"
+                cursor: "pointer",
+                "& $flipIconContainer": {
+                    display: "flex",
+                },
             },
-        },
+            position: "relative",
+            // For some reason there's a little extra whitespace on some cards... subtracting 1px to fix it ¯\_(ツ)_/¯
+            height: `${frontHeight - 1}px`,
+        }),
     
         cardMedia: {
         },
@@ -87,6 +101,19 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
         cardActions: {
             backgroundColor: paperColor,
             color: backgroundColor,
+        },
+
+        flipIconContainer: ({flipped}) => ({
+            position: "absolute",
+            bottom: "5px",
+            right: "5px",
+            display: "none",
+            alignItems: "center",
+            color: (flipped ? "black" : "white"),
+        }),
+
+        flipIcon: {
+            marginLeft: "2px",
         },
 
         frontSide: ({flipped}) => ({
