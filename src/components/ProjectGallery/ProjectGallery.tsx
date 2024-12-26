@@ -23,7 +23,10 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
 
     useEffect(() => {
         const projectData = loadAllProjects();
-        projectData.then(data => setProjects(data));
+        projectData.then(data => {
+            const visibleProjects = data.filter(proj => !proj.hidden);
+            setProjects(visibleProjects);
+        });
     }, []);
 
     const projectCards = projects.map((proj) => {
@@ -62,7 +65,8 @@ const useProjectGalleryStyles = makeStyles({
     },
 
     imageList: {
-        margin: "3vh"
+        margin: "3vh",
+        width: "100%",
     }
 });
 

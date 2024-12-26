@@ -13,6 +13,7 @@ export interface IProject {
     githubUrl: string;
     status: ProjectStatus;
     title: string;
+    hidden: boolean;
 }
 
 export enum ProjectStatus {

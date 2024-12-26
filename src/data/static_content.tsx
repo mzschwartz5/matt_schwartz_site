@@ -13,7 +13,7 @@ export const amazonWorkExperienceText = `
 `
 
 export const epicWorkExperienceText = `
-    I entered the industry in 2019 at Epic Systems as a software developer, helping to create a suite of healthcare products used by over 250 million patients worldwide. I wore many hats at Epic - most often, my backend engineer hat, developing a set of RESTful APIs used to exchange healthcare data with third parties using the standard HL7 FHIR format. I also helped build the App Orchard website, a marketplace for healthcare apps to advertise their products and test our APIs in sandboxed environments. (The skills I picked up doing so enabled me to build this - my very own React-and-firebase website!) And, as time permitted, I occasionally built a handy internal tool, often spurred by a personal desire to automate tedious workflows or to better visualize performance data.
+    I entered the industry in 2019 at Epic Systems as a software developer, helping to create a suite of healthcare products used by over 250 million patients worldwide. I wore many hats at Epic - most often, my backend engineer hat, developing a set of RESTful APIs used to exchange healthcare data with third parties using the standard HL7 FHIR format. I also helped build the App Orchard website, a marketplace for healthcare apps to advertise their products and test our APIs in sandboxed environments. (The skills I picked up doing so enabled me to build this - my very own React-and-Firebase website!) And, as time permitted, I occasionally built a handy internal tool, often spurred by a personal desire to automate tedious workflows or to better visualize performance data.
 `;
 
 export const riceText = `

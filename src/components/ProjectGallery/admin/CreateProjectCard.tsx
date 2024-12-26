@@ -56,7 +56,8 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                     githubUrl: githubUrl,
                     featuredImage: url,
                     status: ProjectStatus.published, // not dealing with draft vs. published at the moment. Default to published.
-                    title: title
+                    title: title,
+                    hidden: false
                 }
 
                 createProject(newProject);
