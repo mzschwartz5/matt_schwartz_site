@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => {
             backgroundColor: theme.palette.tertiary.main,
             color: theme.palette.paper.main,
             boxShadow: "none",
-            height: "5.5vh"
+            minHeight: "5.5vh"
         },
 
         pageLinkDiv: {
@@ -69,8 +69,7 @@ const useStyles = makeStyles((theme: Theme) => {
 
         nameDiv: {
             alignSelf: "center",
-            marginLeft: '15px',
-            marginRight: '10px',
+            margin: "3px 10px 3px 15px",
             color: theme.palette.accent.main
         }
     });
