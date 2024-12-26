@@ -11,6 +11,8 @@ export interface IProject {
     description: string;
     featuredImage: string;
     githubUrl: string;
+    liveDemoUrl: string;
+    videoUrl: string;
     status: ProjectStatus;
     title: string;
     tags: string[];

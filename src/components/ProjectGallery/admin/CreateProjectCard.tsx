@@ -37,6 +37,10 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
     const onDescriptionChange = (event: any) => setDescription(event.target.value);
     const [githubUrl, setGithubUrl] = useState("");
     const onGithubUrlChange = (event: any) => setGithubUrl(event.target.value);
+    const [liveDemoUrl, setLiveDemoUrl] = useState("");
+    const onLiveDemoUrlChange = (event: any) => setLiveDemoUrl(event.target.value);
+    const [videoUrl, setVideoUrl] = useState("");
+    const onVideoUrlChange = (event: any) => setVideoUrl(event.target.value);
     const [imageFile, setImageFile] = useState<File|null|undefined>();
     const onImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.item(0); // multiple file select is off by default
@@ -56,6 +60,8 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                     dateStarted: Timestamp.fromDate(startDate ? startDate : new Date()),
                     description: description,
                     githubUrl: githubUrl,
+                    liveDemoUrl: liveDemoUrl,
+                    videoUrl: videoUrl,
                     featuredImage: url,
                     status: ProjectStatus.published, // not dealing with draft vs. published at the moment. Default to published.
                     title: title,
@@ -76,6 +82,8 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
         setEndDate(null);
         setDescription("");
         setGithubUrl("");
+        setLiveDemoUrl("");
+        setVideoUrl("");
         setImageFile(null);
         setTags([]);
     }
@@ -90,7 +98,7 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                         <DesktopDatePicker label="Start date" inputFormat="MM/dd/yyyy" value={startDate} onChange={onStartDateChange}  renderInput={(props: TextFieldProps) => <TextField {...props} />} InputProps={{style:{marginTop: "10px", marginBottom: "10px"}}}/>
                         <DesktopDatePicker label="End date" inputFormat="MM/dd/yyyy" value={endDate} onChange={onEndDateChange} renderInput={(props: TextFieldProps) => <TextField {...props} />} InputProps={{style:{marginTop: "10px", marginBottom: "10px"}}} />
                         <TextField multiline placeholder="Description" value={description} onChange={onDescriptionChange} className={classes.inputField}/>
-                        <TextField placeholder="Tags" value={tags.join(", ")} onChange={onTagsChange} className={classes.inputField}/>
+                        <TextField placeholder="Tags (comma separated)" value={tags.join(", ")} onChange={onTagsChange} className={classes.inputField}/>
                         <TextField placeholder="Github URL" value={githubUrl} onChange={onGithubUrlChange} className={classes.inputField}/>
                         <label>Featured Image</label>
                         <input type="file" onChange={onImageUpload} accept=""/>

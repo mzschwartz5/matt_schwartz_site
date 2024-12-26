@@ -4,6 +4,8 @@ import defaultImage from "../../assets/images/projectgallery/paella.jpg"
 import { IProject } from "../../data/projects_db";
 import IconLink from "../core/IconLink";
 import GitHubIcon from '@material-ui/icons/GitHub';
+import YoutubeIcon from '@material-ui/icons/YouTube';
+import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import ThreeSixtyIcon from '@material-ui/icons/ThreeSixty';
 import { useMouse } from "../../hooks/useMouse";
 import { useSpring, animated } from '@react-spring/web';
@@ -52,7 +54,9 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                     </div>
                     <div className={classes.tagsAndActions}>
                         <CardActions className={classes.cardActions}>
-                            <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>
+                            {project.liveDemoUrl === "" ? <></> : <IconLink image={<VideogameAssetIcon/>} alignRight={true} altText="Live Demo link" linkTo={project.liveDemoUrl}/>}
+                            {project.videoUrl === "" ? <></> : <IconLink image={<YoutubeIcon/>} alignRight={true} altText="Video link" linkTo={project.videoUrl}/>}
+                            {project.githubUrl === "" ? <></> : <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>}
                         </CardActions>
                         <div className={classes.projectTags}>
                             {project.tags.map((tag) => {
@@ -141,6 +145,7 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
         cardActions: {
             backgroundColor: "transparent",
             color: `${textColor}`,
+            transform: "rotateY(180deg)", // to flip icons so they're not inverted,
         },
 
         flipIconContainer: ({flipped}) => ({
