@@ -20,7 +20,7 @@ const AuthLogin: React.FunctionComponent<IAuthLoginProps> = (props: IAuthLoginPr
     }
 
     return(
-        <Tooltip title={activeUser ? "Logout" : "Login"} arrow>
+        <Tooltip title={activeUser ? "Logout" : "Login to comment on a blog"} arrow>
             <div onClick={onClickAvatar} style={{margin: "auto"}}>
                 <Avatar src={activeUser ? activeUser.photoUrl : ""} className={classes.avatar}  imgProps={{referrerPolicy: "no-referrer"}} />
             </div>

@@ -102,7 +102,7 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
                 },
             },
             position: "relative",
-            backgroundColor: flipped ? "transparent" : "none",
+            backgroundColor: flipped ? "transparent" : "inherit",
         }),
     
         cardMedia: ({flipped}) => ({

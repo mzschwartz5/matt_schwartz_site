@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import { Slide, useScrollTrigger } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
@@ -10,6 +11,7 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
 {
     const trigger = useScrollTrigger();
     const classes = useStyles();
+    const location = useLocation();
 
     return (
     <Slide appear={false} direction="down" in={!trigger}>
@@ -23,7 +25,7 @@ const TitleBar: React.FunctionComponent = (): JSX.Element =>
                 <PageLink text={"Home"} linkTo={"/"} className={classes.pageLink}/>
                 <PageLink text={"Projects"} linkTo={"/project_gallery"} className={classes.pageLink}/>
                 <PageLink text={"Blog"} linkTo={"/blog"} className={classes.pageLink}/>
-                <AuthLogin/>
+                {location.pathname === '/blog' && <AuthLogin/>}
             </div>
         </AppBar>
     </Slide>

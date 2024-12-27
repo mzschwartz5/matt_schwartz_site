@@ -1,7 +1,7 @@
 import { Avatar, Theme, makeStyles, Card, CardContent } from "@material-ui/core";
 import EpicImagePath from '../../assets/images/homepage/Epic-exterior.jpg';
 import AmazonImagePath from '../../assets/images/homepage/amazon.png';
-import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
+import LinkedInImagePath from '../../assets/images/homepage/linkedin_image_mobile.png';
 import UPennImagePath from '../../assets/images/homepage/UPennImage.png';
 import RiceImagePath from '../../assets/images/homepage/riceuniv.png';
 import { riceText, epicWorkExperienceText, amazonWorkExperienceText, uPennText, aboutMeText } from '../../data/static_content';
@@ -11,7 +11,7 @@ const MobileAbout: React.FunctionComponent = () =>
 
     return(
         <>
-            <AboutSection src={LinkedInImagePath} sectionTitle="About me" imageDesc={aboutMeText}/>
+            <AboutSection src={LinkedInImagePath} sectionTitle="Matt Schwartz" imageDesc={aboutMeText}/>
             <AboutSection src={UPennImagePath} sectionTitle="University of Pennsylvania" imageDesc={uPennText}/>
             <AboutSection src={AmazonImagePath} sectionTitle="Amazon Web Services" imageDesc={amazonWorkExperienceText}/>
             <AboutSection src={EpicImagePath} sectionTitle="Epic" imageDesc={epicWorkExperienceText}/>
