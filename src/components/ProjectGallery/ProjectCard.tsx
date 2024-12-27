@@ -41,10 +41,15 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                         title={project.title}
                         component="img"
                     />
+                    <CardHeader
+                        title={project.title}
+                        className={classes.frontSideTitle}
+                        titleTypographyProps={{variant: "h6", color: "inherit"}}
+                    />
                     <div className={classes.backSide + " " + classes.contentContainer}>
                         <CardHeader
                             title={project.title}
-                            className={`${classes.cardContent} ${classes.backSide}`}
+                            className={classes.cardContent}
                             subheaderTypographyProps={{variant: "subtitle1", color: "inherit"}}
                         />
                         <CardContent className={classes.cardContent}>
@@ -92,6 +97,9 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
                 "& $flipIconContainer": {
                     display: "flex",
                 },
+                "& $frontSideTitle": {
+                    display: flipped ? "none" : "flex",
+                },
             },
             position: "relative",
             backgroundColor: flipped ? "transparent" : "none",
@@ -116,6 +124,16 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
             paddingBottom: "0px",
             transform: "rotateY(180deg)", // to flip text so its not inverted,
         },
+
+        frontSideTitle: ({flipped}) => ({
+            backgroundColor: 'transparent',
+            color: `${textColor}`,
+            paddingBottom: "0px",
+            position: "absolute",
+            bottom: "0",
+            left: "0",
+            display: "none"
+        }),
 
         projectChip: {
             margin: "2px",
