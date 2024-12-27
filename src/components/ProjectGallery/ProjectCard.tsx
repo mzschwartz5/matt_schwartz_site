@@ -44,7 +44,6 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                     <div className={classes.backSide + " " + classes.contentContainer}>
                         <CardHeader
                             title={project.title}
-                            subheader={project.dateStarted.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                             className={`${classes.cardContent} ${classes.backSide}`}
                             subheaderTypographyProps={{variant: "subtitle1", color: "inherit"}}
                         />
