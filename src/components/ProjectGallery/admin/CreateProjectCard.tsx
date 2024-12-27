@@ -29,31 +29,60 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
     // Controlled input values
     const [title, setTitle] = useState("");
     const onTitleInputChange = (event:any) => setTitle(event.target.value);
+
     const [startDate, setStartDate] = useState<Date | null>();
     const onStartDateChange = (newValue: Date | null) => setStartDate(newValue);
+
     const [endDate, setEndDate] = useState<Date | null>();
     const onEndDateChange = (newValue: Date | null) => setEndDate(newValue);
+
     const [description, setDescription] = useState("");
     const onDescriptionChange = (event: any) => setDescription(event.target.value);
+
     const [githubUrl, setGithubUrl] = useState("");
     const onGithubUrlChange = (event: any) => setGithubUrl(event.target.value);
+
     const [liveDemoUrl, setLiveDemoUrl] = useState("");
     const onLiveDemoUrlChange = (event: any) => setLiveDemoUrl(event.target.value);
+
     const [videoUrl, setVideoUrl] = useState("");
     const onVideoUrlChange = (event: any) => setVideoUrl(event.target.value);
+
     const [imageFile, setImageFile] = useState<File|null|undefined>();
     const onImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.item(0); // multiple file select is off by default
         setImageFile(file);
     }
+
+    const [gif, setGif] = useState<File|null|undefined>();
+    const onGifUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.item(0); // multiple file select is off by default
+        setGif(file);
+    }
+
     const [tags, setTags] = useState<string[]>([]);
     const onTagsChange = (event: any) => setTags(event.target.value.split(","));
 
     // Create the new project
     const createNewProject = () => {
-        if (!imageFile) return;
-        uploadNewImage(imageFile, "/projects/images/" + title).then((uploadResult) => {
-            getDownloadURL(uploadResult.ref).then(url => {                
+        if (!imageFile) {
+            console.error("No image file selected");
+            return;
+        }
+
+        const imageUploadPromise = uploadNewImage(imageFile, "/projects/images/" + title);
+        const gifUploadPromise = gif ? uploadNewImage(gif, "/projects/gifs/" + title) : Promise.resolve(null);
+
+        Promise.all([imageUploadPromise, gifUploadPromise]).then(([imageUploadResult, gifUploadResult]) => {
+            if (!imageUploadResult) {
+                console.error("Image upload failed");
+                return;
+            }
+
+            const imageDownloadUrl = getDownloadURL(imageUploadResult.ref);
+            const gifDownloadUrl = gifUploadResult ? getDownloadURL(gifUploadResult.ref) : "";
+
+            Promise.all([imageDownloadUrl, gifDownloadUrl]).then(([imageDownloadUrl, gifDownloadUrl]) => {
                 const newProject: IProject = {
                     blogReference: "", // not implemented yet
                     dateEnded: endDate ? Timestamp.fromDate(endDate) : null,
@@ -62,7 +91,8 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                     githubUrl: githubUrl,
                     liveDemoUrl: liveDemoUrl,
                     videoUrl: videoUrl,
-                    featuredImage: url,
+                    featuredImage: imageDownloadUrl,
+                    featuredGif: gifDownloadUrl,
                     status: ProjectStatus.published, // not dealing with draft vs. published at the moment. Default to published.
                     title: title,
                     tags: tags,
@@ -85,6 +115,7 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
         setLiveDemoUrl("");
         setVideoUrl("");
         setImageFile(null);
+        setGif(null);
         setTags([]);
     }
 
@@ -100,8 +131,12 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                         <TextField multiline placeholder="Description" value={description} onChange={onDescriptionChange} className={classes.inputField}/>
                         <TextField placeholder="Tags (comma separated)" value={tags.join(", ")} onChange={onTagsChange} className={classes.inputField}/>
                         <TextField placeholder="Github URL" value={githubUrl} onChange={onGithubUrlChange} className={classes.inputField}/>
+                        <TextField placeholder="Live Demo URL" value={liveDemoUrl} onChange={onLiveDemoUrlChange} className={classes.inputField}/>
+                        <TextField placeholder="Video URL" value={videoUrl} onChange={onVideoUrlChange} className={classes.inputField}/>
                         <label>Featured Image</label>
                         <input type="file" onChange={onImageUpload} accept=""/>
+                        <label>Featured Gif</label>
+                        <input type="file" onChange={onGifUpload} accept=""/>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={onCloseDialog}>Cancel</Button>

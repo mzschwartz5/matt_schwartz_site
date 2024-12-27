@@ -22,6 +22,7 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
     const {project} = props;
     const [mouseState, mouseRef] = useMouse();
     const [isFlipped, setIsFlipped] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
     const classes = useCardStyles({flipped: isFlipped});
 
     const springProps = useSpring({
@@ -32,12 +33,16 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
     });
 
     return(
-        <ImageListItem sx={{lineHeight: "inherit", perspective: "1000px"}} onClick={() => setIsFlipped(!isFlipped)}>
+        <ImageListItem sx={{lineHeight: "inherit", perspective: "1000px"}}
+                       onClick={() => setIsFlipped(!isFlipped)}
+                       onMouseEnter={() => setIsHovered(true)}
+                       onMouseLeave={() => setIsHovered(false)}
+        >
             <animated.div style={springProps}>
                 <Card className={classes.card} ref={mouseRef}>
                     <CardMedia
                         className={classes.cardMedia}
-                        image={project.featuredImage ?? defaultImage}
+                        image={isHovered && !isFlipped && project.featuredGif ? project.featuredGif : project.featuredImage}
                         title={project.title}
                         component="img"
                     />
@@ -58,9 +63,9 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                     </div>
                     <div className={classes.tagsAndActions}>
                         <CardActions className={classes.cardActions}>
-                            {project.liveDemoUrl === "" ? <></> : <IconLink image={<VideogameAssetIcon/>} alignRight={true} altText="Live Demo link" linkTo={project.liveDemoUrl}/>}
-                            {project.videoUrl === "" ? <></> : <IconLink image={<YoutubeIcon/>} alignRight={true} altText="Video link" linkTo={project.videoUrl}/>}
-                            {project.githubUrl === "" ? <></> : <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>}
+                            {project.liveDemoUrl && <IconLink image={<VideogameAssetIcon/>} alignRight={true} altText="Live Demo link" linkTo={project.liveDemoUrl}/>}
+                            {project.videoUrl && <IconLink image={<YoutubeIcon/>} alignRight={true} altText="Video link" linkTo={project.videoUrl}/>}
+                            {project.githubUrl && <IconLink image={<GitHubIcon/>} alignRight={true} altText="GitHub link" linkTo={project.githubUrl}/>}
                         </CardActions>
                         <div className={classes.projectTags}>
                             {project.tags.map((tag) => {

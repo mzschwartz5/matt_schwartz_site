@@ -10,6 +10,7 @@ export interface IProject {
     dateEnded: Timestamp | null;
     description: string;
     featuredImage: string;
+    featuredGif: string;
     githubUrl: string;
     liveDemoUrl: string;
     videoUrl: string;
