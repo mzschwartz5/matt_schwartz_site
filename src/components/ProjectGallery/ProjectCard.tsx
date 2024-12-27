@@ -106,7 +106,7 @@ const useCardStyles = makeStyles<Theme, {flipped: boolean}>((theme) => {
         }),
     
         cardMedia: ({flipped}) => ({
-            filter: flipped ? "grayScale(60%)" : "none",
+            filter: flipped ? "brightness(0.3)" : "none",
             opacity: flipped ? "0.5" : "1",
         }),
 
