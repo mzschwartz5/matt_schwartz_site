@@ -1,6 +1,5 @@
 import { Card, CardHeader, CardMedia, CardContent, makeStyles, Theme, CardActions, Chip } from "@material-ui/core";
 import ImageListItem from '@mui/material/ImageListItem';
-import defaultImage from "../../assets/images/projectgallery/paella.jpg"
 import { IProject } from "../../data/projects_db";
 import IconLink from "../core/IconLink";
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -9,7 +8,7 @@ import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import ThreeSixtyIcon from '@material-ui/icons/ThreeSixty';
 import { useMouse } from "../../hooks/useMouse";
 import { useSpring, animated } from '@react-spring/web';
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 const MAX_ROATATION_DEGREES = -10;
 
@@ -31,6 +30,14 @@ const ProjectCard: React.FunctionComponent<IProjectCard> = (props:IProjectCard):
                     rotateX(${MAX_ROATATION_DEGREES * mouseState.y * Number(!isFlipped)}deg)`,
         config: { tension: 100, friction: 10 },
     });
+
+    // Load in the featuredGif as soon as possible so it's ready to display when hovered over
+    useEffect(() => {
+        // Unused, but necessary to load the gif
+        const gif = new Image();
+        gif.src = project.featuredGif;
+    }, [project.featuredGif]);
+
 
     return(
         <ImageListItem sx={{lineHeight: "inherit", perspective: "1000px"}}
