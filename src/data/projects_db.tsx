@@ -18,6 +18,7 @@ export interface IProject {
     title: string;
     tags: string[];
     hidden: boolean;
+    orderID: number;
 }
 
 export enum ProjectStatus {
@@ -34,14 +35,26 @@ export async function loadAllProjects() {
     try {
         // A "QuerySnapshot" is Firebase's term for a query result
         const querySnapshot = await getDocs(queryString)
-        querySnapshot.forEach((doc) => docs.push(doc.data() as IProject)); // is this type assertion dangerous?
-        docs.sort(sortProjectsByStartDate);
+        querySnapshot.forEach((doc) => {
+            const project = doc.data() as IProject; // is this type assertion dangerous?
+            if (project.hidden) {
+                return;
+            }
+
+            docs.push(project);
+            console.log(project.orderID);
+        });
+        docs.sort(sortProjectsByOrderID);
     }
     catch (e: any) {
         throw new Error(e);
     }
 
     return docs;
+}
+
+const sortProjectsByOrderID = (a: IProject, b: IProject) => {
+    return a.orderID - b.orderID;
 }
 
 // Newest first

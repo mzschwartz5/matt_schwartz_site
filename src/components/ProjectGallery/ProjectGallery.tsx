@@ -24,8 +24,7 @@ const ProjectGallery: React.FunctionComponent<IProjectGaleryProps> = (props:IPro
     useEffect(() => {
         const projectData = loadAllProjects();
         projectData.then(data => {
-            const visibleProjects = data.filter(proj => !proj.hidden);
-            setProjects(visibleProjects);
+            setProjects(data);
         });
     }, []);
 

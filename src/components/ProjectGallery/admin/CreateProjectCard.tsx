@@ -96,7 +96,8 @@ const CreateProjectCard: React.FunctionComponent<ICreateProjectCardProps> = (pro
                     status: ProjectStatus.published, // not dealing with draft vs. published at the moment. Default to published.
                     title: title,
                     tags: tags,
-                    hidden: false
+                    hidden: false,
+                    orderID: -1 // currently needs to be done manually in Firebase
                 }
 
                 createProject(newProject);
