@@ -9,7 +9,7 @@ const firebaseApp = initializeApp({
     storageBucket: "gs://mattzschwartz.appspot.com",
     authDomain: "mattzschwartz.web.app",
     databaseURL: "https://mattzschwartz.firebaseio.com",
-    apiKey: "AIzaSyDM4F78Ow1JNHHfUrb-s6W0hpHrgEZguRM"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
 })
 
 export const db = getFirestore(firebaseApp);
