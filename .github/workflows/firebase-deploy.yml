@@ -24,9 +24,6 @@ jobs:
     - name: Install dependencies
       run: npm install --legacy-peer-deps
 
-    - name: Install Firebase CLI
-      run: npm install -g firebase-tools
-
     - name: Build project
       env:
         REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
@@ -34,7 +31,13 @@ jobs:
         export CI=false
         npm run build
 
+    - name: Write GCP service account key
+      env:
+        SA_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MATTSCHWARTZSITE }}
+      run: |
+        echo "$SA_JSON" > "$RUNNER_TEMP/gcp-sa.json"
+
     - name: Deploy to Firebase
       env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      run: npm run deploy
+        GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-sa.json
+      run: npm run deploy:ci
