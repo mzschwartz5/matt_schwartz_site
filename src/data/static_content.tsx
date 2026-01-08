@@ -1,7 +1,11 @@
 export const aboutMeText = `
-    Hi, I'm Matt Schwartz! I'm a software engineer with five years of industry experience, and recently completed my master's degree in Computer Graphics and Game Technology at the University of Pennsylvania. I currently work on CesiumJS - a WebGL rendering engine for 3D geospatial data. But I also have experience designing and implementing scalable distributed systems at AWS, and full-stack and web-development experience working on the App Orchard marketplace and API at Epic Systems. Before entering industry, my education was primarily in computational physics and applied mathematics. Now, I'm looking to combine my passions for computer science, physics, and art at what I feel to be their natural intersection point: computer graphics.
+    Hi, I'm Matt Schwartz! I'm a software engineer with five years of industry experience, and I recently completed my master's degree in Computer Graphics and Game Technology at the University of Pennsylvania. I currently work on CesiumJS - a WebGL rendering engine for 3D geospatial data. But I also have experience designing and implementing scalable distributed systems at AWS, and full-stack and web-development experience working on the App Orchard marketplace and API at Epic Systems. Before entering industry, my education was primarily in computational physics and applied mathematics. Now, I'm combining my passions for computer science, physics, and art at what I feel to be their natural intersection point: computer graphics.
 
     In my free time, I enjoy playing piano, cycling and staying healthy, playing card and board games, spending time with my family, and pretending a youtube binge is somehow a better use of time than just watching a full-length movie!
+`;
+
+export const cesiumWorkExperienceText = `
+    At Cesium, I get to work on one of the largest javascript libraries in the world, developing a rendering engine that can run in the web, on mobile, on new hardware or old. I haven't been at Cesium for very long as of writing, but I've already had a major impact on the performance of core engine features like terrain rendering and picking workflows. I'm currently working on visualization of borehole geometry using implicit surfaces, and I'm looking forward to larger projects on the roadmap potentially involving WebGPU and gaussian splatting.
 `;
 
 export const uPennText = `

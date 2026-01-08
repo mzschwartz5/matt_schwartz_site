@@ -17,10 +17,11 @@ import AmazonImagePath from '../../assets/images/homepage/amazon.png';
 import LinkedInImagePath from '../../assets/images/homepage/linkedin_image.jpg';
 import UPennImagePath from '../../assets/images/homepage/UPennImage.png';
 import RiceImagePath from '../../assets/images/homepage/riceuniv.png';
+import CesiumImagePath from '../../assets/images/homepage/cesiumimage.png'
 import SchoolIcon from '@material-ui/icons/School';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeIcon from '@mui/icons-material/Home';
-import { riceText, epicWorkExperienceText, amazonWorkExperienceText, uPennText, aboutMeText } from '../../data/static_content';
+import { riceText, epicWorkExperienceText, amazonWorkExperienceText, uPennText, aboutMeText, cesiumWorkExperienceText } from '../../data/static_content';
 
 const Timeline: React.FunctionComponent = () =>
 {
@@ -28,7 +29,8 @@ const Timeline: React.FunctionComponent = () =>
 
     return(
         <MuiTimeline align="alternate" className={classes.timelineRoot}>
-            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="About me" imageDesc={aboutMeText} imageTitle="About me" year="2024" DotIcon={HomeIcon}/>
+            <TimelineItemWrapper imagePath={LinkedInImagePath} imageAltText="About me" imageDesc={aboutMeText} imageTitle="About me" year="2026" DotIcon={HomeIcon}/>
+            <TimelineItemWrapper imagePath={CesiumImagePath} imageAltText="Cesium" imageDesc={cesiumWorkExperienceText} imageTitle="Cesium" year="2025" DotIcon={WorkIcon} />
             <TimelineItemWrapper imagePath={UPennImagePath} imageAltText="University of Pennsylvania" imageDesc={uPennText} imageTitle="Master's in Computer Graphics" year="2023" DotIcon={SchoolIcon}/>
             <TimelineItemWrapper imagePath={AmazonImagePath} imageAltText="Amazon Web Services" imageDesc={amazonWorkExperienceText} imageTitle="Amazon Web Services" year={"2021"} DotIcon={WorkIcon}/>
             <TimelineItemWrapper imagePath={EpicImagePath} imageAltText="Epic Systems" imageDesc={epicWorkExperienceText} imageTitle="Epic Systems" year={"2019"} DotIcon={WorkIcon}/>
