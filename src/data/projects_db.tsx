@@ -42,7 +42,6 @@ export async function loadAllProjects() {
             }
 
             docs.push(project);
-            console.log(project.orderID);
         });
         docs.sort(sortProjectsByOrderID);
     }
